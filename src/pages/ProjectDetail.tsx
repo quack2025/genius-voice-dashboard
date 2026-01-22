@@ -1,6 +1,7 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase, Project, Recording } from '@/integrations/supabase/client';
+import { batchApi, exportApi } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -12,12 +13,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Play, RefreshCw, Mic2, Upload, Download, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import AudioPlayerModal from '@/components/AudioPlayerModal';
 
 const ITEMS_PER_PAGE = 10;
 
 interface BatchAnalysis {
+  batchId: string;
   requested: number;
   found: number;
   notFound: string[];
@@ -28,21 +31,25 @@ interface BatchAnalysis {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
+  const { toast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  
+
   // Batch transcription state
   const [batchInput, setBatchInput] = useState('');
   const [batchAnalysis, setBatchAnalysis] = useState<BatchAnalysis | null>(null);
   const [batchProgress, setBatchProgress] = useState<number | null>(null);
-  
+  const [batchLoading, setBatchLoading] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Export state
   const [exportOnlyCompleted, setExportOnlyCompleted] = useState(true);
-  
+
   // Audio player state
   const [playingRecording, setPlayingRecording] = useState<Recording | null>(null);
 
@@ -121,63 +128,149 @@ export default function ProjectDetail() {
     setPlayingRecording(recording);
   };
 
-  const handleAnalyzeBatch = () => {
+  const handleAnalyzeBatch = async () => {
+    if (!id) return;
+
     const sessionIds = batchInput
       .split(/[\n,]/)
       .map(id => id.trim())
       .filter(id => id.length > 0);
 
-    // Mock analysis - in real app this would query the database
-    const mockAnalysis: BatchAnalysis = {
-      requested: sessionIds.length,
-      found: Math.floor(sessionIds.length * 0.8),
-      notFound: sessionIds.slice(-Math.ceil(sessionIds.length * 0.2)),
-      alreadyTranscribed: Math.floor(sessionIds.length * 0.3),
-      toTranscribe: Math.floor(sessionIds.length * 0.5),
-      estimatedCost: Math.floor(sessionIds.length * 0.5) * 0.02,
-    };
-
-    setBatchAnalysis(mockAnalysis);
-  };
-
-  const handleConfirmBatch = () => {
-    setBatchProgress(0);
-    // Mock progress
-    const interval = setInterval(() => {
-      setBatchProgress(prev => {
-        if (prev === null || prev >= 100) {
-          clearInterval(interval);
-          return null;
-        }
-        return prev + 10;
+    if (sessionIds.length === 0) {
+      toast({
+        title: 'Error',
+        description: 'Ingresa al menos un Session ID',
+        variant: 'destructive',
       });
-    }, 500);
+      return;
+    }
+
+    setBatchLoading(true);
+
+    const response = await batchApi.prepare(id, sessionIds);
+
+    if (!response.success || !response.data) {
+      toast({
+        title: 'Error al analizar',
+        description: response.error || 'No se pudo analizar el batch',
+        variant: 'destructive',
+      });
+      setBatchLoading(false);
+      return;
+    }
+
+    const data = response.data;
+    setBatchAnalysis({
+      batchId: data.batch_id,
+      requested: data.summary.requested,
+      found: data.summary.found,
+      notFound: data.not_found_session_ids,
+      alreadyTranscribed: data.summary.already_transcribed,
+      toTranscribe: data.summary.to_transcribe,
+      estimatedCost: data.estimated_cost_usd,
+    });
+    setBatchLoading(false);
   };
 
-  const handleExport = () => {
-    // Mock export - create CSV from recordings
-    const dataToExport = exportOnlyCompleted 
-      ? recordings.filter(r => r.status === 'completed')
-      : recordings;
+  const pollBatchStatus = useCallback(async (batchId: string) => {
+    if (!id) return;
 
-    const csv = [
-      ['Session ID', 'Duration (s)', 'Status', 'Transcription', 'Created At'].join(','),
-      ...dataToExport.map(r => [
-        r.session_id,
-        r.duration_seconds,
-        r.status,
-        `"${(r.transcription || '').replace(/"/g, '""')}"`,
-        r.created_at,
-      ].join(','))
-    ].join('\n');
+    const response = await batchApi.getStatus(id, batchId);
 
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
+    if (!response.success || !response.data) {
+      return;
+    }
+
+    const data = response.data;
+    const total = data.progress.total;
+    const completed = data.progress.completed + data.progress.failed;
+    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    setBatchProgress(progress);
+
+    if (data.status === 'completed' || data.status === 'partial' || data.status === 'failed') {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+      setBatchProgress(null);
+      setBatchAnalysis(null);
+      setBatchInput('');
+      fetchRecordings();
+
+      toast({
+        title: data.status === 'completed' ? 'Transcripción completada' : 'Transcripción finalizada',
+        description: `${data.progress.completed} transcritas, ${data.progress.failed} fallidas`,
+      });
+    }
+  }, [id, fetchRecordings, toast]);
+
+  const handleConfirmBatch = async () => {
+    if (!id || !batchAnalysis?.batchId) return;
+
+    setBatchLoading(true);
+
+    const response = await batchApi.confirm(id, batchAnalysis.batchId);
+
+    if (!response.success) {
+      toast({
+        title: 'Error al confirmar',
+        description: response.error || 'No se pudo iniciar la transcripción',
+        variant: 'destructive',
+      });
+      setBatchLoading(false);
+      return;
+    }
+
+    setBatchProgress(0);
+    setBatchLoading(false);
+
+    // Start polling for status
+    pollIntervalRef.current = setInterval(() => {
+      pollBatchStatus(batchAnalysis.batchId);
+    }, 3000);
+  };
+
+  // Cleanup polling on unmount
+  useEffect(() => {
+    return () => {
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+      }
+    };
+  }, []);
+
+  const handleExport = async () => {
+    if (!id) return;
+
+    setExportLoading(true);
+
+    const response = await exportApi.exportCsv(id, exportOnlyCompleted ? 'completed' : 'all');
+
+    if (!response.success || !response.data) {
+      toast({
+        title: 'Error al exportar',
+        description: response.error || 'No se pudo descargar el archivo',
+        variant: 'destructive',
+      });
+      setExportLoading(false);
+      return;
+    }
+
+    // Download the file
+    const url = URL.createObjectURL(response.data.blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${project?.name || 'recordings'}-export.csv`;
+    a.download = response.data.filename || `${project?.name || 'recordings'}-export.csv`;
     a.click();
     URL.revokeObjectURL(url);
+
+    setExportLoading(false);
+
+    toast({
+      title: 'Exportación completada',
+      description: 'El archivo CSV se descargó correctamente',
+    });
   };
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -434,11 +527,14 @@ export default function ProjectDetail() {
                 )}
 
                 <div className="flex gap-4 pt-4">
-                  <Button variant="outline" onClick={() => setBatchAnalysis(null)}>
+                  <Button variant="outline" onClick={() => setBatchAnalysis(null)} disabled={batchLoading}>
                     Cancelar
                   </Button>
-                  <Button onClick={handleConfirmBatch}>
-                    Confirmar y Transcribir
+                  <Button onClick={handleConfirmBatch} disabled={batchLoading}>
+                    {batchLoading ? (
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    ) : null}
+                    {batchLoading ? 'Procesando...' : 'Confirmar y Transcribir'}
                   </Button>
                 </div>
               </CardContent>
@@ -485,13 +581,17 @@ export default function ProjectDetail() {
                   />
                 </div>
 
-                <Button 
-                  onClick={handleAnalyzeBatch} 
-                  disabled={!batchInput.trim()}
+                <Button
+                  onClick={handleAnalyzeBatch}
+                  disabled={!batchInput.trim() || batchLoading}
                   className="w-full"
                 >
-                  <FileText className="h-4 w-4 mr-2" />
-                  Analizar
+                  {batchLoading ? (
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <FileText className="h-4 w-4 mr-2" />
+                  )}
+                  {batchLoading ? 'Analizando...' : 'Analizar'}
                 </Button>
               </CardContent>
             </Card>
@@ -564,9 +664,13 @@ export default function ProjectDetail() {
                 </div>
               )}
 
-              <Button onClick={handleExport} disabled={recordings.length === 0}>
-                <Download className="h-4 w-4 mr-2" />
-                Descargar CSV
+              <Button onClick={handleExport} disabled={recordings.length === 0 || exportLoading}>
+                {exportLoading ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4 mr-2" />
+                )}
+                {exportLoading ? 'Exportando...' : 'Descargar CSV'}
               </Button>
             </CardContent>
           </Card>
