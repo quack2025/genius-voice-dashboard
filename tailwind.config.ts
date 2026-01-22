@@ -56,6 +56,13 @@ export default {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
+          muted: "hsl(var(--sidebar-muted))",
+        },
+        status: {
+          pending: "hsl(var(--status-pending))",
+          processing: "hsl(var(--status-processing))",
+          completed: "hsl(var(--status-completed))",
+          failed: "hsl(var(--status-failed))",
         },
       },
       borderRadius: {
