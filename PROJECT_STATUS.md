@@ -27,6 +27,9 @@ Dashboard frontend para Voice Capture API. Permite gestionar proyectos de captur
 | Audio Player | `src/components/AudioPlayerModal.tsx` | ✅ Completo | Reproducción de audio |
 | API Client | `src/lib/api.ts` | ✅ Completo | Cliente para backend Railway |
 | Supabase Client | `src/integrations/supabase/client.ts` | ✅ Completo | Conexión directa a DB |
+| **i18n System** | `src/i18n/` | ✅ Completo | ES/EN/PT, detección automática |
+| Language Switcher | `src/components/LanguageSwitcher.tsx` | ✅ Completo | Selector de idioma UI |
+| Locale Formatters | `src/hooks/useFormatters.ts` | ✅ Completo | Formato de fechas/números |
 
 ### Integración con Backend
 
@@ -47,6 +50,21 @@ Dashboard frontend para Voice Capture API. Permite gestionar proyectos de captur
 | Subir archivo CSV para batch | 🟢 Baja | UI existe pero no implementado |
 | Export XLSX | 🟢 Baja | Backend retorna 501 |
 
+### i18n - Soporte Multi-Idioma
+
+| Idioma | Código | Estado |
+|--------|--------|--------|
+| Español | `es` | ✅ Completo (idioma por defecto) |
+| English | `en` | ✅ Completo |
+| Português | `pt` | ✅ Completo |
+
+**Características:**
+- Detección automática de idioma del navegador
+- Persistencia en localStorage (key: `ui_language`)
+- Selector de idioma en sidebar y páginas de auth
+- Formateo de fechas/números según locale
+- **Nota**: El idioma de la UI es independiente del idioma de transcripción del proyecto
+
 ---
 
 ## Estructura de Archivos
@@ -56,11 +74,20 @@ genius-voice-dashboard/
 ├── src/
 │   ├── components/
 │   │   ├── ui/                    # shadcn/ui components
-│   │   └── AudioPlayerModal.tsx   # Audio playback
+│   │   ├── AudioPlayerModal.tsx   # Audio playback
+│   │   ├── AppSidebar.tsx         # Sidebar con LanguageSwitcher
+│   │   └── LanguageSwitcher.tsx   # Selector de idioma UI
 │   ├── contexts/
 │   │   └── AuthContext.tsx        # Supabase auth
 │   ├── hooks/
-│   │   └── use-toast.ts           # Toast notifications
+│   │   ├── use-toast.ts           # Toast notifications
+│   │   └── useFormatters.ts       # Formateo locale-aware
+│   ├── i18n/
+│   │   ├── index.ts               # Configuración i18n
+│   │   └── locales/
+│   │       ├── es/                # Traducciones español
+│   │       ├── en/                # Traducciones inglés
+│   │       └── pt/                # Traducciones portugués
 │   ├── integrations/
 │   │   └── supabase/
 │   │       └── client.ts          # Supabase client & types
@@ -68,12 +95,16 @@ genius-voice-dashboard/
 │   │   ├── api.ts                 # Backend API client
 │   │   └── utils.ts               # Utilities
 │   ├── pages/
-│   │   ├── Auth.tsx               # Login/Register
-│   │   ├── Dashboard.tsx          # Project list
-│   │   ├── NewProject.tsx         # Create project
-│   │   └── ProjectDetail.tsx      # Recordings & batch
+│   │   ├── Login.tsx              # Login (i18n)
+│   │   ├── Register.tsx           # Register (i18n)
+│   │   ├── Dashboard.tsx          # Project list (i18n)
+│   │   ├── NewProject.tsx         # Create project (i18n)
+│   │   ├── ProjectDetail.tsx      # Recordings & batch (i18n)
+│   │   ├── Recordings.tsx         # All recordings (i18n)
+│   │   ├── Export.tsx             # Export data (i18n)
+│   │   └── Settings.tsx           # Settings (i18n)
 │   ├── App.tsx                    # Router
-│   └── main.tsx                   # Entry point
+│   └── main.tsx                   # Entry point + i18n import
 ├── .env                           # (local) VITE_API_URL, etc.
 ├── package.json
 ├── tailwind.config.js
@@ -112,6 +143,7 @@ El cliente API maneja:
 | 2026-01-22 | Proyecto creado en Lovable | `b331aa1` |
 | 2026-01-22 | Actualización sidebar Voice Capture | `1ee5689` |
 | 2026-01-22 | **Integración backend**: API client creado, batch y export conectados al backend Railway | `5805fd5` |
+| 2026-01-22 | **i18n Multi-idioma**: Soporte ES/EN/PT, detección automática, todas las páginas migradas | `194e40f` |
 
 ---
 
