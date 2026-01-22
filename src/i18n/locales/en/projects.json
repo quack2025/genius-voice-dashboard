@@ -1,0 +1,103 @@
+{
+  "new": {
+    "title": "New Project",
+    "subtitle": "Configure a new voice capture project",
+    "backToProjects": "Back to projects",
+    "cardTitle": "Project information",
+    "cardDescription": "Fill in the details to create your Voice Capture project",
+    "name": "Project name",
+    "nameRequired": "Project name is required",
+    "namePlaceholder": "Ex: Customer satisfaction survey Q1 2024",
+    "language": "Primary language",
+    "languagePlaceholder": "Select a language",
+    "transcriptionMode": "Transcription mode",
+    "realtimeDescription": "Automatic transcription immediately upon receiving each recording",
+    "batchDescription": "On-demand transcription to optimize costs",
+    "create": "Create Project",
+    "creating": "Creating...",
+    "created": "Project created!",
+    "createError": "Error creating project",
+    "snippetInstruction": "Copy this snippet and integrate it into your survey",
+    "goToDashboard": "Go to dashboard",
+    "copySnippet": "Copy snippet",
+    "snippetCopied": "Snippet copied to clipboard"
+  },
+  "detail": {
+    "backToProjects": "Back to projects",
+    "tabs": {
+      "recordings": "Recordings",
+      "batch": "Batch Transcription",
+      "export": "Export"
+    },
+    "filterByStatus": "Filter by status",
+    "noRecordings": "No recordings yet",
+    "noRecordingsHint": "Integrate the widget into your survey to start capturing voice recordings.",
+    "table": {
+      "sessionId": "Session ID",
+      "duration": "Duration",
+      "status": "Status",
+      "transcription": "Transcription",
+      "actions": "Actions"
+    },
+    "playAudio": "Play Audio"
+  },
+  "batch": {
+    "title": "Batch Transcription",
+    "subtitle": "Upload a CSV file or paste a list of Session IDs to transcribe in batch",
+    "dragDrop": "Drag a CSV file here or click to select",
+    "selectFile": "Select file",
+    "or": "or",
+    "pasteLabel": "Paste Session IDs (one per line or comma-separated)",
+    "pastePlaceholder": "session_abc123\nsession_def456\nsession_ghi789",
+    "analyze": "Analyze",
+    "analyzing": "Analyzing...",
+    "enterSessionIds": "Enter at least one Session ID",
+    "analyzeError": "Analysis error",
+    "analyzeErrorMessage": "Could not analyze the batch",
+    "summaryTitle": "Analysis summary",
+    "summarySubtitle": "Review the analysis before confirming transcription",
+    "requested": "Requested",
+    "found": "Found",
+    "notFound": "Not found",
+    "alreadyTranscribed": "Already transcribed",
+    "toTranscribe": "To transcribe",
+    "estimatedCost": "Estimated cost",
+    "notFoundIds": "Session IDs not found:",
+    "confirmAndTranscribe": "Confirm and Transcribe",
+    "processing": "Processing...",
+    "confirmError": "Confirmation error",
+    "confirmErrorMessage": "Could not start transcription",
+    "inProgress": "Transcription in progress",
+    "processingRecordings": "Processing {{count}} recordings...",
+    "completed": "Transcription completed",
+    "completedPartial": "Transcription finished",
+    "completedMessage": "{{completed}} transcribed, {{failed}} failed"
+  },
+  "export": {
+    "title": "Export data",
+    "subtitle": "Download recordings and transcriptions in CSV format",
+    "format": "Format",
+    "formatValue": "CSV (comma-separated values)",
+    "onlyCompleted": "Include only completed recordings",
+    "preview": "Preview (first 5 rows)",
+    "download": "Download CSV",
+    "downloading": "Exporting...",
+    "error": "Export error",
+    "errorMessage": "Could not download the file",
+    "success": "Export completed",
+    "successMessage": "CSV file downloaded successfully"
+  },
+  "recordings": {
+    "title": "Recordings",
+    "subtitle": "All recordings from your projects",
+    "noRecordings": "No recordings",
+    "noRecordingsSearch": "No recordings match your search",
+    "noRecordingsYet": "You don't have any recordings in any project yet"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account preferences",
+    "generalTitle": "General settings",
+    "comingSoon": "Configuration options will be available soon."
+  }
+}

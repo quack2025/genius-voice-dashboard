@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Mic } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -15,6 +17,7 @@ export default function Login() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation('auth');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +27,7 @@ export default function Login() {
 
     if (error) {
       toast({
-        title: 'Error al iniciar sesión',
+        title: t('login.error'),
         description: error.message,
         variant: 'destructive',
       });
@@ -37,6 +40,9 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-sidebar p-4">
+      <div className="absolute top-4 right-4">
+        <LanguageSwitcher />
+      </div>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -45,24 +51,24 @@ export default function Login() {
             </div>
             <span className="text-2xl font-bold text-foreground">Voice Capture</span>
           </div>
-          <CardTitle className="text-xl">Bienvenido de nuevo</CardTitle>
-          <CardDescription>Ingresa tus credenciales para acceder</CardDescription>
+          <CardTitle className="text-xl">{t('login.title')}</CardTitle>
+          <CardDescription>{t('login.subtitle')}</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('login.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="tu@email.com"
+                placeholder={t('login.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <Label htmlFor="password">{t('login.password')}</Label>
               <Input
                 id="password"
                 type="password"
@@ -75,12 +81,12 @@ export default function Login() {
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {isLoading ? t('login.submitting') : t('login.submit')}
             </Button>
             <p className="text-sm text-muted-foreground">
-              ¿No tienes cuenta?{' '}
+              {t('login.noAccount')}{' '}
               <Link to="/register" className="text-primary hover:underline">
-                Regístrate
+                {t('login.register')}
               </Link>
             </p>
           </CardFooter>

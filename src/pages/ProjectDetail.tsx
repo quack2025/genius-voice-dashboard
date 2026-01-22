@@ -1,7 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase, Project, Recording } from '@/integrations/supabase/client';
 import { batchApi, exportApi } from '@/lib/api';
+import { useFormatters } from '@/hooks/useFormatters';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -16,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Play, RefreshCw, Mic2, Upload, Download, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import AudioPlayerModal from '@/components/AudioPlayerModal';
+import { LANGUAGE_NAMES, SupportedLanguage } from '@/i18n';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -32,6 +35,9 @@ interface BatchAnalysis {
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
+  const { t } = useTranslation('projects');
+  const { t: tCommon } = useTranslation('common');
+  const { formatDuration, formatCurrency } = useFormatters();
   const [project, setProject] = useState<Project | null>(null);
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +61,7 @@ export default function ProjectDetail() {
 
   const fetchProject = useCallback(async () => {
     if (!id) return;
-    
+
     const { data, error } = await supabase
       .from('projects')
       .select('*')
@@ -96,12 +102,6 @@ export default function ProjectDetail() {
     fetchRecordings();
   }, [fetchProject, fetchRecordings]);
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       pending: 'bg-status-pending/10 text-status-pending border-status-pending/20',
@@ -110,16 +110,9 @@ export default function ProjectDetail() {
       failed: 'bg-status-failed/10 text-status-failed border-status-failed/20',
     };
 
-    const labels: Record<string, string> = {
-      pending: 'Pendiente',
-      processing: 'Procesando',
-      completed: 'Completado',
-      failed: 'Fallido',
-    };
-
     return (
       <Badge variant="outline" className={styles[status] || ''}>
-        {labels[status] || status}
+        {tCommon(`status.${status}`)}
       </Badge>
     );
   };
@@ -139,7 +132,7 @@ export default function ProjectDetail() {
     if (sessionIds.length === 0) {
       toast({
         title: 'Error',
-        description: 'Ingresa al menos un Session ID',
+        description: t('batch.enterSessionIds'),
         variant: 'destructive',
       });
       return;
@@ -151,8 +144,8 @@ export default function ProjectDetail() {
 
     if (!response.success || !response.data) {
       toast({
-        title: 'Error al analizar',
-        description: response.error || 'No se pudo analizar el batch',
+        title: t('batch.analyzeError'),
+        description: response.error || t('batch.analyzeErrorMessage'),
         variant: 'destructive',
       });
       setBatchLoading(false);
@@ -199,11 +192,11 @@ export default function ProjectDetail() {
       fetchRecordings();
 
       toast({
-        title: data.status === 'completed' ? 'Transcripción completada' : 'Transcripción finalizada',
-        description: `${data.progress.completed} transcritas, ${data.progress.failed} fallidas`,
+        title: data.status === 'completed' ? t('batch.completed') : t('batch.completedPartial'),
+        description: t('batch.completedMessage', { completed: data.progress.completed, failed: data.progress.failed }),
       });
     }
-  }, [id, fetchRecordings, toast]);
+  }, [id, fetchRecordings, toast, t]);
 
   const handleConfirmBatch = async () => {
     if (!id || !batchAnalysis?.batchId) return;
@@ -214,8 +207,8 @@ export default function ProjectDetail() {
 
     if (!response.success) {
       toast({
-        title: 'Error al confirmar',
-        description: response.error || 'No se pudo iniciar la transcripción',
+        title: t('batch.confirmError'),
+        description: response.error || t('batch.confirmErrorMessage'),
         variant: 'destructive',
       });
       setBatchLoading(false);
@@ -249,8 +242,8 @@ export default function ProjectDetail() {
 
     if (!response.success || !response.data) {
       toast({
-        title: 'Error al exportar',
-        description: response.error || 'No se pudo descargar el archivo',
+        title: t('export.error'),
+        description: response.error || t('export.errorMessage'),
         variant: 'destructive',
       });
       setExportLoading(false);
@@ -268,8 +261,8 @@ export default function ProjectDetail() {
     setExportLoading(false);
 
     toast({
-      title: 'Exportación completada',
-      description: 'El archivo CSV se descargó correctamente',
+      title: t('export.success'),
+      description: t('export.successMessage'),
     });
   };
 
@@ -295,7 +288,7 @@ export default function ProjectDetail() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4" />
-          Volver a proyectos
+          {t('detail.backToProjects')}
         </Link>
         <div className="flex items-center gap-4">
           <div className="p-3 bg-primary/10 rounded-lg">
@@ -305,11 +298,11 @@ export default function ProjectDetail() {
             <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant={project.transcription_mode === 'realtime' ? 'default' : 'secondary'}>
-                {project.transcription_mode === 'realtime' ? 'Real-Time' : 'Batch'}
+                {tCommon(`transcriptionModes.${project.transcription_mode}`)}
               </Badge>
               <span className="text-muted-foreground">·</span>
               <span className="text-muted-foreground text-sm">
-                {project.language === 'es' ? 'Español' : project.language === 'en' ? 'English' : 'Português'}
+                {LANGUAGE_NAMES[project.language as SupportedLanguage] || project.language}
               </span>
             </div>
           </div>
@@ -319,9 +312,9 @@ export default function ProjectDetail() {
       {/* Tabs */}
       <Tabs defaultValue="recordings" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="recordings">Grabaciones</TabsTrigger>
-          <TabsTrigger value="batch">Transcripción Batch</TabsTrigger>
-          <TabsTrigger value="export">Exportar</TabsTrigger>
+          <TabsTrigger value="recordings">{t('detail.tabs.recordings')}</TabsTrigger>
+          <TabsTrigger value="batch">{t('detail.tabs.batch')}</TabsTrigger>
+          <TabsTrigger value="export">{t('detail.tabs.export')}</TabsTrigger>
         </TabsList>
 
         {/* Recordings Tab */}
@@ -333,14 +326,14 @@ export default function ProjectDetail() {
               setCurrentPage(1);
             }}>
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filtrar por estado" />
+                <SelectValue placeholder={t('detail.filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todos los estados</SelectItem>
-                <SelectItem value="pending">Pendiente</SelectItem>
-                <SelectItem value="processing">Procesando</SelectItem>
-                <SelectItem value="completed">Completado</SelectItem>
-                <SelectItem value="failed">Fallido</SelectItem>
+                <SelectItem value="all">{tCommon('status.all')}</SelectItem>
+                <SelectItem value="pending">{tCommon('status.pending')}</SelectItem>
+                <SelectItem value="processing">{tCommon('status.processing')}</SelectItem>
+                <SelectItem value="completed">{tCommon('status.completed')}</SelectItem>
+                <SelectItem value="failed">{tCommon('status.failed')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -358,10 +351,10 @@ export default function ProjectDetail() {
                   <Mic2 className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <h3 className="text-lg font-semibold text-foreground mb-2">
-                  Aún no hay grabaciones
+                  {t('detail.noRecordings')}
                 </h3>
                 <p className="text-muted-foreground text-center max-w-sm">
-                  Integra el widget en tu encuesta para comenzar a capturar grabaciones de voz.
+                  {t('detail.noRecordingsHint')}
                 </p>
               </CardContent>
             </Card>
@@ -371,11 +364,11 @@ export default function ProjectDetail() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Session ID</TableHead>
-                      <TableHead>Duración</TableHead>
-                      <TableHead>Estado</TableHead>
-                      <TableHead>Transcripción</TableHead>
-                      <TableHead>Acciones</TableHead>
+                      <TableHead>{t('detail.table.sessionId')}</TableHead>
+                      <TableHead>{t('detail.table.duration')}</TableHead>
+                      <TableHead>{t('detail.table.status')}</TableHead>
+                      <TableHead>{t('detail.table.transcription')}</TableHead>
+                      <TableHead>{t('detail.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -437,7 +430,11 @@ export default function ProjectDetail() {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-muted-foreground">
-                    Mostrando {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} de {totalCount}
+                    {tCommon('pagination.showing', {
+                      from: (currentPage - 1) * ITEMS_PER_PAGE + 1,
+                      to: Math.min(currentPage * ITEMS_PER_PAGE, totalCount),
+                      total: totalCount
+                    })}
                   </p>
                   <div className="flex items-center gap-2">
                     <Button
@@ -449,7 +446,7 @@ export default function ProjectDetail() {
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="text-sm text-muted-foreground">
-                      Página {currentPage} de {totalPages}
+                      {tCommon('pagination.page', { current: currentPage, total: totalPages })}
                     </span>
                     <Button
                       variant="outline"
@@ -471,9 +468,9 @@ export default function ProjectDetail() {
           {batchProgress !== null ? (
             <Card>
               <CardHeader>
-                <CardTitle>Transcripción en progreso</CardTitle>
+                <CardTitle>{t('batch.inProgress')}</CardTitle>
                 <CardDescription>
-                  Procesando {batchAnalysis?.toTranscribe || 0} grabaciones...
+                  {t('batch.processingRecordings', { count: batchAnalysis?.toTranscribe || 0 })}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -484,42 +481,42 @@ export default function ProjectDetail() {
           ) : batchAnalysis ? (
             <Card>
               <CardHeader>
-                <CardTitle>Resumen del análisis</CardTitle>
+                <CardTitle>{t('batch.summaryTitle')}</CardTitle>
                 <CardDescription>
-                  Revisa el análisis antes de confirmar la transcripción
+                  {t('batch.summarySubtitle')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">Solicitados</p>
+                    <p className="text-sm text-muted-foreground">{t('batch.requested')}</p>
                     <p className="text-2xl font-bold">{batchAnalysis.requested}</p>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">Encontrados</p>
+                    <p className="text-sm text-muted-foreground">{t('batch.found')}</p>
                     <p className="text-2xl font-bold text-status-completed">{batchAnalysis.found}</p>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">No encontrados</p>
+                    <p className="text-sm text-muted-foreground">{t('batch.notFound')}</p>
                     <p className="text-2xl font-bold text-status-failed">{batchAnalysis.notFound.length}</p>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">Ya transcritos</p>
+                    <p className="text-sm text-muted-foreground">{t('batch.alreadyTranscribed')}</p>
                     <p className="text-2xl font-bold">{batchAnalysis.alreadyTranscribed}</p>
                   </div>
                   <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">Por transcribir</p>
+                    <p className="text-sm text-muted-foreground">{t('batch.toTranscribe')}</p>
                     <p className="text-2xl font-bold text-primary">{batchAnalysis.toTranscribe}</p>
                   </div>
                   <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-                    <p className="text-sm text-muted-foreground">Costo estimado</p>
-                    <p className="text-2xl font-bold text-primary">${batchAnalysis.estimatedCost.toFixed(2)} USD</p>
+                    <p className="text-sm text-muted-foreground">{t('batch.estimatedCost')}</p>
+                    <p className="text-2xl font-bold text-primary">{formatCurrency(batchAnalysis.estimatedCost)}</p>
                   </div>
                 </div>
 
                 {batchAnalysis.notFound.length > 0 && (
                   <div className="p-4 bg-status-failed/10 border border-status-failed/20 rounded-lg">
-                    <p className="text-sm font-medium text-status-failed mb-2">Session IDs no encontrados:</p>
+                    <p className="text-sm font-medium text-status-failed mb-2">{t('batch.notFoundIds')}</p>
                     <p className="text-sm text-muted-foreground font-mono">
                       {batchAnalysis.notFound.join(', ')}
                     </p>
@@ -528,13 +525,13 @@ export default function ProjectDetail() {
 
                 <div className="flex gap-4 pt-4">
                   <Button variant="outline" onClick={() => setBatchAnalysis(null)} disabled={batchLoading}>
-                    Cancelar
+                    {tCommon('buttons.cancel')}
                   </Button>
                   <Button onClick={handleConfirmBatch} disabled={batchLoading}>
                     {batchLoading ? (
                       <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
                     ) : null}
-                    {batchLoading ? 'Procesando...' : 'Confirmar y Transcribir'}
+                    {batchLoading ? t('batch.processing') : t('batch.confirmAndTranscribe')}
                   </Button>
                 </div>
               </CardContent>
@@ -544,20 +541,20 @@ export default function ProjectDetail() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Upload className="h-5 w-5" />
-                  Transcripción Batch
+                  {t('batch.title')}
                 </CardTitle>
                 <CardDescription>
-                  Sube un archivo CSV o pega una lista de Session IDs para transcribir en lote
+                  {t('batch.subtitle')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
                   <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-4" />
                   <p className="text-sm text-muted-foreground mb-2">
-                    Arrastra un archivo CSV aquí o haz clic para seleccionar
+                    {t('batch.dragDrop')}
                   </p>
                   <Button variant="outline" size="sm">
-                    Seleccionar archivo
+                    {t('batch.selectFile')}
                   </Button>
                 </div>
 
@@ -566,14 +563,14 @@ export default function ProjectDetail() {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">o</span>
+                    <span className="bg-card px-2 text-muted-foreground">{t('batch.or')}</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Pegar Session IDs (uno por línea o separados por coma)</Label>
+                  <Label>{t('batch.pasteLabel')}</Label>
                   <Textarea
-                    placeholder="session_abc123&#10;session_def456&#10;session_ghi789"
+                    placeholder={t('batch.pastePlaceholder')}
                     value={batchInput}
                     onChange={(e) => setBatchInput(e.target.value)}
                     rows={6}
@@ -591,7 +588,7 @@ export default function ProjectDetail() {
                   ) : (
                     <FileText className="h-4 w-4 mr-2" />
                   )}
-                  {batchLoading ? 'Analizando...' : 'Analizar'}
+                  {batchLoading ? t('batch.analyzing') : t('batch.analyze')}
                 </Button>
               </CardContent>
             </Card>
@@ -604,17 +601,17 @@ export default function ProjectDetail() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Download className="h-5 w-5" />
-                Exportar datos
+                {t('export.title')}
               </CardTitle>
               <CardDescription>
-                Descarga las grabaciones y transcripciones en formato CSV
+                {t('export.subtitle')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <Label className="text-base">Formato</Label>
-                  <p className="text-sm text-muted-foreground">CSV (valores separados por coma)</p>
+                  <Label className="text-base">{t('export.format')}</Label>
+                  <p className="text-sm text-muted-foreground">{t('export.formatValue')}</p>
                 </div>
 
                 <div className="flex items-center space-x-2">
@@ -623,25 +620,25 @@ export default function ProjectDetail() {
                     checked={exportOnlyCompleted}
                     onCheckedChange={(checked) => setExportOnlyCompleted(checked as boolean)}
                   />
-                  <Label htmlFor="completed-only">Incluir solo grabaciones completadas</Label>
+                  <Label htmlFor="completed-only">{t('export.onlyCompleted')}</Label>
                 </div>
               </div>
 
               {recordings.length > 0 && (
                 <div className="space-y-2">
-                  <Label>Vista previa (primeras 5 filas)</Label>
+                  <Label>{t('export.preview')}</Label>
                   <div className="border rounded-lg overflow-hidden">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="text-xs">Session ID</TableHead>
-                          <TableHead className="text-xs">Duración</TableHead>
-                          <TableHead className="text-xs">Estado</TableHead>
-                          <TableHead className="text-xs">Transcripción</TableHead>
+                          <TableHead className="text-xs">{t('detail.table.sessionId')}</TableHead>
+                          <TableHead className="text-xs">{t('detail.table.duration')}</TableHead>
+                          <TableHead className="text-xs">{t('detail.table.status')}</TableHead>
+                          <TableHead className="text-xs">{t('detail.table.transcription')}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {(exportOnlyCompleted 
+                        {(exportOnlyCompleted
                           ? recordings.filter(r => r.status === 'completed')
                           : recordings
                         ).slice(0, 5).map((recording) => (
@@ -652,7 +649,7 @@ export default function ProjectDetail() {
                             <TableCell className="text-xs">
                               {formatDuration(recording.duration_seconds)}
                             </TableCell>
-                            <TableCell className="text-xs">{recording.status}</TableCell>
+                            <TableCell className="text-xs">{tCommon(`status.${recording.status}`)}</TableCell>
                             <TableCell className="text-xs max-w-[200px] truncate">
                               {recording.transcription || '-'}
                             </TableCell>
@@ -670,7 +667,7 @@ export default function ProjectDetail() {
                 ) : (
                   <Download className="h-4 w-4 mr-2" />
                 )}
-                {exportLoading ? 'Exportando...' : 'Descargar CSV'}
+                {exportLoading ? t('export.downloading') : t('export.download')}
               </Button>
             </CardContent>
           </Card>

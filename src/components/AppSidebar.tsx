@@ -1,25 +1,28 @@
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  FolderKanban, 
-  Mic2, 
-  Download, 
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import {
+  FolderKanban,
+  Mic2,
+  Download,
   Settings,
   LogOut,
   Mic
 } from 'lucide-react';
 
 const navItems = [
-  { name: 'Proyectos', href: '/dashboard', icon: FolderKanban },
-  { name: 'Grabaciones', href: '/recordings', icon: Mic2 },
-  { name: 'Exportar', href: '/export', icon: Download },
-  { name: 'Configuración', href: '/settings', icon: Settings },
+  { key: 'projects', href: '/dashboard', icon: FolderKanban },
+  { key: 'recordings', href: '/recordings', icon: Mic2 },
+  { key: 'export', href: '/export', icon: Download },
+  { key: 'settings', href: '/settings', icon: Settings },
 ];
 
 export default function AppSidebar() {
   const location = useLocation();
   const { signOut, user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col h-screen fixed left-0 top-0">
@@ -36,12 +39,12 @@ export default function AppSidebar() {
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.href || 
+          const isActive = location.pathname === item.href ||
             (item.href === '/dashboard' && location.pathname.startsWith('/projects'));
-          
+
           return (
             <NavLink
-              key={item.name}
+              key={item.key}
               to={item.href}
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
@@ -51,7 +54,7 @@ export default function AppSidebar() {
               )}
             >
               <item.icon className="h-5 w-5" />
-              {item.name}
+              {t(`nav.${item.key}`)}
             </NavLink>
           );
         })}
@@ -71,12 +74,15 @@ export default function AppSidebar() {
             </p>
           </div>
         </div>
+        <div className="px-4 py-2 mb-2">
+          <LanguageSwitcher />
+        </div>
         <button
           onClick={signOut}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
         >
           <LogOut className="h-5 w-5" />
-          Cerrar sesión
+          {t('nav.logout')}
         </button>
       </div>
     </aside>

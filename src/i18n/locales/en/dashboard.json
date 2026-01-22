@@ -1,0 +1,16 @@
+{
+  "title": "Projects",
+  "subtitle": "Manage your voice capture projects",
+  "newProject": "New Project",
+  "searchPlaceholder": "Search projects...",
+  "noResults": "No projects found",
+  "noResultsHint": "No projects match your search",
+  "createFirst": "Create your first project",
+  "createFirstHint": "Start by creating a project to capture and transcribe voice recordings from your surveys",
+  "table": {
+    "name": "Project name",
+    "mode": "Mode",
+    "recordings": "Recordings",
+    "createdAt": "Created at"
+  }
+}

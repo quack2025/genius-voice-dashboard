@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase, Recording } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,11 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Mic2, Play, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import AudioPlayerModal from '@/components/AudioPlayerModal';
+import { useFormatters } from '@/hooks/useFormatters';
 
 const ITEMS_PER_PAGE = 10;
 
 export default function Recordings() {
   const { user } = useAuth();
+  const { t } = useTranslation('projects');
+  const { t: tCommon } = useTranslation('common');
+  const { formatDuration } = useFormatters();
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -64,12 +69,6 @@ export default function Recordings() {
     setLoading(false);
   };
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
   const getStatusBadge = (status: string) => {
     const styles: Record<string, string> = {
       pending: 'bg-status-pending/10 text-status-pending border-status-pending/20',
@@ -78,16 +77,9 @@ export default function Recordings() {
       failed: 'bg-status-failed/10 text-status-failed border-status-failed/20',
     };
 
-    const labels: Record<string, string> = {
-      pending: 'Pendiente',
-      processing: 'Procesando',
-      completed: 'Completado',
-      failed: 'Fallido',
-    };
-
     return (
       <Badge variant="outline" className={styles[status] || ''}>
-        {labels[status] || status}
+        {tCommon(`status.${status}`)}
       </Badge>
     );
   };
@@ -98,8 +90,8 @@ export default function Recordings() {
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Grabaciones</h1>
-        <p className="text-muted-foreground mt-1">Todas las grabaciones de tus proyectos</p>
+        <h1 className="text-2xl font-bold text-foreground">{t('recordings.title')}</h1>
+        <p className="text-muted-foreground mt-1">{t('recordings.subtitle')}</p>
       </div>
 
       {/* Filter */}
@@ -109,14 +101,14 @@ export default function Recordings() {
           setCurrentPage(1);
         }}>
           <SelectTrigger className="w-48">
-            <SelectValue placeholder="Filtrar por estado" />
+            <SelectValue placeholder={t('detail.filterByStatus')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todos los estados</SelectItem>
-            <SelectItem value="pending">Pendiente</SelectItem>
-            <SelectItem value="processing">Procesando</SelectItem>
-            <SelectItem value="completed">Completado</SelectItem>
-            <SelectItem value="failed">Fallido</SelectItem>
+            <SelectItem value="all">{tCommon('status.all')}</SelectItem>
+            <SelectItem value="pending">{tCommon('status.pending')}</SelectItem>
+            <SelectItem value="processing">{tCommon('status.processing')}</SelectItem>
+            <SelectItem value="completed">{tCommon('status.completed')}</SelectItem>
+            <SelectItem value="failed">{tCommon('status.failed')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -134,12 +126,12 @@ export default function Recordings() {
               <Mic2 className="h-8 w-8 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">
-              No hay grabaciones
+              {t('recordings.noRecordings')}
             </h3>
             <p className="text-muted-foreground text-center max-w-sm">
-              {statusFilter !== 'all' 
-                ? 'No hay grabaciones con el estado seleccionado'
-                : 'Las grabaciones aparecerán aquí cuando integres el widget en tus encuestas'}
+              {statusFilter !== 'all'
+                ? t('recordings.noRecordingsSearch')
+                : t('recordings.noRecordingsYet')}
             </p>
           </CardContent>
         </Card>
@@ -149,11 +141,11 @@ export default function Recordings() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Session ID</TableHead>
-                  <TableHead>Duración</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Transcripción</TableHead>
-                  <TableHead>Acciones</TableHead>
+                  <TableHead>{t('detail.table.sessionId')}</TableHead>
+                  <TableHead>{t('detail.table.duration')}</TableHead>
+                  <TableHead>{t('detail.table.status')}</TableHead>
+                  <TableHead>{t('detail.table.transcription')}</TableHead>
+                  <TableHead>{t('detail.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -215,7 +207,11 @@ export default function Recordings() {
           {totalPages > 1 && (
             <div className="flex items-center justify-between mt-4">
               <p className="text-sm text-muted-foreground">
-                Mostrando {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)} de {totalCount}
+                {tCommon('pagination.showing', {
+                  from: (currentPage - 1) * ITEMS_PER_PAGE + 1,
+                  to: Math.min(currentPage * ITEMS_PER_PAGE, totalCount),
+                  total: totalCount
+                })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
@@ -227,7 +223,7 @@ export default function Recordings() {
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <span className="text-sm text-muted-foreground">
-                  Página {currentPage} de {totalPages}
+                  {tCommon('pagination.page', { current: currentPage, total: totalPages })}
                 </span>
                 <Button
                   variant="outline"

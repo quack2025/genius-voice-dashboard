@@ -1,0 +1,51 @@
+{
+  "buttons": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "loading": "Carregando...",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "download": "Baixar",
+    "refresh": "Atualizar",
+    "analyze": "Analisar",
+    "analyzing": "Analisando...",
+    "export": "Exportar",
+    "exporting": "Exportando..."
+  },
+  "status": {
+    "pending": "Pendente",
+    "processing": "Processando",
+    "completed": "Concluído",
+    "failed": "Falhou",
+    "all": "Todos os status"
+  },
+  "pagination": {
+    "showing": "Mostrando {{from}} - {{to}} de {{total}}",
+    "page": "Página {{current}} de {{total}}"
+  },
+  "errors": {
+    "generic": "Ocorreu um erro",
+    "network": "Erro de conexão",
+    "notFound": "Não encontrado"
+  },
+  "nav": {
+    "projects": "Projetos",
+    "recordings": "Gravações",
+    "export": "Exportar",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "languages": {
+    "es": "Español",
+    "en": "English",
+    "pt": "Português"
+  },
+  "transcriptionModes": {
+    "realtime": "Real-Time",
+    "batch": "Batch"
+  }
+}

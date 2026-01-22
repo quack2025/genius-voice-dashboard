@@ -1,0 +1,16 @@
+{
+  "title": "Proyectos",
+  "subtitle": "Gestiona tus proyectos de captura de voz",
+  "newProject": "Nuevo Proyecto",
+  "searchPlaceholder": "Buscar proyectos...",
+  "noResults": "No se encontraron proyectos",
+  "noResultsHint": "No hay proyectos que coincidan con tu búsqueda",
+  "createFirst": "Crea tu primer proyecto",
+  "createFirstHint": "Comienza creando un proyecto para capturar y transcribir grabaciones de voz de tus encuestas",
+  "table": {
+    "name": "Nombre del proyecto",
+    "mode": "Modo",
+    "recordings": "Grabaciones",
+    "createdAt": "Fecha de creación"
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase, Recording } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,10 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useFormatters } from '@/hooks/useFormatters';
 
 export default function Export() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation('projects');
+  const { t: tCommon } = useTranslation('common');
+  const { formatDuration } = useFormatters();
   const [exportOnlyCompleted, setExportOnlyCompleted] = useState(true);
   const [loading, setLoading] = useState(false);
   const [previewData, setPreviewData] = useState<Recording[]>([]);
@@ -57,8 +62,8 @@ export default function Export() {
 
     if (!projects || projects.length === 0) {
       toast({
-        title: 'Sin datos',
-        description: 'No hay proyectos para exportar',
+        title: t('export.error'),
+        description: t('export.errorMessage'),
         variant: 'destructive',
       });
       setLoading(false);
@@ -81,8 +86,8 @@ export default function Export() {
 
     if (!recordings || recordings.length === 0) {
       toast({
-        title: 'Sin datos',
-        description: 'No hay grabaciones para exportar',
+        title: t('export.error'),
+        description: t('export.errorMessage'),
         variant: 'destructive',
       });
       setLoading(false);
@@ -110,42 +115,36 @@ export default function Export() {
     URL.revokeObjectURL(url);
 
     toast({
-      title: 'Exportación completada',
-      description: `Se exportaron ${recordings.length} grabaciones`,
+      title: t('export.success'),
+      description: t('export.successMessage'),
     });
 
     setLoading(false);
-  };
-
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Exportar</h1>
-        <p className="text-muted-foreground mt-1">Descarga tus grabaciones y transcripciones</p>
+        <h1 className="text-2xl font-bold text-foreground">{t('export.title')}</h1>
+        <p className="text-muted-foreground mt-1">{t('export.subtitle')}</p>
       </div>
 
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Download className="h-5 w-5" />
-            Exportar datos
+            {t('export.title')}
           </CardTitle>
           <CardDescription>
-            Descarga todas las grabaciones de tus proyectos en formato CSV
+            {t('export.subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div>
-              <Label className="text-base">Formato</Label>
-              <p className="text-sm text-muted-foreground">CSV (valores separados por coma)</p>
+              <Label className="text-base">{t('export.format')}</Label>
+              <p className="text-sm text-muted-foreground">{t('export.formatValue')}</p>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -154,31 +153,31 @@ export default function Export() {
                 checked={exportOnlyCompleted}
                 onCheckedChange={(checked) => setExportOnlyCompleted(checked as boolean)}
               />
-              <Label htmlFor="completed-only">Incluir solo grabaciones completadas</Label>
+              <Label htmlFor="completed-only">{t('export.onlyCompleted')}</Label>
             </div>
           </div>
 
           <div className="flex gap-4">
             <Button variant="outline" onClick={fetchPreview} disabled={loading}>
-              Ver preview
+              {t('export.preview')}
             </Button>
             <Button onClick={handleExport} disabled={loading}>
               <Download className="h-4 w-4 mr-2" />
-              {loading ? 'Exportando...' : 'Descargar CSV'}
+              {loading ? t('export.downloading') : t('export.download')}
             </Button>
           </div>
 
           {previewData.length > 0 && (
             <div className="space-y-2">
-              <Label>Vista previa (primeras 5 filas)</Label>
+              <Label>{t('export.preview')}</Label>
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-xs">Session ID</TableHead>
-                      <TableHead className="text-xs">Duración</TableHead>
-                      <TableHead className="text-xs">Estado</TableHead>
-                      <TableHead className="text-xs">Transcripción</TableHead>
+                      <TableHead className="text-xs">{t('detail.table.sessionId')}</TableHead>
+                      <TableHead className="text-xs">{t('detail.table.duration')}</TableHead>
+                      <TableHead className="text-xs">{t('detail.table.status')}</TableHead>
+                      <TableHead className="text-xs">{t('detail.table.transcription')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

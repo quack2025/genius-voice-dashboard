@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -11,12 +12,15 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Copy, Check, Code } from 'lucide-react';
+import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES } from '@/i18n';
 
 export default function NewProject() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+  const { t } = useTranslation('projects');
+  const { t: tCommon } = useTranslation('common');
+
   const [name, setName] = useState('');
   const [language, setLanguage] = useState('es');
   const [mode, setMode] = useState('realtime');
@@ -36,11 +40,11 @@ export default function NewProject() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim()) {
       toast({
         title: 'Error',
-        description: 'El nombre del proyecto es requerido',
+        description: t('new.nameRequired'),
         variant: 'destructive',
       });
       return;
@@ -60,7 +64,7 @@ export default function NewProject() {
 
     if (error) {
       toast({
-        title: 'Error al crear proyecto',
+        title: t('new.createError'),
         description: error.message,
         variant: 'destructive',
       });
@@ -81,8 +85,8 @@ export default function NewProject() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     toast({
-      title: '¡Copiado!',
-      description: 'El snippet ha sido copiado al portapapeles',
+      title: tCommon('buttons.copied'),
+      description: t('new.snippetCopied'),
     });
   };
 
@@ -100,26 +104,26 @@ export default function NewProject() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-4"
         >
           <ArrowLeft className="h-4 w-4" />
-          Volver a proyectos
+          {t('new.backToProjects')}
         </button>
-        <h1 className="text-2xl font-bold text-foreground">Nuevo Proyecto</h1>
-        <p className="text-muted-foreground mt-1">Configura un nuevo proyecto de captura de voz</p>
+        <h1 className="text-2xl font-bold text-foreground">{t('new.title')}</h1>
+        <p className="text-muted-foreground mt-1">{t('new.subtitle')}</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Información del proyecto</CardTitle>
+          <CardTitle>{t('new.cardTitle')}</CardTitle>
           <CardDescription>
-            Completa los datos para crear tu proyecto de Voice Capture
+            {t('new.cardDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Nombre del proyecto *</Label>
+              <Label htmlFor="name">{t('new.name')} *</Label>
               <Input
                 id="name"
-                placeholder="Ej: Encuesta satisfacción Q1 2024"
+                placeholder={t('new.namePlaceholder')}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -127,30 +131,32 @@ export default function NewProject() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="language">Idioma principal</Label>
+              <Label htmlFor="language">{t('new.language')}</Label>
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecciona un idioma" />
+                  <SelectValue placeholder={t('new.languagePlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="es">Español</SelectItem>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="pt">Português</SelectItem>
+                  {SUPPORTED_LANGUAGES.map((lang) => (
+                    <SelectItem key={lang} value={lang}>
+                      {LANGUAGE_NAMES[lang]}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-3">
-              <Label>Modo de transcripción</Label>
+              <Label>{t('new.transcriptionMode')}</Label>
               <RadioGroup value={mode} onValueChange={setMode} className="space-y-3">
                 <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer">
                   <RadioGroupItem value="realtime" id="realtime" className="mt-0.5" />
                   <div className="flex-1">
                     <Label htmlFor="realtime" className="cursor-pointer font-medium">
-                      Real-Time
+                      {tCommon('transcriptionModes.realtime')}
                     </Label>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Transcripción automática inmediata al recibir cada grabación
+                      {t('new.realtimeDescription')}
                     </p>
                   </div>
                 </div>
@@ -158,10 +164,10 @@ export default function NewProject() {
                   <RadioGroupItem value="batch" id="batch" className="mt-0.5" />
                   <div className="flex-1">
                     <Label htmlFor="batch" className="cursor-pointer font-medium">
-                      Batch
+                      {tCommon('transcriptionModes.batch')}
                     </Label>
                     <p className="text-sm text-muted-foreground mt-1">
-                      Transcripción bajo demanda para optimizar costos
+                      {t('new.batchDescription')}
                     </p>
                   </div>
                 </div>
@@ -170,10 +176,10 @@ export default function NewProject() {
 
             <div className="flex gap-4 pt-4">
               <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
-                Cancelar
+                {tCommon('buttons.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Creando...' : 'Crear Proyecto'}
+                {isLoading ? t('new.creating') : t('new.create')}
               </Button>
             </div>
           </form>
@@ -189,9 +195,9 @@ export default function NewProject() {
                 <Code className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <DialogTitle>¡Proyecto creado!</DialogTitle>
+                <DialogTitle>{t('new.created')}</DialogTitle>
                 <DialogDescription>
-                  Copia este snippet e intégralo en tu encuesta
+                  {t('new.snippetInstruction')}
                 </DialogDescription>
               </div>
             </div>
@@ -205,18 +211,18 @@ export default function NewProject() {
 
           <DialogFooter className="mt-6">
             <Button variant="outline" onClick={handleCloseModal}>
-              Ir al dashboard
+              {t('new.goToDashboard')}
             </Button>
             <Button onClick={handleCopy}>
               {copied ? (
                 <>
                   <Check className="h-4 w-4 mr-2" />
-                  ¡Copiado!
+                  {tCommon('buttons.copied')}
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4 mr-2" />
-                  Copiar snippet
+                  {t('new.copySnippet')}
                 </>
               )}
             </Button>

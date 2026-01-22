@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { supabase, Project } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFormatters } from '@/hooks/useFormatters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +17,9 @@ interface ProjectWithCount extends Project {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { t } = useTranslation('dashboard');
+  const { t: tCommon } = useTranslation('common');
+  const { formatDate } = useFormatters();
   const [projects, setProjects] = useState<ProjectWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,7 +32,7 @@ export default function Dashboard() {
 
   const fetchProjects = async () => {
     setLoading(true);
-    
+
     const { data: projectsData, error } = await supabase
       .from('projects')
       .select('*')
@@ -46,7 +51,7 @@ export default function Dashboard() {
           .from('recordings')
           .select('*', { count: 'exact', head: true })
           .eq('project_id', project.id);
-        
+
         return {
           ...project,
           recording_count: count || 0,
@@ -62,16 +67,8 @@ export default function Dashboard() {
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
-  };
-
   const getModeLabel = (mode: string) => {
-    return mode === 'realtime' ? 'Real-Time' : 'Batch';
+    return tCommon(`transcriptionModes.${mode}`);
   };
 
   return (
@@ -79,13 +76,13 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Proyectos</h1>
-          <p className="text-muted-foreground mt-1">Gestiona tus proyectos de captura de voz</p>
+          <h1 className="text-2xl font-bold text-foreground">{t('title')}</h1>
+          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
         </div>
         <Button asChild>
           <Link to="/projects/new">
             <Plus className="h-4 w-4 mr-2" />
-            Nuevo Proyecto
+            {t('newProject')}
           </Link>
         </Button>
       </div>
@@ -95,7 +92,7 @@ export default function Dashboard() {
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar proyectos..."
+            placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -115,18 +112,16 @@ export default function Dashboard() {
               <FolderOpen className="h-8 w-8 text-muted-foreground" />
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-2">
-              {searchQuery ? 'No se encontraron proyectos' : 'Crea tu primer proyecto'}
+              {searchQuery ? t('noResults') : t('createFirst')}
             </h3>
             <p className="text-muted-foreground text-center max-w-sm mb-6">
-              {searchQuery
-                ? 'No hay proyectos que coincidan con tu búsqueda'
-                : 'Comienza creando un proyecto para capturar y transcribir grabaciones de voz de tus encuestas'}
+              {searchQuery ? t('noResultsHint') : t('createFirstHint')}
             </p>
             {!searchQuery && (
               <Button asChild>
                 <Link to="/projects/new">
                   <Plus className="h-4 w-4 mr-2" />
-                  Nuevo Proyecto
+                  {t('newProject')}
                 </Link>
               </Button>
             )}
@@ -137,10 +132,10 @@ export default function Dashboard() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nombre del proyecto</TableHead>
-                <TableHead>Modo</TableHead>
-                <TableHead>Grabaciones</TableHead>
-                <TableHead>Fecha de creación</TableHead>
+                <TableHead>{t('table.name')}</TableHead>
+                <TableHead>{t('table.mode')}</TableHead>
+                <TableHead>{t('table.recordings')}</TableHead>
+                <TableHead>{t('table.createdAt')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

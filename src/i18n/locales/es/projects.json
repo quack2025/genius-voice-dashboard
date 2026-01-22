@@ -1,0 +1,103 @@
+{
+  "new": {
+    "title": "Nuevo Proyecto",
+    "subtitle": "Configura un nuevo proyecto de captura de voz",
+    "backToProjects": "Volver a proyectos",
+    "cardTitle": "Información del proyecto",
+    "cardDescription": "Completa los datos para crear tu proyecto de Voice Capture",
+    "name": "Nombre del proyecto",
+    "nameRequired": "El nombre del proyecto es requerido",
+    "namePlaceholder": "Ej: Encuesta satisfacción Q1 2024",
+    "language": "Idioma principal",
+    "languagePlaceholder": "Selecciona un idioma",
+    "transcriptionMode": "Modo de transcripción",
+    "realtimeDescription": "Transcripción automática inmediata al recibir cada grabación",
+    "batchDescription": "Transcripción bajo demanda para optimizar costos",
+    "create": "Crear Proyecto",
+    "creating": "Creando...",
+    "created": "¡Proyecto creado!",
+    "createError": "Error al crear proyecto",
+    "snippetInstruction": "Copia este snippet e intégralo en tu encuesta",
+    "goToDashboard": "Ir al dashboard",
+    "copySnippet": "Copiar snippet",
+    "snippetCopied": "El snippet ha sido copiado al portapapeles"
+  },
+  "detail": {
+    "backToProjects": "Volver a proyectos",
+    "tabs": {
+      "recordings": "Grabaciones",
+      "batch": "Transcripción Batch",
+      "export": "Exportar"
+    },
+    "filterByStatus": "Filtrar por estado",
+    "noRecordings": "Aún no hay grabaciones",
+    "noRecordingsHint": "Integra el widget en tu encuesta para comenzar a capturar grabaciones de voz.",
+    "table": {
+      "sessionId": "Session ID",
+      "duration": "Duración",
+      "status": "Estado",
+      "transcription": "Transcripción",
+      "actions": "Acciones"
+    },
+    "playAudio": "Reproducir Audio"
+  },
+  "batch": {
+    "title": "Transcripción Batch",
+    "subtitle": "Sube un archivo CSV o pega una lista de Session IDs para transcribir en lote",
+    "dragDrop": "Arrastra un archivo CSV aquí o haz clic para seleccionar",
+    "selectFile": "Seleccionar archivo",
+    "or": "o",
+    "pasteLabel": "Pegar Session IDs (uno por línea o separados por coma)",
+    "pastePlaceholder": "session_abc123\nsession_def456\nsession_ghi789",
+    "analyze": "Analizar",
+    "analyzing": "Analizando...",
+    "enterSessionIds": "Ingresa al menos un Session ID",
+    "analyzeError": "Error al analizar",
+    "analyzeErrorMessage": "No se pudo analizar el batch",
+    "summaryTitle": "Resumen del análisis",
+    "summarySubtitle": "Revisa el análisis antes de confirmar la transcripción",
+    "requested": "Solicitados",
+    "found": "Encontrados",
+    "notFound": "No encontrados",
+    "alreadyTranscribed": "Ya transcritos",
+    "toTranscribe": "Por transcribir",
+    "estimatedCost": "Costo estimado",
+    "notFoundIds": "Session IDs no encontrados:",
+    "confirmAndTranscribe": "Confirmar y Transcribir",
+    "processing": "Procesando...",
+    "confirmError": "Error al confirmar",
+    "confirmErrorMessage": "No se pudo iniciar la transcripción",
+    "inProgress": "Transcripción en progreso",
+    "processingRecordings": "Procesando {{count}} grabaciones...",
+    "completed": "Transcripción completada",
+    "completedPartial": "Transcripción finalizada",
+    "completedMessage": "{{completed}} transcritas, {{failed}} fallidas"
+  },
+  "export": {
+    "title": "Exportar datos",
+    "subtitle": "Descarga las grabaciones y transcripciones en formato CSV",
+    "format": "Formato",
+    "formatValue": "CSV (valores separados por coma)",
+    "onlyCompleted": "Incluir solo grabaciones completadas",
+    "preview": "Vista previa (primeras 5 filas)",
+    "download": "Descargar CSV",
+    "downloading": "Exportando...",
+    "error": "Error al exportar",
+    "errorMessage": "No se pudo descargar el archivo",
+    "success": "Exportación completada",
+    "successMessage": "El archivo CSV se descargó correctamente"
+  },
+  "recordings": {
+    "title": "Grabaciones",
+    "subtitle": "Todas las grabaciones de tus proyectos",
+    "noRecordings": "No hay grabaciones",
+    "noRecordingsSearch": "No hay grabaciones que coincidan con tu búsqueda",
+    "noRecordingsYet": "Aún no tienes grabaciones en ningún proyecto"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra las preferencias de tu cuenta",
+    "generalTitle": "Configuración general",
+    "comingSoon": "Las opciones de configuración estarán disponibles próximamente."
+  }
+}
