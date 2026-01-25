@@ -117,9 +117,23 @@ Dashboard frontend para Voice Capture API. Permite gestionar proyectos de captur
 | Tarea | Prioridad | Notas |
 |-------|-----------|-------|
 | Probar flujo completo E2E | 🔴 Alta | Login → crear proyecto → upload → transcribir |
+| Crear widget voice.js | 🔴 Alta | El snippet usa URL placeholder |
 | Agregar CORS para Lovable preview | 🟡 Media | Si se usa Lovable preview URL |
 | Subir archivo CSV para batch | 🟢 Baja | UI existe pero no implementado |
 | Export XLSX | 🟢 Baja | Backend retorna 501 |
+
+### Widget de Captura de Voz
+
+El snippet generado en NewProject usa una URL placeholder:
+```html
+<script src="https://cdn.geniuslabs.ai/voice.js"></script>
+```
+
+**TODO**: Crear el widget real que:
+1. Capture audio del micrófono del usuario
+2. Suba el audio a Supabase Storage
+3. Registre la grabación en la tabla `recordings`
+4. Use el `public_key` del proyecto para autenticación
 
 ---
 
@@ -311,6 +325,7 @@ El cliente maneja automáticamente:
 | 2026-01-22 | Actualización sidebar Voice Capture | `1ee5689` |
 | 2026-01-22 | **Integración backend**: API client creado, batch y export conectados al backend Railway | `5805fd5` |
 | 2026-01-22 | **i18n Multi-idioma**: Soporte ES/EN/PT, detección automática, todas las páginas migradas | `194e40f` |
+| 2026-01-25 | **Fix i18n**: AudioPlayerModal migrado a i18n, CLAUDE.md creado, documentación widget | - |
 
 ---
 

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Recording, supabase } from '@/integrations/supabase/client';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { Play, Pause, X } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 
 interface AudioPlayerModalProps {
   recording: Recording | null;
@@ -11,6 +12,7 @@ interface AudioPlayerModalProps {
 }
 
 export default function AudioPlayerModal({ recording, onClose }: AudioPlayerModalProps) {
+  const { t } = useTranslation('projects');
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -89,7 +91,7 @@ export default function AudioPlayerModal({ recording, onClose }: AudioPlayerModa
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
-            <span>Reproducir Audio</span>
+            <span>{t('detail.playAudio')}</span>
           </DialogTitle>
         </DialogHeader>
         
@@ -143,7 +145,7 @@ export default function AudioPlayerModal({ recording, onClose }: AudioPlayerModa
 
               {recording?.session_id && (
                 <div className="text-center">
-                  <p className="text-xs text-muted-foreground">Session ID</p>
+                  <p className="text-xs text-muted-foreground">{t('detail.table.sessionId')}</p>
                   <p className="text-sm font-mono">{recording.session_id}</p>
                 </div>
               )}
