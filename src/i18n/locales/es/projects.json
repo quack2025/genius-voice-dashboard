@@ -71,7 +71,8 @@
     "processingRecordings": "Procesando {{count}} grabaciones...",
     "completed": "Transcripción completada",
     "completedPartial": "Transcripción finalizada",
-    "completedMessage": "{{completed}} transcritas, {{failed}} fallidas"
+    "completedMessage": "{{completed}} transcritas, {{failed}} fallidas",
+    "pollErrorMessage": "Se perdió la conexión con el servidor. Revisa el estado del batch manualmente."
   },
   "export": {
     "title": "Exportar datos",
@@ -80,6 +81,9 @@
     "formatValue": "CSV (valores separados por coma)",
     "onlyCompleted": "Incluir solo grabaciones completadas",
     "preview": "Vista previa (primeras 5 filas)",
+    "selectProject": "Proyecto",
+    "selectProjectPlaceholder": "Selecciona un proyecto",
+    "selectProjectFirst": "Selecciona un proyecto antes de exportar",
     "download": "Descargar CSV",
     "downloading": "Exportando...",
     "error": "Error al exportar",

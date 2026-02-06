@@ -9,8 +9,10 @@ import {
   Download,
   Settings,
   LogOut,
-  Mic
+  Mic,
+  X
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const navItems = [
   { key: 'projects', href: '/dashboard', icon: FolderKanban },
@@ -19,20 +21,40 @@ const navItems = [
   { key: 'settings', href: '/settings', icon: Settings },
 ];
 
-export default function AppSidebar() {
+interface AppSidebarProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function AppSidebar({ open, onClose }: AppSidebarProps) {
   const location = useLocation();
   const { signOut, user } = useAuth();
   const { t } = useTranslation();
 
   return (
-    <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col h-screen fixed left-0 top-0">
+    <aside className={cn(
+      "w-64 bg-sidebar border-r border-sidebar-border flex flex-col h-screen fixed left-0 top-0 z-50 transition-transform duration-200",
+      open ? "translate-x-0" : "-translate-x-full",
+      "md:translate-x-0"
+    )}>
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-sidebar-primary rounded-lg">
-            <Mic className="h-5 w-5 text-sidebar-primary-foreground" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-sidebar-primary rounded-lg">
+              <Mic className="h-5 w-5 text-sidebar-primary-foreground" />
+            </div>
+            <span className="text-lg font-semibold text-sidebar-foreground">Voice Capture</span>
           </div>
-          <span className="text-lg font-semibold text-sidebar-foreground">Voice Capture</span>
+          {/* Close button on mobile */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden text-sidebar-muted hover:text-sidebar-foreground"
+            onClick={onClose}
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
       </div>
 
@@ -46,6 +68,7 @@ export default function AppSidebar() {
             <NavLink
               key={item.key}
               to={item.href}
+              onClick={onClose}
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                 isActive

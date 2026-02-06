@@ -1,116 +1,75 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { supabase, Project } from '@/integrations/supabase/client';
+import { exportApi } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase, Recording } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Download } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Download, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useFormatters } from '@/hooks/useFormatters';
 
 export default function Export() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation('projects');
   const { t: tCommon } = useTranslation('common');
-  const { formatDuration } = useFormatters();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
   const [exportOnlyCompleted, setExportOnlyCompleted] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [previewData, setPreviewData] = useState<Recording[]>([]);
+  const [projectsLoading, setProjectsLoading] = useState(true);
 
-  const fetchPreview = async () => {
-    setLoading(true);
+  useEffect(() => {
+    if (user) {
+      fetchProjects();
+    }
+  }, [user]);
 
-    // First get user's projects
-    const { data: projects } = await supabase
+  const fetchProjects = async () => {
+    setProjectsLoading(true);
+    const { data } = await supabase
       .from('projects')
-      .select('id');
-
-    if (!projects || projects.length === 0) {
-      setPreviewData([]);
-      setLoading(false);
-      return;
-    }
-
-    const projectIds = projects.map(p => p.id);
-
-    let query = supabase
-      .from('recordings')
       .select('*')
-      .in('project_id', projectIds)
-      .order('created_at', { ascending: false })
-      .limit(5);
+      .order('created_at', { ascending: false });
 
-    if (exportOnlyCompleted) {
-      query = query.eq('status', 'completed');
-    }
-
-    const { data } = await query;
-    setPreviewData((data || []) as Recording[]);
-    setLoading(false);
+    setProjects((data || []) as Project[]);
+    setProjectsLoading(false);
   };
 
   const handleExport = async () => {
+    if (!selectedProjectId) {
+      toast({
+        title: t('export.error'),
+        description: t('export.selectProjectFirst'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setLoading(true);
 
-    const { data: projects } = await supabase
-      .from('projects')
-      .select('id');
+    const response = await exportApi.exportCsv(
+      selectedProjectId,
+      exportOnlyCompleted ? 'completed' : 'all'
+    );
 
-    if (!projects || projects.length === 0) {
+    if (!response.success || !response.data) {
       toast({
         title: t('export.error'),
-        description: t('export.errorMessage'),
+        description: response.error || t('export.errorMessage'),
         variant: 'destructive',
       });
       setLoading(false);
       return;
     }
 
-    const projectIds = projects.map(p => p.id);
-
-    let query = supabase
-      .from('recordings')
-      .select('*')
-      .in('project_id', projectIds)
-      .order('created_at', { ascending: false });
-
-    if (exportOnlyCompleted) {
-      query = query.eq('status', 'completed');
-    }
-
-    const { data: recordings } = await query;
-
-    if (!recordings || recordings.length === 0) {
-      toast({
-        title: t('export.error'),
-        description: t('export.errorMessage'),
-        variant: 'destructive',
-      });
-      setLoading(false);
-      return;
-    }
-
-    const csv = [
-      ['Session ID', 'Project ID', 'Duration (s)', 'Status', 'Transcription', 'Created At'].join(','),
-      ...recordings.map(r => [
-        r.session_id,
-        r.project_id,
-        r.duration_seconds,
-        r.status,
-        `"${(r.transcription || '').replace(/"/g, '""')}"`,
-        r.created_at,
-      ].join(','))
-    ].join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(response.data.blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `voice-capture-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = response.data.filename || `voice-capture-export-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -123,7 +82,7 @@ export default function Export() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">{t('export.title')}</h1>
@@ -142,6 +101,30 @@ export default function Export() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
+            {/* Project selector */}
+            <div className="space-y-2">
+              <Label className="text-base">{t('export.selectProject')}</Label>
+              {projectsLoading ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  {tCommon('loading')}
+                </div>
+              ) : (
+                <Select value={selectedProjectId} onValueChange={setSelectedProjectId}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t('export.selectProjectPlaceholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.map(project => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
+
             <div>
               <Label className="text-base">{t('export.format')}</Label>
               <p className="text-sm text-muted-foreground">{t('export.formatValue')}</p>
@@ -157,49 +140,14 @@ export default function Export() {
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <Button variant="outline" onClick={fetchPreview} disabled={loading}>
-              {t('export.preview')}
-            </Button>
-            <Button onClick={handleExport} disabled={loading}>
+          <Button onClick={handleExport} disabled={loading || !selectedProjectId}>
+            {loading ? (
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
               <Download className="h-4 w-4 mr-2" />
-              {loading ? t('export.downloading') : t('export.download')}
-            </Button>
-          </div>
-
-          {previewData.length > 0 && (
-            <div className="space-y-2">
-              <Label>{t('export.preview')}</Label>
-              <div className="border rounded-lg overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="text-xs">{t('detail.table.sessionId')}</TableHead>
-                      <TableHead className="text-xs">{t('detail.table.duration')}</TableHead>
-                      <TableHead className="text-xs">{t('detail.table.status')}</TableHead>
-                      <TableHead className="text-xs">{t('detail.table.transcription')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {previewData.map((recording) => (
-                      <TableRow key={recording.id}>
-                        <TableCell className="text-xs font-mono">
-                          {recording.session_id.slice(0, 12)}...
-                        </TableCell>
-                        <TableCell className="text-xs">
-                          {formatDuration(recording.duration_seconds)}
-                        </TableCell>
-                        <TableCell className="text-xs">{recording.status}</TableCell>
-                        <TableCell className="text-xs max-w-[200px] truncate">
-                          {recording.transcription || '-'}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          )}
+            )}
+            {loading ? t('export.downloading') : t('export.download')}
+          </Button>
         </CardContent>
       </Card>
     </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase, Recording } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,29 +25,40 @@ export default function Recordings() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [playingRecording, setPlayingRecording] = useState<Recording | null>(null);
+  const projectIdsRef = useRef<string[] | null>(null);
 
+  // Fetch project IDs once
   useEffect(() => {
-    if (user) {
-      fetchRecordings();
+    if (!user) return;
+
+    const loadProjectIds = async () => {
+      const { data } = await supabase
+        .from('projects')
+        .select('id');
+
+      projectIdsRef.current = (data || []).map(p => p.id);
+      fetchRecordings(projectIdsRef.current);
+    };
+
+    loadProjectIds();
+  }, [user]);
+
+  // Fetch recordings when pagination or filter changes
+  useEffect(() => {
+    if (projectIdsRef.current) {
+      fetchRecordings(projectIdsRef.current);
     }
-  }, [user, currentPage, statusFilter]);
+  }, [currentPage, statusFilter]);
 
-  const fetchRecordings = async () => {
-    setLoading(true);
-
-    // First get user's projects
-    const { data: projects } = await supabase
-      .from('projects')
-      .select('id');
-
-    if (!projects || projects.length === 0) {
+  const fetchRecordings = async (projectIds: string[]) => {
+    if (projectIds.length === 0) {
       setRecordings([]);
       setTotalCount(0);
       setLoading(false);
       return;
     }
 
-    const projectIds = projects.map(p => p.id);
+    setLoading(true);
 
     let query = supabase
       .from('recordings')
@@ -87,7 +98,7 @@ export default function Recordings() {
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">{t('recordings.title')}</h1>
@@ -144,7 +155,7 @@ export default function Recordings() {
                   <TableHead>{t('detail.table.sessionId')}</TableHead>
                   <TableHead>{t('detail.table.duration')}</TableHead>
                   <TableHead>{t('detail.table.status')}</TableHead>
-                  <TableHead>{t('detail.table.transcription')}</TableHead>
+                  <TableHead className="hidden md:table-cell">{t('detail.table.transcription')}</TableHead>
                   <TableHead>{t('detail.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -167,7 +178,7 @@ export default function Recordings() {
                       {formatDuration(recording.duration_seconds)}
                     </TableCell>
                     <TableCell>{getStatusBadge(recording.status)}</TableCell>
-                    <TableCell className="max-w-xs">
+                    <TableCell className="max-w-xs hidden md:table-cell">
                       {recording.transcription ? (
                         <TooltipProvider>
                           <Tooltip>

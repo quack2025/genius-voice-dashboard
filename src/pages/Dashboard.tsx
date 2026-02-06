@@ -44,20 +44,30 @@ export default function Dashboard() {
       return;
     }
 
-    // Get recording counts for each project
-    const projectsWithCounts: ProjectWithCount[] = await Promise.all(
-      (projectsData || []).map(async (project) => {
-        const { count } = await supabase
-          .from('recordings')
-          .select('*', { count: 'exact', head: true })
-          .eq('project_id', project.id);
+    if (projectsData.length === 0) {
+      setProjects([]);
+      setLoading(false);
+      return;
+    }
 
-        return {
-          ...project,
-          recording_count: count || 0,
-        };
-      })
-    );
+    // Single query for all recording counts (instead of N+1)
+    const projectIds = projectsData.map(p => p.id);
+    const { data: countData } = await supabase
+      .from('recordings')
+      .select('project_id')
+      .in('project_id', projectIds);
+
+    const counts: Record<string, number> = {};
+    if (countData) {
+      for (const rec of countData) {
+        counts[rec.project_id] = (counts[rec.project_id] || 0) + 1;
+      }
+    }
+
+    const projectsWithCounts: ProjectWithCount[] = projectsData.map(project => ({
+      ...project,
+      recording_count: counts[project.id] || 0,
+    }));
 
     setProjects(projectsWithCounts);
     setLoading(false);
@@ -72,7 +82,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

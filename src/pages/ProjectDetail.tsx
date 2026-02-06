@@ -52,6 +52,7 @@ export default function ProjectDetail() {
   const [batchLoading, setBatchLoading] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollErrorCountRef = useRef(0);
 
   // Export state
   const [exportOnlyCompleted, setExportOnlyCompleted] = useState(true);
@@ -171,9 +172,23 @@ export default function ProjectDetail() {
     const response = await batchApi.getStatus(id, batchId);
 
     if (!response.success || !response.data) {
+      pollErrorCountRef.current++;
+      if (pollErrorCountRef.current >= 5) {
+        if (pollIntervalRef.current) {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+        }
+        setBatchProgress(null);
+        toast({
+          title: t('batch.confirmError'),
+          description: t('batch.pollErrorMessage'),
+          variant: 'destructive',
+        });
+      }
       return;
     }
 
+    pollErrorCountRef.current = 0;
     const data = response.data;
     const total = data.progress.total;
     const completed = data.progress.completed + data.progress.failed;
@@ -219,6 +234,7 @@ export default function ProjectDetail() {
     setBatchLoading(false);
 
     // Start polling for status
+    pollErrorCountRef.current = 0;
     pollIntervalRef.current = setInterval(() => {
       pollBatchStatus(batchAnalysis.batchId);
     }, 3000);
@@ -270,7 +286,7 @@ export default function ProjectDetail() {
 
   if (!project) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="animate-pulse">
           <div className="h-8 bg-muted rounded w-48 mb-4"></div>
           <div className="h-4 bg-muted rounded w-96"></div>
@@ -280,7 +296,7 @@ export default function ProjectDetail() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="mb-8">
         <Link
