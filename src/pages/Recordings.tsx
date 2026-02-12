@@ -195,7 +195,7 @@ export default function Recordings() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
+                      {recording.audio_path && (
                         <Button
                           variant="ghost"
                           size="icon"
@@ -203,10 +203,7 @@ export default function Recordings() {
                         >
                           <Play className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon">
-                          <RefreshCw className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

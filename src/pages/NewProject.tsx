@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Copy, Check, Code } from 'lucide-react';
@@ -23,7 +22,6 @@ export default function NewProject() {
 
   const [name, setName] = useState('');
   const [language, setLanguage] = useState('es');
-  const [mode, setMode] = useState('realtime');
   const [isLoading, setIsLoading] = useState(false);
   const [showSnippetModal, setShowSnippetModal] = useState(false);
   const [publicKey, setPublicKey] = useState('');
@@ -59,7 +57,7 @@ export default function NewProject() {
       name: name.trim(),
       public_key: newPublicKey,
       language,
-      transcription_mode: mode,
+      transcription_mode: 'realtime',
     });
 
     if (error) {
@@ -77,8 +75,9 @@ export default function NewProject() {
     setIsLoading(false);
   };
 
-  const snippet = `<div id="genius-voice" data-project="${publicKey}"></div>
-<script src="https://cdn.geniuslabs.ai/voice.js"></script>`;
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://voice-capture-api-production.up.railway.app';
+  const snippet = `<div id="genius-voice" data-project="${publicKey}" data-session="[survey('session id')]"></div>
+<script src="${apiUrl}/voice.js"></script>`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(snippet);
@@ -144,34 +143,6 @@ export default function NewProject() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="space-y-3">
-              <Label>{t('new.transcriptionMode')}</Label>
-              <RadioGroup value={mode} onValueChange={setMode} className="space-y-3">
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer">
-                  <RadioGroupItem value="realtime" id="realtime" className="mt-0.5" />
-                  <div className="flex-1">
-                    <Label htmlFor="realtime" className="cursor-pointer font-medium">
-                      {tCommon('transcriptionModes.realtime')}
-                    </Label>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {t('new.realtimeDescription')}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-muted/50 cursor-pointer">
-                  <RadioGroupItem value="batch" id="batch" className="mt-0.5" />
-                  <div className="flex-1">
-                    <Label htmlFor="batch" className="cursor-pointer font-medium">
-                      {tCommon('transcriptionModes.batch')}
-                    </Label>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {t('new.batchDescription')}
-                    </p>
-                  </div>
-                </div>
-              </RadioGroup>
             </div>
 
             <div className="flex gap-4 pt-4">

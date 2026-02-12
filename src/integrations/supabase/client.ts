@@ -25,7 +25,7 @@ export interface Recording {
   id: string;
   project_id: string;
   session_id: string;
-  audio_path: string;
+  audio_path: string | null;
   duration_seconds: number;
   transcription: string | null;
   status: string;

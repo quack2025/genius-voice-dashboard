@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase, Project, Recording } from '@/integrations/supabase/client';
-import { batchApi, exportApi } from '@/lib/api';
+import { exportApi } from '@/lib/api';
 import { useFormatters } from '@/hooks/useFormatters';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,34 +10,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Play, RefreshCw, Mic2, Upload, Download, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Play, RefreshCw, Mic2, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import AudioPlayerModal from '@/components/AudioPlayerModal';
 import { LANGUAGE_NAMES, SupportedLanguage } from '@/i18n';
 
 const ITEMS_PER_PAGE = 10;
-
-interface BatchAnalysis {
-  batchId: string;
-  requested: number;
-  found: number;
-  notFound: string[];
-  alreadyTranscribed: number;
-  toTranscribe: number;
-  estimatedCost: number;
-}
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const { t } = useTranslation('projects');
   const { t: tCommon } = useTranslation('common');
-  const { formatDuration, formatCurrency } = useFormatters();
+  const { formatDuration } = useFormatters();
   const [project, setProject] = useState<Project | null>(null);
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,17 +33,9 @@ export default function ProjectDetail() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
-  // Batch transcription state
-  const [batchInput, setBatchInput] = useState('');
-  const [batchAnalysis, setBatchAnalysis] = useState<BatchAnalysis | null>(null);
-  const [batchProgress, setBatchProgress] = useState<number | null>(null);
-  const [batchLoading, setBatchLoading] = useState(false);
-  const [exportLoading, setExportLoading] = useState(false);
-  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const pollErrorCountRef = useRef(0);
-
   // Export state
   const [exportOnlyCompleted, setExportOnlyCompleted] = useState(true);
+  const [exportLoading, setExportLoading] = useState(false);
 
   // Audio player state
   const [playingRecording, setPlayingRecording] = useState<Recording | null>(null);
@@ -118,137 +98,6 @@ export default function ProjectDetail() {
     );
   };
 
-  const handlePlayAudio = (recording: Recording) => {
-    setPlayingRecording(recording);
-  };
-
-  const handleAnalyzeBatch = async () => {
-    if (!id) return;
-
-    const sessionIds = batchInput
-      .split(/[\n,]/)
-      .map(id => id.trim())
-      .filter(id => id.length > 0);
-
-    if (sessionIds.length === 0) {
-      toast({
-        title: 'Error',
-        description: t('batch.enterSessionIds'),
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setBatchLoading(true);
-
-    const response = await batchApi.prepare(id, sessionIds);
-
-    if (!response.success || !response.data) {
-      toast({
-        title: t('batch.analyzeError'),
-        description: response.error || t('batch.analyzeErrorMessage'),
-        variant: 'destructive',
-      });
-      setBatchLoading(false);
-      return;
-    }
-
-    const data = response.data;
-    setBatchAnalysis({
-      batchId: data.batch_id,
-      requested: data.summary.requested,
-      found: data.summary.found,
-      notFound: data.not_found_session_ids,
-      alreadyTranscribed: data.summary.already_transcribed,
-      toTranscribe: data.summary.to_transcribe,
-      estimatedCost: data.estimated_cost_usd,
-    });
-    setBatchLoading(false);
-  };
-
-  const pollBatchStatus = useCallback(async (batchId: string) => {
-    if (!id) return;
-
-    const response = await batchApi.getStatus(id, batchId);
-
-    if (!response.success || !response.data) {
-      pollErrorCountRef.current++;
-      if (pollErrorCountRef.current >= 5) {
-        if (pollIntervalRef.current) {
-          clearInterval(pollIntervalRef.current);
-          pollIntervalRef.current = null;
-        }
-        setBatchProgress(null);
-        toast({
-          title: t('batch.confirmError'),
-          description: t('batch.pollErrorMessage'),
-          variant: 'destructive',
-        });
-      }
-      return;
-    }
-
-    pollErrorCountRef.current = 0;
-    const data = response.data;
-    const total = data.progress.total;
-    const completed = data.progress.completed + data.progress.failed;
-    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-    setBatchProgress(progress);
-
-    if (data.status === 'completed' || data.status === 'partial' || data.status === 'failed') {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-        pollIntervalRef.current = null;
-      }
-      setBatchProgress(null);
-      setBatchAnalysis(null);
-      setBatchInput('');
-      fetchRecordings();
-
-      toast({
-        title: data.status === 'completed' ? t('batch.completed') : t('batch.completedPartial'),
-        description: t('batch.completedMessage', { completed: data.progress.completed, failed: data.progress.failed }),
-      });
-    }
-  }, [id, fetchRecordings, toast, t]);
-
-  const handleConfirmBatch = async () => {
-    if (!id || !batchAnalysis?.batchId) return;
-
-    setBatchLoading(true);
-
-    const response = await batchApi.confirm(id, batchAnalysis.batchId);
-
-    if (!response.success) {
-      toast({
-        title: t('batch.confirmError'),
-        description: response.error || t('batch.confirmErrorMessage'),
-        variant: 'destructive',
-      });
-      setBatchLoading(false);
-      return;
-    }
-
-    setBatchProgress(0);
-    setBatchLoading(false);
-
-    // Start polling for status
-    pollErrorCountRef.current = 0;
-    pollIntervalRef.current = setInterval(() => {
-      pollBatchStatus(batchAnalysis.batchId);
-    }, 3000);
-  };
-
-  // Cleanup polling on unmount
-  useEffect(() => {
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-      }
-    };
-  }, []);
-
   const handleExport = async () => {
     if (!id) return;
 
@@ -266,7 +115,6 @@ export default function ProjectDetail() {
       return;
     }
 
-    // Download the file
     const url = URL.createObjectURL(response.data.blob);
     const a = document.createElement('a');
     a.href = url;
@@ -312,15 +160,9 @@ export default function ProjectDetail() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-foreground">{project.name}</h1>
-            <div className="flex items-center gap-2 mt-1">
-              <Badge variant={project.transcription_mode === 'realtime' ? 'default' : 'secondary'}>
-                {tCommon(`transcriptionModes.${project.transcription_mode}`)}
-              </Badge>
-              <span className="text-muted-foreground">·</span>
-              <span className="text-muted-foreground text-sm">
-                {LANGUAGE_NAMES[project.language as SupportedLanguage] || project.language}
-              </span>
-            </div>
+            <span className="text-muted-foreground text-sm">
+              {LANGUAGE_NAMES[project.language as SupportedLanguage] || project.language}
+            </span>
           </div>
         </div>
       </div>
@@ -329,7 +171,6 @@ export default function ProjectDetail() {
       <Tabs defaultValue="recordings" className="space-y-6">
         <TabsList>
           <TabsTrigger value="recordings">{t('detail.tabs.recordings')}</TabsTrigger>
-          <TabsTrigger value="batch">{t('detail.tabs.batch')}</TabsTrigger>
           <TabsTrigger value="export">{t('detail.tabs.export')}</TabsTrigger>
         </TabsList>
 
@@ -346,8 +187,6 @@ export default function ProjectDetail() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{tCommon('status.all')}</SelectItem>
-                <SelectItem value="pending">{tCommon('status.pending')}</SelectItem>
-                <SelectItem value="processing">{tCommon('status.processing')}</SelectItem>
                 <SelectItem value="completed">{tCommon('status.completed')}</SelectItem>
                 <SelectItem value="failed">{tCommon('status.failed')}</SelectItem>
               </SelectContent>
@@ -383,7 +222,7 @@ export default function ProjectDetail() {
                       <TableHead>{t('detail.table.sessionId')}</TableHead>
                       <TableHead>{t('detail.table.duration')}</TableHead>
                       <TableHead>{t('detail.table.status')}</TableHead>
-                      <TableHead>{t('detail.table.transcription')}</TableHead>
+                      <TableHead className="hidden md:table-cell">{t('detail.table.transcription')}</TableHead>
                       <TableHead>{t('detail.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -406,7 +245,7 @@ export default function ProjectDetail() {
                           {formatDuration(recording.duration_seconds)}
                         </TableCell>
                         <TableCell>{getStatusBadge(recording.status)}</TableCell>
-                        <TableCell className="max-w-xs">
+                        <TableCell className="max-w-xs hidden md:table-cell">
                           {recording.transcription ? (
                             <TooltipProvider>
                               <Tooltip>
@@ -423,18 +262,15 @@ export default function ProjectDetail() {
                           )}
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
+                          {recording.audio_path && (
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => handlePlayAudio(recording)}
+                              onClick={() => setPlayingRecording(recording)}
                             >
                               <Play className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="icon">
-                              <RefreshCw className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -476,138 +312,6 @@ export default function ProjectDetail() {
                 </div>
               )}
             </>
-          )}
-        </TabsContent>
-
-        {/* Batch Transcription Tab */}
-        <TabsContent value="batch" className="space-y-6">
-          {batchProgress !== null ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('batch.inProgress')}</CardTitle>
-                <CardDescription>
-                  {t('batch.processingRecordings', { count: batchAnalysis?.toTranscribe || 0 })}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Progress value={batchProgress} />
-                <p className="text-sm text-muted-foreground text-center">{batchProgress}%</p>
-              </CardContent>
-            </Card>
-          ) : batchAnalysis ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('batch.summaryTitle')}</CardTitle>
-                <CardDescription>
-                  {t('batch.summarySubtitle')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('batch.requested')}</p>
-                    <p className="text-2xl font-bold">{batchAnalysis.requested}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('batch.found')}</p>
-                    <p className="text-2xl font-bold text-status-completed">{batchAnalysis.found}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('batch.notFound')}</p>
-                    <p className="text-2xl font-bold text-status-failed">{batchAnalysis.notFound.length}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('batch.alreadyTranscribed')}</p>
-                    <p className="text-2xl font-bold">{batchAnalysis.alreadyTranscribed}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg">
-                    <p className="text-sm text-muted-foreground">{t('batch.toTranscribe')}</p>
-                    <p className="text-2xl font-bold text-primary">{batchAnalysis.toTranscribe}</p>
-                  </div>
-                  <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-                    <p className="text-sm text-muted-foreground">{t('batch.estimatedCost')}</p>
-                    <p className="text-2xl font-bold text-primary">{formatCurrency(batchAnalysis.estimatedCost)}</p>
-                  </div>
-                </div>
-
-                {batchAnalysis.notFound.length > 0 && (
-                  <div className="p-4 bg-status-failed/10 border border-status-failed/20 rounded-lg">
-                    <p className="text-sm font-medium text-status-failed mb-2">{t('batch.notFoundIds')}</p>
-                    <p className="text-sm text-muted-foreground font-mono">
-                      {batchAnalysis.notFound.join(', ')}
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex gap-4 pt-4">
-                  <Button variant="outline" onClick={() => setBatchAnalysis(null)} disabled={batchLoading}>
-                    {tCommon('buttons.cancel')}
-                  </Button>
-                  <Button onClick={handleConfirmBatch} disabled={batchLoading}>
-                    {batchLoading ? (
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    ) : null}
-                    {batchLoading ? t('batch.processing') : t('batch.confirmAndTranscribe')}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Upload className="h-5 w-5" />
-                  {t('batch.title')}
-                </CardTitle>
-                <CardDescription>
-                  {t('batch.subtitle')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                  <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {t('batch.dragDrop')}
-                  </p>
-                  <Button variant="outline" size="sm">
-                    {t('batch.selectFile')}
-                  </Button>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">{t('batch.or')}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>{t('batch.pasteLabel')}</Label>
-                  <Textarea
-                    placeholder={t('batch.pastePlaceholder')}
-                    value={batchInput}
-                    onChange={(e) => setBatchInput(e.target.value)}
-                    rows={6}
-                    className="font-mono"
-                  />
-                </div>
-
-                <Button
-                  onClick={handleAnalyzeBatch}
-                  disabled={!batchInput.trim() || batchLoading}
-                  className="w-full"
-                >
-                  {batchLoading ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <FileText className="h-4 w-4 mr-2" />
-                  )}
-                  {batchLoading ? t('batch.analyzing') : t('batch.analyze')}
-                </Button>
-              </CardContent>
-            </Card>
           )}
         </TabsContent>
 
@@ -690,7 +394,7 @@ export default function ProjectDetail() {
         </TabsContent>
       </Tabs>
 
-      {/* Audio Player Modal */}
+      {/* Audio Player Modal (only for recordings with stored audio) */}
       <AudioPlayerModal
         recording={playingRecording}
         onClose={() => setPlayingRecording(null)}
