@@ -76,11 +76,20 @@ export default function NewProject() {
   };
 
   const apiUrl = import.meta.env.VITE_API_URL || 'https://voice-capture-api-production.up.railway.app';
-  const snippet = `<script src="${apiUrl}/voice.js"
-  data-project="${publicKey}"
-  data-session="[survey('session id')]"
-  data-question="q1"
-  data-lang="${language}"></script>`;
+
+  // Alchemer-compatible JS snippet (pure JavaScript, works in JS Actions)
+  // Alchemer replaces [survey("session id")] with the actual value before execution
+  const snippet = `var c=document.createElement('div');
+c.dataset.project='${publicKey}';
+c.dataset.session='[survey("session id")]';
+c.dataset.question='q1';
+c.dataset.lang='${language}';
+var s=document.scripts;
+s[s.length-1].parentNode.appendChild(c);
+if(window.GeniusVoice){GeniusVoice.init(c)}
+else{var j=document.createElement('script');
+j.src='${apiUrl}/voice.js';
+document.head.appendChild(j)}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(snippet);
