@@ -18,6 +18,17 @@
     "created": "¡Proyecto creado!",
     "createError": "Error al crear proyecto",
     "snippetInstruction": "Copia este snippet e intégralo en tu encuesta",
+    "snippetSteps": {
+      "title": "¿Cómo integrar en tu encuesta?",
+      "alchemerTitle": "En Alchemer:",
+      "alchemerStep1": "Ve a la pregunta donde quieres capturar voz",
+      "alchemerStep2": "Agrega una acción \"JavaScript\" debajo de la pregunta",
+      "alchemerStep3": "Pega el snippet en el campo de código",
+      "genericTitle": "En otras plataformas:",
+      "genericStep1": "Agrega un bloque HTML/JavaScript en tu encuesta",
+      "genericStep2": "Pega el snippet dentro del bloque",
+      "note": "El atributo data-session se llenará automáticamente con el ID de sesión de la encuesta. Puedes cambiar data-question para identificar cada pregunta."
+    },
     "goToDashboard": "Ir al dashboard",
     "copySnippet": "Copiar snippet",
     "snippetCopied": "El snippet ha sido copiado al portapapeles"

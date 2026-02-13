@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Copy, Check, Code } from 'lucide-react';
+import { ArrowLeft, Copy, Check, Code, Info } from 'lucide-react';
 import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES } from '@/i18n';
 
 export default function NewProject() {
@@ -178,6 +178,34 @@ export default function NewProject() {
             <div className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
               <pre className="whitespace-pre-wrap break-all">{snippet}</pre>
             </div>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            <h4 className="text-sm font-semibold flex items-center gap-2">
+              <Info className="h-4 w-4 text-muted-foreground" />
+              {t('new.snippetSteps.title')}
+            </h4>
+
+            <div className="text-sm space-y-2">
+              <p className="font-medium text-foreground">{t('new.snippetSteps.alchemerTitle')}</p>
+              <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
+                <li>{t('new.snippetSteps.alchemerStep1')}</li>
+                <li>{t('new.snippetSteps.alchemerStep2')}</li>
+                <li>{t('new.snippetSteps.alchemerStep3')}</li>
+              </ol>
+            </div>
+
+            <div className="text-sm space-y-2">
+              <p className="font-medium text-foreground">{t('new.snippetSteps.genericTitle')}</p>
+              <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
+                <li>{t('new.snippetSteps.genericStep1')}</li>
+                <li>{t('new.snippetSteps.genericStep2')}</li>
+              </ol>
+            </div>
+
+            <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-3 rounded-md border border-blue-200 dark:border-blue-800">
+              {t('new.snippetSteps.note')}
+            </p>
           </div>
 
           <DialogFooter className="mt-6">

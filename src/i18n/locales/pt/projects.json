@@ -18,6 +18,17 @@
     "created": "Projeto criado!",
     "createError": "Erro ao criar projeto",
     "snippetInstruction": "Copie este snippet e integre-o em sua pesquisa",
+    "snippetSteps": {
+      "title": "Como integrar na sua pesquisa?",
+      "alchemerTitle": "No Alchemer:",
+      "alchemerStep1": "Vá até a pergunta onde deseja capturar voz",
+      "alchemerStep2": "Adicione uma ação \"JavaScript\" abaixo da pergunta",
+      "alchemerStep3": "Cole o snippet no campo de código",
+      "genericTitle": "Em outras plataformas:",
+      "genericStep1": "Adicione um bloco HTML/JavaScript na sua pesquisa",
+      "genericStep2": "Cole o snippet dentro do bloco",
+      "note": "O atributo data-session será preenchido automaticamente com o ID da sessão da pesquisa. Você pode alterar data-question para identificar cada pergunta."
+    },
     "goToDashboard": "Ir para o dashboard",
     "copySnippet": "Copiar snippet",
     "snippetCopied": "Snippet copiado para a área de transferência"

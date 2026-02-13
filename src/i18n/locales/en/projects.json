@@ -18,6 +18,17 @@
     "created": "Project created!",
     "createError": "Error creating project",
     "snippetInstruction": "Copy this snippet and integrate it into your survey",
+    "snippetSteps": {
+      "title": "How to integrate into your survey?",
+      "alchemerTitle": "In Alchemer:",
+      "alchemerStep1": "Go to the question where you want to capture voice",
+      "alchemerStep2": "Add a \"JavaScript\" action below the question",
+      "alchemerStep3": "Paste the snippet into the code field",
+      "genericTitle": "In other platforms:",
+      "genericStep1": "Add an HTML/JavaScript block to your survey",
+      "genericStep2": "Paste the snippet inside the block",
+      "note": "The data-session attribute will be automatically filled with the survey session ID. You can change data-question to identify each question."
+    },
     "goToDashboard": "Go to dashboard",
     "copySnippet": "Copy snippet",
     "snippetCopied": "Snippet copied to clipboard"
