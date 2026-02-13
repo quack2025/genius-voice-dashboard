@@ -1,21 +1,21 @@
 # Voice Capture Dashboard - Contexto para Claude
 
-## Descripción del Proyecto
+## Descripcion
 
-Dashboard frontend para gestionar proyectos de captura de voz con transcripción automática usando OpenAI Whisper.
+Dashboard frontend para gestionar proyectos de captura de voz con transcripcion automatica usando OpenAI Whisper. Los usuarios crean proyectos, obtienen un snippet para embeber en encuestas Alchemer, y gestionan las transcripciones resultantes.
 
-## Stack Tecnológico
+## Stack
 
 - **Frontend**: Vite + React 18 + TypeScript
 - **Estilos**: Tailwind CSS + shadcn/ui
 - **Estado**: React Context + TanStack Query
 - **i18n**: i18next (ES/EN/PT)
 - **Auth**: Supabase Auth
-- **Database**: Supabase PostgreSQL
-- **Storage**: Supabase Storage
-- **Backend API**: Express.js en Railway
+- **Database**: Supabase PostgreSQL (lectura directa)
+- **Backend API**: Express.js en Railway (export, retranscribe)
+- **Deploy**: Lovable (auto-deploy desde GitHub)
 
-## URLs Importantes
+## URLs
 
 | Servicio | URL |
 |----------|-----|
@@ -24,129 +24,172 @@ Dashboard frontend para gestionar proyectos de captura de voz con transcripción
 | GitHub (Frontend) | https://github.com/quack2025/genius-voice-dashboard |
 | GitHub (Backend) | https://github.com/quack2025/genius-voice-capture |
 
+## Arquitectura
+
+```
+Widget (voice.js) --POST /api/transcribe--> Backend --Whisper--> DB (solo texto)
+Dashboard (este repo) --lectura directa--> Supabase (projects, recordings)
+Dashboard --API calls--> Backend (export CSV, retranscribe)
+```
+
+- **Transcripcion inmediata:** El widget envia audio al backend, Whisper transcribe en memoria, solo se guarda texto
+- **audio_path nullable:** Recordings exitosos tienen audio_path = null. Solo los fallback (Whisper fallo 3x) tienen audio almacenado
+- **Play button condicional:** Solo aparece si `recording.audio_path` existe
+
+---
+
 ## Estructura del Proyecto
 
 ```
 src/
-├── components/          # Componentes React
-│   ├── ui/              # shadcn/ui components
-│   ├── AppSidebar.tsx   # Navegación principal
-│   ├── AudioPlayerModal.tsx
-│   └── LanguageSwitcher.tsx
+├── components/
+│   ├── ui/                    # shadcn/ui components
+│   ├── DashboardLayout.tsx    # Layout responsive con sidebar mobile
+│   ├── AppSidebar.tsx         # Navegacion con slide-in mobile
+│   ├── ProtectedRoute.tsx     # Auth guard
+│   ├── ErrorBoundary.tsx      # Error boundary global
+│   ├── AudioPlayerModal.tsx   # Reproductor (solo fallback recordings)
+│   └── LanguageSwitcher.tsx   # Selector de idioma UI
 ├── contexts/
-│   └── AuthContext.tsx  # Autenticación Supabase
+│   └── AuthContext.tsx        # Auth Supabase (login, register, signOut)
 ├── hooks/
 │   ├── use-toast.ts
-│   └── useFormatters.ts # Formateo locale-aware
+│   └── useFormatters.ts      # Formateo locale-aware (fecha, numero, moneda, duracion)
 ├── i18n/
-│   ├── index.ts         # Configuración i18n
-│   └── locales/         # Traducciones ES/EN/PT
-├── integrations/
-│   └── supabase/
-│       └── client.ts    # Cliente Supabase + tipos
+│   ├── index.ts              # Config i18n (namespaces: common, auth, dashboard, projects)
+│   └── locales/{es,en,pt}/   # Traducciones
+├── integrations/supabase/
+│   └── client.ts             # Cliente Supabase + tipos (audio_path: string | null)
 ├── lib/
-│   ├── api.ts           # Cliente API backend
-│   └── utils.ts
+│   ├── api.ts                # API client backend (exportApi, healthApi)
+│   └── utils.ts              # cn() helper
 ├── pages/
 │   ├── Login.tsx
 │   ├── Register.tsx
-│   ├── Dashboard.tsx    # Lista de proyectos
-│   ├── NewProject.tsx   # Crear proyecto + snippet
-│   ├── ProjectDetail.tsx # Grabaciones, batch, export
-│   ├── Recordings.tsx   # Todas las grabaciones
-│   ├── Export.tsx
+│   ├── Dashboard.tsx          # Lista proyectos (contadores optimizados)
+│   ├── NewProject.tsx         # Crear proyecto + snippet widget
+│   ├── ProjectDetail.tsx      # 2 tabs: Recordings + Export
+│   ├── Recordings.tsx         # Lista global todas las grabaciones
+│   ├── Export.tsx             # Export CSV via backend API
 │   └── Settings.tsx
-├── App.tsx              # Router
-└── main.tsx             # Entry point
+├── App.tsx                    # Router (BrowserRouter)
+└── main.tsx                   # Entry point
 ```
 
-## Modelo de Datos
+---
 
-### projects
-- `id` (UUID)
-- `user_id` (UUID) - FK auth.users
-- `name` (TEXT)
-- `public_key` (TEXT) - Para widget (proj_xxx)
-- `language` (TEXT) - Idioma transcripción
-- `transcription_mode` (TEXT) - realtime/batch
-- `created_at` (TIMESTAMP)
+## Modelo de Datos (tipos en client.ts)
 
-### recordings
-- `id` (UUID)
-- `project_id` (UUID) - FK projects
-- `session_id` (TEXT)
-- `audio_path` (TEXT) - Path en Supabase Storage
-- `duration_seconds` (INTEGER)
-- `status` (TEXT) - pending/processing/completed/failed
-- `transcription` (TEXT)
-- `created_at` (TIMESTAMP)
+### Project
+```typescript
+{
+  id: string;
+  user_id: string;
+  name: string;
+  public_key: string;        // proj_xxx
+  language: string;           // es, en, pt
+  transcription_mode: string; // siempre 'realtime'
+  created_at: string;
+}
+```
 
-## API Endpoints (Backend)
+### Recording
+```typescript
+{
+  id: string;
+  project_id: string;
+  session_id: string;
+  audio_path: string | null;  // null = transcripcion exitosa (audio descartado)
+  duration_seconds: number;
+  status: string;              // pending | processing | completed | failed
+  transcription: string | null;
+  created_at: string;
+}
+```
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | /health | Health check |
-| POST | /api/projects/:id/transcribe-batch | Preparar batch |
-| POST | /api/projects/:id/transcribe-batch/:bid/confirm | Confirmar batch |
-| GET | /api/projects/:id/transcribe-batch/:bid | Status batch |
-| GET | /api/projects/:id/export | Exportar CSV |
+---
 
-## Flujos Principales
+## Paginas y Funcionalidad
 
-### Autenticación
-1. Usuario → Login/Register → Supabase Auth
-2. Supabase → JWT Token → localStorage
-3. API calls usan `Authorization: Bearer <token>`
+| Pagina | Funcion |
+|--------|---------|
+| Dashboard | Lista proyectos con contadores de recordings (query optimizada) |
+| NewProject | Formulario nombre + idioma. Al crear muestra snippet para Alchemer |
+| ProjectDetail | Tab Recordings (tabla paginada + Play condicional) + Tab Export (CSV) |
+| Recordings | Lista global de recordings de todos los proyectos |
+| Export | Seleccionar proyecto + exportar CSV via backend |
+| Settings | Configuracion de cuenta |
 
-### Transcripción Batch
-1. Usuario pega Session IDs
-2. Frontend → `batchApi.prepare()` → Backend analiza
-3. Usuario confirma → `batchApi.confirm()` → Backend inicia
-4. Frontend hace polling → `batchApi.getStatus()`
-5. Backend → OpenAI Whisper → Actualiza DB
+---
 
-### Exportación
-1. Usuario selecciona opciones
-2. Frontend → `exportApi.exportCsv()` → Backend
-3. Backend genera CSV → Response blob
-4. Frontend descarga archivo
+## API Client (api.ts)
 
-## Internacionalización (i18n)
+```typescript
+// Export CSV via backend
+exportApi.exportCsv(projectId, status) -> { blob, filename }
 
-- **Idiomas**: Español (es), English (en), Português (pt)
+// Health check
+healthApi.check() -> { status, timestamp, version }
+```
+
+Todas las llamadas usan JWT de Supabase Auth via `Authorization: Bearer <token>`.
+
+---
+
+## Internacionalizacion (i18n)
+
+- **Idiomas**: Espanol (es), English (en), Portugues (pt)
 - **Namespaces**: common, auth, dashboard, projects
-- **Detección**: Automática por navegador
+- **Deteccion**: Automatica por navegador
 - **Persistencia**: localStorage (`ui_language`)
-- **Selector**: LanguageSwitcher en sidebar y auth pages
+- **Selector**: LanguageSwitcher en sidebar y paginas auth
+- **Hook**: `useTranslation('namespace')` para textos
+- **Hook**: `useFormatters()` para fechas/numeros locale-aware
 
-**Importante**: El idioma de UI es independiente del idioma de transcripción del proyecto.
+**Importante**: El idioma de UI es independiente del idioma de transcripcion del proyecto.
+
+---
+
+## Responsive Design
+
+- **Desktop**: Sidebar fija a la izquierda (w-64, md:translate-x-0)
+- **Mobile**: Hamburger menu + sidebar slide-in + backdrop overlay
+- **DashboardLayout**: Controla estado open/close del sidebar
+- **AppSidebar**: Acepta props `open`/`onClose`, cierra al navegar
+
+---
+
+## Deployment (Lovable)
+
+**CRITICO**: El archivo `.env` DEBE estar commiteado en git. Lovable lee las variables `VITE_*` directamente del `.env` en el repo. No inyecta env vars de su dashboard al build de Vite.
+
+```env
+VITE_API_URL=https://voice-capture-api-production.up.railway.app
+VITE_SUPABASE_URL=https://hggwsdqjkwydiubhvrvq.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...  # Clave publica (anon), segura en git
+```
+
+Usar `.env.local` (gitignored) para secretos locales.
+
+---
 
 ## Comandos
 
 ```bash
 npm install      # Instalar dependencias
 npm run dev      # Desarrollo local (http://localhost:5173)
-npm run build    # Build producción
+npm run build    # Build produccion
 npm run preview  # Preview build
 ```
 
-## Pendientes Importantes
+---
 
-1. **Widget voice.js**: El snippet usa URL placeholder `https://cdn.geniuslabs.ai/voice.js`. Necesita implementarse.
+## Convenciones
 
-2. **Test E2E**: Probar flujo completo Login → Crear proyecto → Grabar → Transcribir
-
-## Convenciones de Código
-
-- Usar `useTranslation()` para todos los textos visibles
-- Usar `useFormatters()` para fechas/números/moneda
+- `useTranslation('namespace')` para todos los textos visibles
+- `useFormatters()` para fechas, numeros, moneda, duracion
 - Componentes en PascalCase
-- Archivos de página en pages/
-- Tipos en el mismo archivo o en types.ts
-
-## Notas para Desarrollo
-
-- El backend ya soporta múltiples idiomas para transcripción
-- Supabase Storage bucket: `voice-recordings`
-- Las grabaciones se almacenan con path: `{project_id}/{session_id}.webm`
-- Los tokens JWT expiran, el AuthContext maneja refresh
+- Paginas en `src/pages/`
+- UI components de shadcn/ui en `src/components/ui/`
+- Tipos en el mismo archivo o en `client.ts`
+- No usar emojis en codigo
