@@ -22,12 +22,12 @@
       "title": "How to integrate into your survey?",
       "alchemerTitle": "In Alchemer:",
       "alchemerStep1": "Go to the question where you want to capture voice",
-      "alchemerStep2": "Add a \"JavaScript\" action below the question",
-      "alchemerStep3": "Paste the snippet into the code field",
+      "alchemerStep2": "Click \"+\" > \"Action\" > \"JavaScript\"",
+      "alchemerStep3": "Paste the full snippet into the code field",
       "genericTitle": "In other platforms:",
       "genericStep1": "Add an HTML/JavaScript block to your survey",
-      "genericStep2": "Paste the snippet inside the block",
-      "note": "The data-session attribute will be automatically filled with the survey session ID. You can change data-question to identify each question."
+      "genericStep2": "Paste the full snippet",
+      "note": "Change data-question=\"q1\" to identify each question (e.g., q1, q2, q3). The widget will automatically appear with a recording button."
     },
     "goToDashboard": "Go to dashboard",
     "copySnippet": "Copy snippet",

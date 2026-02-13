@@ -76,8 +76,11 @@ export default function NewProject() {
   };
 
   const apiUrl = import.meta.env.VITE_API_URL || 'https://voice-capture-api-production.up.railway.app';
-  const snippet = `<div id="genius-voice" data-project="${publicKey}" data-session="[survey('session id')]"></div>
-<script src="${apiUrl}/voice.js"></script>`;
+  const snippet = `<script src="${apiUrl}/voice.js"
+  data-project="${publicKey}"
+  data-session="[survey('session id')]"
+  data-question="q1"
+  data-lang="${language}"></script>`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(snippet);

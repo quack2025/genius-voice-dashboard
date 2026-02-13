@@ -22,12 +22,12 @@
       "title": "Como integrar na sua pesquisa?",
       "alchemerTitle": "No Alchemer:",
       "alchemerStep1": "Vá até a pergunta onde deseja capturar voz",
-      "alchemerStep2": "Adicione uma ação \"JavaScript\" abaixo da pergunta",
-      "alchemerStep3": "Cole o snippet no campo de código",
+      "alchemerStep2": "Clique em \"+\" > \"Action\" > \"JavaScript\"",
+      "alchemerStep3": "Cole o snippet completo no campo de código",
       "genericTitle": "Em outras plataformas:",
       "genericStep1": "Adicione um bloco HTML/JavaScript na sua pesquisa",
-      "genericStep2": "Cole o snippet dentro do bloco",
-      "note": "O atributo data-session será preenchido automaticamente com o ID da sessão da pesquisa. Você pode alterar data-question para identificar cada pergunta."
+      "genericStep2": "Cole o snippet completo",
+      "note": "Altere data-question=\"q1\" para identificar cada pergunta (ex: q1, q2, q3). O widget aparecerá automaticamente com um botão de gravação."
     },
     "goToDashboard": "Ir para o dashboard",
     "copySnippet": "Copiar snippet",
