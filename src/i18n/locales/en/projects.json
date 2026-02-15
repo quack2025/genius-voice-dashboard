@@ -23,7 +23,7 @@
     "actionSnippetLabel": "Step 2: JavaScript Action (per question)",
     "actionSnippetInstruction": "For each question: \"+\" > \"Action\" > \"JavaScript\"",
     "snippetSteps": {
-      "note": "Change QUESTION_ID = 'q1' for each question (q1, q2, q3...). Add a separate JavaScript action for each question where you need voice capture. The widget will automatically appear with a recording button."
+      "note": "Change QUESTION_ID = 'q1' for each question (q1, q2, q3...). Add a separate JavaScript action for each question where you need voice capture. The widget will appear with a recording button and the transcription will be automatically written to the question's answer field."
     },
     "goToDashboard": "Go to dashboard",
     "copySnippet": "Copy snippet",

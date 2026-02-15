@@ -23,7 +23,7 @@
     "actionSnippetLabel": "Passo 2: JavaScript Action (por pergunta)",
     "actionSnippetInstruction": "Em cada pergunta: \"+\" > \"Action\" > \"JavaScript\"",
     "snippetSteps": {
-      "note": "Altere QUESTION_ID = 'q1' para cada pergunta (q1, q2, q3...). Adicione uma ação JavaScript separada para cada pergunta onde precisar de captura de voz. O widget aparecerá automaticamente com um botão de gravação."
+      "note": "Altere QUESTION_ID = 'q1' para cada pergunta (q1, q2, q3...). Adicione uma ação JavaScript separada para cada pergunta onde precisar de captura de voz. O widget aparecerá com um botão de gravação e a transcrição será escrita automaticamente no campo de resposta da pergunta."
     },
     "goToDashboard": "Ir para o dashboard",
     "copySnippet": "Copiar snippet",
