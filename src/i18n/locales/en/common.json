@@ -52,7 +52,8 @@
     "names": {
       "free": "Free",
       "freelancer": "Freelancer",
-      "pro": "Pro"
+      "pro": "Pro",
+      "enterprise": "Enterprise"
     },
     "currentPlan": "Current plan",
     "comparePlans": "Compare plans",

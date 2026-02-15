@@ -170,7 +170,7 @@ export default function Settings() {
                 </TableBody>
               </Table>
 
-              {usage && usage.plan !== 'pro' && (
+              {usage && usage.plan !== 'enterprise' && (
                 <div className="mt-4 text-center">
                   <Button disabled className="gap-2">
                     <Crown className="h-4 w-4" />

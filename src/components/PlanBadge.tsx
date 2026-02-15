@@ -8,6 +8,7 @@ interface PlanBadgeProps {
 }
 
 const planConfig: Record<string, { icon: typeof Crown; variant: 'default' | 'secondary' | 'outline'; className: string }> = {
+  enterprise: { icon: Crown, variant: 'default', className: 'bg-amber-600 hover:bg-amber-700' },
   pro: { icon: Crown, variant: 'default', className: 'bg-violet-600 hover:bg-violet-700' },
   freelancer: { icon: Zap, variant: 'default', className: 'bg-blue-600 hover:bg-blue-700' },
   free: { icon: User, variant: 'secondary', className: '' },
