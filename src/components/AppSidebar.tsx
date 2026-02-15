@@ -1,8 +1,11 @@
+import { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import PlanBadge from '@/components/PlanBadge';
+import { accountApi } from '@/lib/api';
 import {
   FolderKanban,
   Mic2,
@@ -30,6 +33,17 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
   const location = useLocation();
   const { signOut, user } = useAuth();
   const { t } = useTranslation();
+  const [planKey, setPlanKey] = useState<string>('free');
+
+  useEffect(() => {
+    if (user) {
+      accountApi.getUsage().then(result => {
+        if (result.success && result.data) {
+          setPlanKey(result.data.plan);
+        }
+      });
+    }
+  }, [user]);
 
   return (
     <aside className={cn(
@@ -95,6 +109,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
             <p className="text-sm font-medium text-sidebar-foreground truncate">
               {user?.email}
             </p>
+            <PlanBadge plan={planKey} />
           </div>
         </div>
         <div className="px-4 py-2 mb-2">

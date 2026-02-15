@@ -10,6 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Plus, Search, FolderOpen, Mic } from 'lucide-react';
+import { accountApi } from '@/lib/api';
+import type { UsageData } from '@/lib/plans';
+import PlanBadge from '@/components/PlanBadge';
+import UsageBadge from '@/components/UsageBadge';
 
 interface ProjectWithCount extends Project {
   recording_count: number;
@@ -23,12 +27,21 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<ProjectWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [usage, setUsage] = useState<UsageData | null>(null);
 
   useEffect(() => {
     if (user) {
       fetchProjects();
+      fetchUsage();
     }
   }, [user]);
+
+  const fetchUsage = async () => {
+    const result = await accountApi.getUsage();
+    if (result.success && result.data) {
+      setUsage(result.data);
+    }
+  };
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -96,6 +109,32 @@ export default function Dashboard() {
           </Link>
         </Button>
       </div>
+
+      {/* Usage Card */}
+      {usage && (
+        <Card className="mb-6">
+          <CardContent className="py-4">
+            <div className="flex items-center gap-3 mb-4">
+              <PlanBadge plan={usage.plan} size="md" />
+              <span className="text-sm text-muted-foreground">
+                {tCommon('plans.month', { month: usage.month })}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <UsageBadge
+                current={usage.usage.responses_this_month}
+                limit={usage.limits.max_responses}
+                label={tCommon('plans.responses')}
+              />
+              <UsageBadge
+                current={usage.usage.projects_count}
+                limit={usage.limits.max_projects}
+                label={tCommon('plans.projects')}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Search */}
       <div className="mb-6">

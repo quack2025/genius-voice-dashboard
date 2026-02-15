@@ -47,5 +47,34 @@
   "transcriptionModes": {
     "realtime": "Real-Time",
     "batch": "Batch"
+  },
+  "plans": {
+    "names": {
+      "free": "Free",
+      "freelancer": "Freelancer",
+      "pro": "Pro"
+    },
+    "currentPlan": "Current plan",
+    "comparePlans": "Compare plans",
+    "responses": "Responses/month",
+    "projects": "Projects",
+    "maxDuration": "Max duration",
+    "retention": "Data retention",
+    "days": "days",
+    "languages": "Languages",
+    "allLanguages": "All",
+    "batch": "Batch transcription",
+    "customThemes": "Custom themes",
+    "customDomains": "Custom domains",
+    "feature": "Feature",
+    "unlimited": "Unlimited",
+    "freePrice": "Free",
+    "current": "Current",
+    "upgrade": "Upgrade plan",
+    "contactUs": "Contact us to change your plan",
+    "month": "Period: {{month}}",
+    "limitReached": "Limit reached",
+    "projectLimitReached": "You have reached your plan's project limit",
+    "upgradeToContinue": "Upgrade your plan to continue"
   }
 }

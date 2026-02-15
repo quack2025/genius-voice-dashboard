@@ -1,7 +1,9 @@
 import { supabase } from '@/integrations/supabase/client';
 
-// API base URL - defaults to Railway production URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://voice-capture-api-production.up.railway.app';
+import type { UsageData } from '@/lib/plans';
+
+// API base URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://voiceapi.survey-genius.ai';
 
 interface ApiResponse<T> {
   success: boolean;
@@ -85,6 +87,23 @@ export const exportApi = {
         : 'export.csv';
 
       return { success: true, data: { blob, filename } };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : 'Network error' };
+    }
+  },
+};
+
+// Account & Usage API
+export const accountApi = {
+  async getUsage(): Promise<ApiResponse<UsageData>> {
+    return fetchWithAuth<UsageData>('/api/account/usage');
+  },
+
+  async getPlans(): Promise<ApiResponse<{ plans: Array<{ key: string; name: string; price: number; max_responses: number; max_projects: number | null; max_duration: number }> }>> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/account/plans`);
+      const data = await response.json();
+      return { success: true, data };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : 'Network error' };
     }
