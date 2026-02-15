@@ -26,6 +26,7 @@ export default function NewProject() {
   const [showSnippetModal, setShowSnippetModal] = useState(false);
   const [publicKey, setPublicKey] = useState('');
   const [copied, setCopied] = useState(false);
+  const [copiedHead, setCopiedHead] = useState(false);
 
   const generatePublicKey = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -77,24 +78,45 @@ export default function NewProject() {
 
   const apiUrl = import.meta.env.VITE_API_URL || 'https://voice-capture-api-production.up.railway.app';
 
-  // Alchemer-compatible JS snippet (pure JavaScript, works in JS Actions)
-  // Alchemer replaces [survey("session id")] with the actual value before execution
-  const snippet = `var c=document.createElement('div');
-c.dataset.project='${publicKey}';
-c.dataset.session='[survey("session id")]';
-c.dataset.question='q1';
-c.dataset.lang='${language}';
-var s=document.scripts;
-s[s.length-1].parentNode.appendChild(c);
-if(window.GeniusVoice){GeniusVoice.init(c)}
-else{var j=document.createElement('script');
-j.src='${apiUrl}/voice.js';
-document.head.appendChild(j)}`;
+  // Step 1: HEAD script (one-time, loaded via Alchemer Custom HEAD)
+  const headSnippet = `<script src="${apiUrl}/voice.js" defer></script>`;
+
+  // Step 2: JS Action snippet (per question, Alchemer 3-step pattern)
+  // Positions widget outside <label> to avoid click interception
+  const snippet = `(function() {
+  var QUESTION_ID = 'q1'; // Change: q1, q2, q3...
+  if (document.getElementById('genius-voice-' + QUESTION_ID)) return;
+  var c = document.createElement('div');
+  c.id = 'genius-voice-' + QUESTION_ID;
+  c.setAttribute('data-project', '${publicKey}');
+  c.setAttribute('data-question', QUESTION_ID);
+  c.setAttribute('data-lang', '${language}');
+  var sid = '[survey("session id")]';
+  if (sid.indexOf('[') === -1) c.setAttribute('data-session', sid);
+  var qs = document.querySelectorAll('.sg-question');
+  var q = qs[qs.length - 2];
+  if (q) {
+    var opts = q.querySelector('.sg-question-options');
+    if (opts) q.insertBefore(c, opts);
+    else q.appendChild(c);
+  }
+  if (window.GeniusVoice) GeniusVoice.init(c);
+})();`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(snippet);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    toast({
+      title: tCommon('buttons.copied'),
+      description: t('new.snippetCopied'),
+    });
+  };
+
+  const handleCopyHead = async () => {
+    await navigator.clipboard.writeText(headSnippet);
+    setCopiedHead(true);
+    setTimeout(() => setCopiedHead(false), 2000);
     toast({
       title: tCommon('buttons.copied'),
       description: t('new.snippetCopied'),
@@ -171,7 +193,7 @@ document.head.appendChild(j)}`;
 
       {/* Snippet Modal */}
       <Dialog open={showSnippetModal} onOpenChange={handleCloseModal}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
@@ -186,56 +208,43 @@ document.head.appendChild(j)}`;
             </div>
           </DialogHeader>
 
+          {/* Step 1: HEAD script */}
           <div className="mt-4">
-            <div className="bg-muted p-4 rounded-lg font-mono text-sm overflow-x-auto">
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="text-sm font-semibold">{t('new.headSnippetLabel')}</h4>
+              <Button size="sm" variant="ghost" className="h-7 px-2" onClick={handleCopyHead}>
+                {copiedHead ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2">{t('new.headSnippetInstruction')}</p>
+            <div className="bg-muted p-3 rounded-lg font-mono text-xs overflow-x-auto">
+              <pre className="whitespace-pre-wrap break-all">{headSnippet}</pre>
+            </div>
+          </div>
+
+          {/* Step 2: JS Action snippet */}
+          <div className="mt-4">
+            <div className="flex items-center justify-between mb-1">
+              <h4 className="text-sm font-semibold">{t('new.actionSnippetLabel')}</h4>
+              <Button size="sm" variant="ghost" className="h-7 px-2" onClick={handleCopy}>
+                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mb-2">{t('new.actionSnippetInstruction')}</p>
+            <div className="bg-muted p-3 rounded-lg font-mono text-xs overflow-x-auto max-h-48 overflow-y-auto">
               <pre className="whitespace-pre-wrap break-all">{snippet}</pre>
             </div>
           </div>
 
-          <div className="mt-4 space-y-3">
-            <h4 className="text-sm font-semibold flex items-center gap-2">
-              <Info className="h-4 w-4 text-muted-foreground" />
-              {t('new.snippetSteps.title')}
-            </h4>
+          {/* Note */}
+          <p className="mt-3 text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-3 rounded-md border border-blue-200 dark:border-blue-800 flex gap-2">
+            <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+            <span>{t('new.snippetSteps.note')}</span>
+          </p>
 
-            <div className="text-sm space-y-2">
-              <p className="font-medium text-foreground">{t('new.snippetSteps.alchemerTitle')}</p>
-              <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
-                <li>{t('new.snippetSteps.alchemerStep1')}</li>
-                <li>{t('new.snippetSteps.alchemerStep2')}</li>
-                <li>{t('new.snippetSteps.alchemerStep3')}</li>
-              </ol>
-            </div>
-
-            <div className="text-sm space-y-2">
-              <p className="font-medium text-foreground">{t('new.snippetSteps.genericTitle')}</p>
-              <ol className="list-decimal list-inside space-y-1 text-muted-foreground ml-1">
-                <li>{t('new.snippetSteps.genericStep1')}</li>
-                <li>{t('new.snippetSteps.genericStep2')}</li>
-              </ol>
-            </div>
-
-            <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-3 rounded-md border border-blue-200 dark:border-blue-800">
-              {t('new.snippetSteps.note')}
-            </p>
-          </div>
-
-          <DialogFooter className="mt-6">
-            <Button variant="outline" onClick={handleCloseModal}>
+          <DialogFooter className="mt-4">
+            <Button onClick={handleCloseModal}>
               {t('new.goToDashboard')}
-            </Button>
-            <Button onClick={handleCopy}>
-              {copied ? (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  {tCommon('buttons.copied')}
-                </>
-              ) : (
-                <>
-                  <Copy className="h-4 w-4 mr-2" />
-                  {t('new.copySnippet')}
-                </>
-              )}
             </Button>
           </DialogFooter>
         </DialogContent>

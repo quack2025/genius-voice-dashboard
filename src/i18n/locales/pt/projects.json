@@ -17,17 +17,13 @@
     "creating": "Criando...",
     "created": "Projeto criado!",
     "createError": "Erro ao criar projeto",
-    "snippetInstruction": "Copie este código JavaScript na sua pesquisa",
+    "snippetInstruction": "Siga estes 2 passos para integrar o Voice Capture na sua pesquisa Alchemer",
+    "headSnippetLabel": "Passo 1: Custom HEAD (uma única vez)",
+    "headSnippetInstruction": "No Alchemer: Style > HTML/CSS Editor > Custom HEAD",
+    "actionSnippetLabel": "Passo 2: JavaScript Action (por pergunta)",
+    "actionSnippetInstruction": "Em cada pergunta: \"+\" > \"Action\" > \"JavaScript\"",
     "snippetSteps": {
-      "title": "Como integrar no Alchemer?",
-      "alchemerTitle": "Passos:",
-      "alchemerStep1": "Vá até a pergunta onde deseja capturar voz",
-      "alchemerStep2": "Clique em \"+\" > \"Action\" > \"JavaScript\"",
-      "alchemerStep3": "Cole o código no campo de JavaScript",
-      "genericTitle": "Em outras plataformas:",
-      "genericStep1": "Adicione um bloco JavaScript na sua pesquisa",
-      "genericStep2": "Cole o código completo",
-      "note": "Altere data-question='q1' para identificar cada pergunta (ex: q1, q2, q3). Para múltiplas perguntas, adicione uma ação JavaScript por pergunta. O widget aparecerá automaticamente com um botão de gravação."
+      "note": "Altere QUESTION_ID = 'q1' para cada pergunta (q1, q2, q3...). Adicione uma ação JavaScript separada para cada pergunta onde precisar de captura de voz. O widget aparecerá automaticamente com um botão de gravação."
     },
     "goToDashboard": "Ir para o dashboard",
     "copySnippet": "Copiar snippet",
