@@ -60,8 +60,6 @@
     "responses": "Responses/month",
     "projects": "Projects",
     "maxDuration": "Max duration",
-    "retention": "Data retention",
-    "days": "days",
     "languages": "Languages",
     "allLanguages": "All",
     "batch": "Batch transcription",

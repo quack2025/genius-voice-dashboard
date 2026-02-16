@@ -8,8 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Mic2, Play, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
-import AudioPlayerModal from '@/components/AudioPlayerModal';
+import { Mic2, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useFormatters } from '@/hooks/useFormatters';
 
 const ITEMS_PER_PAGE = 10;
@@ -24,7 +23,6 @@ export default function Recordings() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [playingRecording, setPlayingRecording] = useState<Recording | null>(null);
   const projectIdsRef = useRef<string[] | null>(null);
 
   // Fetch project IDs once
@@ -156,7 +154,6 @@ export default function Recordings() {
                   <TableHead>{t('detail.table.duration')}</TableHead>
                   <TableHead>{t('detail.table.status')}</TableHead>
                   <TableHead className="hidden md:table-cell">{t('detail.table.transcription')}</TableHead>
-                  <TableHead>{t('detail.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -192,17 +189,6 @@ export default function Recordings() {
                         </TooltipProvider>
                       ) : (
                         <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {recording.audio_path && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setPlayingRecording(recording)}
-                        >
-                          <Play className="h-4 w-4" />
-                        </Button>
                       )}
                     </TableCell>
                   </TableRow>
@@ -247,11 +233,6 @@ export default function Recordings() {
         </>
       )}
 
-      {/* Audio Player Modal */}
-      <AudioPlayerModal
-        recording={playingRecording}
-        onClose={() => setPlayingRecording(null)}
-      />
     </div>
   );
 }

@@ -45,8 +45,7 @@
       "status": "Status",
       "transcription": "Transcription",
       "actions": "Actions"
-    },
-    "playAudio": "Play Audio"
+    }
   },
   "batch": {
     "title": "Batch Transcription",

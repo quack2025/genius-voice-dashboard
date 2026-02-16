@@ -74,10 +74,6 @@ export default function Settings() {
                   <span className="text-muted-foreground">{tCommon('plans.maxDuration')}</span>
                   <span className="font-medium">{usage.limits.max_duration}s</span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{tCommon('plans.retention')}</span>
-                  <span className="font-medium">{usage.limits.retention_days} {tCommon('plans.days')}</span>
-                </div>
               </CardContent>
             </Card>
           )}
@@ -159,12 +155,6 @@ export default function Settings() {
                       <TableCell key={key} className="text-center">
                         {PLANS[key].custom_domains ? <Check className="h-4 w-4 text-green-600 mx-auto" /> : <X className="h-4 w-4 text-muted-foreground mx-auto" />}
                       </TableCell>
-                    ))}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">{tCommon('plans.retention')}</TableCell>
-                    {planKeys.map(key => (
-                      <TableCell key={key} className="text-center">{PLANS[key].retention_days} {tCommon('plans.days')}</TableCell>
                     ))}
                   </TableRow>
                 </TableBody>

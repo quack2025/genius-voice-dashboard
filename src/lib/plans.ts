@@ -7,7 +7,6 @@ export interface PlanDefinition {
   languages: string[] | null;
   export_formats: string[];
   batch: boolean;
-  retention_days: number;
   show_branding: boolean;
   custom_themes: boolean;
   custom_domains: boolean;
@@ -23,7 +22,7 @@ export const PLANS: Record<string, PlanDefinition> = {
     languages: ['es'],
     export_formats: ['csv'],
     batch: false,
-    retention_days: 30,
+
     show_branding: true,
     custom_themes: false,
     custom_domains: false,
@@ -37,7 +36,6 @@ export const PLANS: Record<string, PlanDefinition> = {
     languages: ['es', 'en', 'pt', 'fr', 'de', 'it', 'ja', 'ko', 'zh'],
     export_formats: ['csv', 'xlsx'],
     batch: true,
-    retention_days: 90,
     show_branding: false,
     custom_themes: false,
     custom_domains: false,
@@ -51,7 +49,6 @@ export const PLANS: Record<string, PlanDefinition> = {
     languages: null,
     export_formats: ['csv', 'xlsx', 'api'],
     batch: true,
-    retention_days: 365,
     show_branding: false,
     custom_themes: true,
     custom_domains: true,
@@ -65,7 +62,6 @@ export const PLANS: Record<string, PlanDefinition> = {
     languages: null,
     export_formats: ['csv', 'xlsx', 'api'],
     batch: true,
-    retention_days: 730,
     show_branding: false,
     custom_themes: true,
     custom_domains: true,
@@ -92,7 +88,6 @@ export interface UsageData {
     custom_themes: boolean;
     custom_domains: boolean;
     show_branding: boolean;
-    retention_days: number;
   };
   usage: {
     responses_this_month: number;

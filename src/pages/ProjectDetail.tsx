@@ -14,8 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Play, RefreshCw, Mic2, Download, ChevronLeft, ChevronRight } from 'lucide-react';
-import AudioPlayerModal from '@/components/AudioPlayerModal';
+import { ArrowLeft, RefreshCw, Mic2, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LANGUAGE_NAMES, SupportedLanguage } from '@/i18n';
 
 const ITEMS_PER_PAGE = 10;
@@ -36,9 +35,6 @@ export default function ProjectDetail() {
   // Export state
   const [exportOnlyCompleted, setExportOnlyCompleted] = useState(true);
   const [exportLoading, setExportLoading] = useState(false);
-
-  // Audio player state
-  const [playingRecording, setPlayingRecording] = useState<Recording | null>(null);
 
   const fetchProject = useCallback(async () => {
     if (!id) return;
@@ -223,7 +219,6 @@ export default function ProjectDetail() {
                       <TableHead>{t('detail.table.duration')}</TableHead>
                       <TableHead>{t('detail.table.status')}</TableHead>
                       <TableHead className="hidden md:table-cell">{t('detail.table.transcription')}</TableHead>
-                      <TableHead>{t('detail.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -259,17 +254,6 @@ export default function ProjectDetail() {
                             </TooltipProvider>
                           ) : (
                             <span className="text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {recording.audio_path && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => setPlayingRecording(recording)}
-                            >
-                              <Play className="h-4 w-4" />
-                            </Button>
                           )}
                         </TableCell>
                       </TableRow>
@@ -394,11 +378,6 @@ export default function ProjectDetail() {
         </TabsContent>
       </Tabs>
 
-      {/* Audio Player Modal (only for recordings with stored audio) */}
-      <AudioPlayerModal
-        recording={playingRecording}
-        onClose={() => setPlayingRecording(null)}
-      />
     </div>
   );
 }
