@@ -44,7 +44,9 @@
       "duration": "Duración",
       "status": "Estado",
       "transcription": "Transcripción",
-      "actions": "Acciones"
+      "actions": "Acciones",
+      "inputMethodVoice": "Voz",
+      "inputMethodText": "Texto"
     }
   },
   "batch": {

@@ -14,7 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, RefreshCw, Mic2, Download, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, RefreshCw, Mic2, Keyboard, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LANGUAGE_NAMES, SupportedLanguage } from '@/i18n';
 
 const ITEMS_PER_PAGE = 10;
@@ -216,6 +216,7 @@ export default function ProjectDetail() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>{t('detail.table.sessionId')}</TableHead>
+                      <TableHead className="w-10"></TableHead>
                       <TableHead>{t('detail.table.duration')}</TableHead>
                       <TableHead>{t('detail.table.status')}</TableHead>
                       <TableHead className="hidden md:table-cell">{t('detail.table.transcription')}</TableHead>
@@ -232,6 +233,22 @@ export default function ProjectDetail() {
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p className="font-mono">{recording.session_id}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </TableCell>
+                        <TableCell>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                {recording.input_method === 'text' ? (
+                                  <Keyboard className="h-4 w-4 text-muted-foreground" />
+                                ) : (
+                                  <Mic2 className="h-4 w-4 text-muted-foreground" />
+                                )}
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{recording.input_method === 'text' ? t('detail.table.inputMethodText') : t('detail.table.inputMethodVoice')}</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>

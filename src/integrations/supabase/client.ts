@@ -28,6 +28,7 @@ export interface Recording {
   audio_path: string | null;
   duration_seconds: number;
   transcription: string | null;
+  input_method: string | null;
   status: string;
   created_at: string;
   transcribed_at: string | null;
