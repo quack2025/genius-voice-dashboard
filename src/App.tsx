@@ -17,6 +17,8 @@ import Recordings from "./pages/Recordings";
 import Export from "./pages/Export";
 import Settings from "./pages/Settings";
 import Landing from "./pages/Landing";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import AdminUserDetail from "./pages/AdminUserDetail";
@@ -36,6 +38,8 @@ const App = () => (
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
 
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
