@@ -1,0 +1,74 @@
+{
+  "hero": {
+    "title": "Transform Voice into",
+    "titleHighlight": "Actionable Data",
+    "subtitle": "Capture voice responses from your surveys and forms. Transcribe, analyze and export insights in real time — powered by AI.",
+    "cta": "Get Started Free",
+    "ctaSecondary": "See How It Works",
+    "trustedBy": "Trusted by research teams worldwide"
+  },
+  "features": {
+    "sectionTitle": "Everything you need to capture voice insights",
+    "sectionSubtitle": "From real-time transcription to powerful analytics, Voice Capture gives your surveys a voice.",
+    "realtime": {
+      "title": "Real-Time Transcription",
+      "description": "Transcribe voice responses instantly as respondents speak. No waiting, no delays."
+    },
+    "multilingual": {
+      "title": "Multilingual Support",
+      "description": "Support for 9+ languages out of the box. Reach respondents in their native language."
+    },
+    "integration": {
+      "title": "Easy Integration",
+      "description": "Add voice capture to Alchemer and other platforms with a simple code snippet."
+    },
+    "export": {
+      "title": "Flexible Export",
+      "description": "Export transcriptions as CSV, Excel, or access them via API. Your data, your way."
+    },
+    "analytics": {
+      "title": "AI-Powered Analytics",
+      "description": "Get automatic sentiment analysis, keyword extraction, and response summaries."
+    },
+    "security": {
+      "title": "Enterprise Security",
+      "description": "SOC2-ready infrastructure with encryption at rest and in transit. GDPR compliant."
+    }
+  },
+  "pricing": {
+    "sectionTitle": "Simple, transparent pricing",
+    "sectionSubtitle": "Start free, scale as you grow. No hidden fees.",
+    "monthly": "/month",
+    "popular": "Most Popular",
+    "features": {
+      "responses": "{{count}} responses/month",
+      "responsesUnlimited": "{{count}} responses/month",
+      "projects": "{{count}} projects",
+      "projectsUnlimited": "Unlimited projects",
+      "duration": "{{count}}s max duration",
+      "languages": "{{count}} languages",
+      "allLanguages": "All languages",
+      "batch": "Batch transcription",
+      "customThemes": "Custom themes",
+      "customDomains": "Custom domains",
+      "apiAccess": "API access",
+      "noBranding": "No branding"
+    },
+    "cta": {
+      "free": "Start Free",
+      "paid": "Get Started",
+      "enterprise": "Contact Sales"
+    }
+  },
+  "cta": {
+    "title": "Ready to give your surveys a voice?",
+    "subtitle": "Join hundreds of research teams already using Voice Capture to collect richer, more authentic feedback.",
+    "button": "Create Free Account"
+  },
+  "nav": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "login": "Log In",
+    "signup": "Sign Up"
+  }
+}

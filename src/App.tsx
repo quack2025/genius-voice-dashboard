@@ -15,6 +15,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Recordings from "./pages/Recordings";
 import Export from "./pages/Export";
 import Settings from "./pages/Settings";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,7 +46,7 @@ const App = () => (
             </Route>
             
             {/* Redirects */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Landing />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
