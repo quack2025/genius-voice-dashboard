@@ -13,7 +13,9 @@ import {
   Settings,
   LogOut,
   Mic,
-  X
+  X,
+  Shield,
+  Users
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -34,12 +36,14 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
   const { signOut, user } = useAuth();
   const { t } = useTranslation();
   const [planKey, setPlanKey] = useState<string>('free');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (user) {
       accountApi.getUsage().then(result => {
         if (result.success && result.data) {
           setPlanKey(result.data.plan);
+          setIsAdmin(result.data.is_admin);
         }
       });
     }
@@ -95,6 +99,38 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
             </NavLink>
           );
         })}
+
+        {/* Admin section */}
+        {isAdmin && (
+          <>
+            <div className="my-3 border-t border-sidebar-border" />
+            <p className="px-4 py-1 text-xs font-semibold text-sidebar-muted uppercase tracking-wider">
+              {t('nav.admin')}
+            </p>
+            {[
+              { key: 'adminDashboard', href: '/admin', icon: Shield },
+              { key: 'adminUsers', href: '/admin/users', icon: Users },
+            ].map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <NavLink
+                  key={item.key}
+                  to={item.href}
+                  onClick={onClose}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                    isActive
+                      ? 'bg-sidebar-accent text-sidebar-primary'
+                      : 'text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  {t(`nav.${item.key}`)}
+                </NavLink>
+              );
+            })}
+          </>
+        )}
       </nav>
 
       {/* User section */}

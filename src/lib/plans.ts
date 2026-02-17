@@ -75,6 +75,7 @@ export function getPlan(key: string): PlanDefinition {
 }
 
 export interface UsageData {
+  is_admin: boolean;
   plan: string;
   plan_name: string;
   plan_started_at: string | null;

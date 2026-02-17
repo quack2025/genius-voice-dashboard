@@ -37,6 +37,9 @@
     "recordings": "Recordings",
     "export": "Export",
     "settings": "Settings",
+    "admin": "Admin",
+    "adminDashboard": "Dashboard",
+    "adminUsers": "Users",
     "logout": "Log out"
   },
   "languages": {

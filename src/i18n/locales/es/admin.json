@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "title": "Panel de Administracion",
+    "subtitle": "Vista general de la plataforma",
+    "totalUsers": "Usuarios Totales",
+    "totalProjects": "Proyectos Totales",
+    "totalRecordings": "Grabaciones Totales",
+    "recordingsThisMonth": "Grabaciones Este Mes",
+    "usersByPlan": "Usuarios por Plan"
+  },
+  "users": {
+    "title": "Gestion de Usuarios",
+    "subtitle": "Ver y gestionar todos los usuarios de la plataforma",
+    "searchPlaceholder": "Buscar por email...",
+    "email": "Email",
+    "plan": "Plan",
+    "projects": "Proyectos",
+    "responsesMonth": "Respuestas (mes)",
+    "joined": "Registro",
+    "actions": "Acciones",
+    "view": "Ver",
+    "noUsers": "No se encontraron usuarios"
+  },
+  "userDetail": {
+    "title": "Detalle de Usuario",
+    "backToUsers": "Volver a usuarios",
+    "memberSince": "Miembro desde",
+    "planStarted": "Plan iniciado",
+    "adminBadge": "Admin",
+    "userInfo": "Informacion del Usuario",
+    "changePlanSection": "Cambiar Plan",
+    "projectsSection": "Proyectos",
+    "usageSection": "Historial de Uso",
+    "month": "Mes",
+    "responses": "Respuestas",
+    "noProjects": "Sin proyectos",
+    "noUsage": "Sin historial de uso"
+  },
+  "changePlan": "Cambiar Plan",
+  "changePlanFor": "Cambiar plan de {{email}}",
+  "currentPlan": "Actual: {{plan}}",
+  "selectPlan": "Seleccionar plan",
+  "planChanged": "Plan cambiado exitosamente",
+  "planChangeFailed": "Error al cambiar el plan"
+}

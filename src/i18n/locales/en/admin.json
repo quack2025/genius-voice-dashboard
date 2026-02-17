@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "title": "Admin Dashboard",
+    "subtitle": "Platform overview",
+    "totalUsers": "Total Users",
+    "totalProjects": "Total Projects",
+    "totalRecordings": "Total Recordings",
+    "recordingsThisMonth": "Recordings This Month",
+    "usersByPlan": "Users by Plan"
+  },
+  "users": {
+    "title": "User Management",
+    "subtitle": "View and manage all platform users",
+    "searchPlaceholder": "Search by email...",
+    "email": "Email",
+    "plan": "Plan",
+    "projects": "Projects",
+    "responsesMonth": "Responses (month)",
+    "joined": "Joined",
+    "actions": "Actions",
+    "view": "View",
+    "noUsers": "No users found"
+  },
+  "userDetail": {
+    "title": "User Detail",
+    "backToUsers": "Back to users",
+    "memberSince": "Member since",
+    "planStarted": "Plan started",
+    "adminBadge": "Admin",
+    "userInfo": "User Information",
+    "changePlanSection": "Change Plan",
+    "projectsSection": "Projects",
+    "usageSection": "Usage History",
+    "month": "Month",
+    "responses": "Responses",
+    "noProjects": "No projects",
+    "noUsage": "No usage history"
+  },
+  "changePlan": "Change Plan",
+  "changePlanFor": "Change plan for {{email}}",
+  "currentPlan": "Current: {{plan}}",
+  "selectPlan": "Select plan",
+  "planChanged": "Plan changed successfully",
+  "planChangeFailed": "Failed to change plan"
+}

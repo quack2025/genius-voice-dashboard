@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminProtectedRoute from "@/components/AdminProtectedRoute";
 import DashboardLayout from "@/components/DashboardLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,6 +17,9 @@ import Recordings from "./pages/Recordings";
 import Export from "./pages/Export";
 import Settings from "./pages/Settings";
 import Landing from "./pages/Landing";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminUsers from "./pages/AdminUsers";
+import AdminUserDetail from "./pages/AdminUserDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,7 +36,7 @@ const App = () => (
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
@@ -44,7 +48,16 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
               </Route>
             </Route>
-            
+
+            {/* Admin routes */}
+            <Route element={<AdminProtectedRoute />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<AdminUsers />} />
+                <Route path="/admin/users/:id" element={<AdminUserDetail />} />
+              </Route>
+            </Route>
+
             {/* Redirects */}
             <Route path="/" element={<Landing />} />
             <Route path="*" element={<NotFound />} />
