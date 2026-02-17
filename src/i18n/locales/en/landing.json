@@ -1,74 +1,115 @@
 {
+  "nav": {
+    "features": "Benefits",
+    "howItWorks": "How It Works",
+    "pricing": "Pricing",
+    "login": "Log In",
+    "signup": "Try Free"
+  },
   "hero": {
-    "title": "Transform Voice into",
-    "titleHighlight": "Actionable Data",
-    "subtitle": "Capture voice responses from your surveys and forms. Transcribe, analyze and export insights in real time — powered by AI.",
-    "cta": "Get Started Free",
-    "ctaSecondary": "See How It Works",
-    "trustedBy": "Trusted by research teams worldwide"
+    "title": "Your open-ended questions deserve",
+    "titleHighlight": "real answers",
+    "subtitle": "40% of respondents skip open-ended questions. With Voice Capture, they just talk. You get transcriptions, sentiment, and keywords — automatically.",
+    "cta": "Add voice to your survey — free",
+    "ctaSecondary": "See how it works",
+    "stats": {
+      "responseRate": "3x more responses",
+      "responseRateDesc": "vs. open text",
+      "richerData": "5x more words",
+      "richerDataDesc": "per average response",
+      "faster": "Same-day results",
+      "fasterDesc": "real-time transcription"
+    }
+  },
+  "problem": {
+    "sectionTitle": "Open-ended questions are broken",
+    "sectionSubtitle": "Your respondents don't want to type. And when they do, you get \"fine\", \"ok\", \"nothing to add\". You're losing the most valuable insights from your study.",
+    "pain1": {
+      "title": "High skip rates",
+      "description": "30-50% of respondents skip free-text questions. You lose half your qualitative data."
+    },
+    "pain2": {
+      "title": "Shallow responses",
+      "description": "When they do answer, they type 3-5 words. No emotion, no context, no nuance."
+    },
+    "pain3": {
+      "title": "Manual processing",
+      "description": "Hand-coding open-ended responses takes days. With 500+ responses, it's unfeasible."
+    }
+  },
+  "howItWorks": {
+    "sectionTitle": "It works in 3 steps",
+    "sectionSubtitle": "No software to install. No switching platforms. Voice Capture lives inside your existing survey.",
+    "step1": {
+      "title": "Embed the widget",
+      "description": "Paste a code snippet into your Alchemer, Qualtrics, or any web form survey. 2 minutes."
+    },
+    "step2": {
+      "title": "Respondent speaks",
+      "description": "Instead of typing, they press a button and talk. Transcription appears in real time. 9+ languages."
+    },
+    "step3": {
+      "title": "Analyze and export",
+      "description": "Every response arrives transcribed with sentiment, keywords, and AI summaries. Export to CSV, Excel, or API."
+    }
   },
   "features": {
-    "sectionTitle": "Everything you need to capture voice insights",
-    "sectionSubtitle": "From real-time transcription to powerful analytics, Voice Capture gives your surveys a voice.",
+    "sectionTitle": "Built for research teams",
+    "sectionSubtitle": "Not another recording app. It's voice capture infrastructure that plugs into your existing workflow.",
     "realtime": {
-      "title": "Real-Time Transcription",
-      "description": "Transcribe voice responses instantly as respondents speak. No waiting, no delays."
+      "title": "Instant results",
+      "description": "See transcribed responses as they come in. Start your analysis today, not next week."
     },
     "multilingual": {
-      "title": "Multilingual Support",
-      "description": "Support for 9+ languages out of the box. Reach respondents in their native language."
+      "title": "One study, 9+ markets",
+      "description": "Run the same survey in Spanish, English, Portuguese, French, German, and more. No separate tools."
     },
     "integration": {
-      "title": "Easy Integration",
-      "description": "Add voice capture to Alchemer and other platforms with a simple code snippet."
+      "title": "Lives in your survey",
+      "description": "Not a separate app. The widget embeds directly into Alchemer, Qualtrics, or any web form with an HTML snippet."
     },
     "export": {
-      "title": "Flexible Export",
-      "description": "Export transcriptions as CSV, Excel, or access them via API. Your data, your way."
+      "title": "Your data, your format",
+      "description": "Export transcriptions as CSV for SPSS, Excel for reports, or consume via API for your pipeline."
     },
     "analytics": {
-      "title": "AI-Powered Analytics",
-      "description": "Get automatic sentiment analysis, keyword extraction, and response summaries."
+      "title": "AI that codes for you",
+      "description": "Sentiment, keywords, categories, and automatic summaries. What used to take days now takes seconds."
     },
     "security": {
-      "title": "Enterprise Security",
-      "description": "SOC2-ready infrastructure with encryption at rest and in transit. GDPR compliant."
+      "title": "Data protected",
+      "description": "End-to-end encryption, domain locking, and access control. Your data never leaves your infrastructure."
     }
   },
   "pricing": {
-    "sectionTitle": "Simple, transparent pricing",
-    "sectionSubtitle": "Start free, scale as you grow. No hidden fees.",
+    "sectionTitle": "Pricing that scales with you",
+    "sectionSubtitle": "Start free to test. Scale when your volume needs it. No contracts, cancel anytime.",
     "monthly": "/month",
     "popular": "Most Popular",
+    "valueAnchor": "From $0.02/response",
     "features": {
       "responses": "{{count}} responses/month",
       "responsesUnlimited": "{{count}} responses/month",
       "projects": "{{count}} projects",
       "projectsUnlimited": "Unlimited projects",
-      "duration": "{{count}}s max duration",
+      "duration": "Up to {{count}}s per response",
       "languages": "{{count}} languages",
       "allLanguages": "All languages",
       "batch": "Batch transcription",
-      "customThemes": "Custom themes",
-      "customDomains": "Custom domains",
+      "customThemes": "Customizable widget",
+      "customDomains": "Your own domain",
       "apiAccess": "API access",
-      "noBranding": "No branding"
+      "noBranding": "Your brand, not ours"
     },
     "cta": {
-      "free": "Start Free",
+      "free": "Try Free",
       "paid": "Get Started",
-      "enterprise": "Contact Sales"
+      "enterprise": "Talk to Sales"
     }
   },
   "cta": {
-    "title": "Ready to give your surveys a voice?",
-    "subtitle": "Join hundreds of research teams already using Voice Capture to collect richer, more authentic feedback.",
+    "title": "Your next study can have a voice",
+    "subtitle": "Set up Voice Capture in your survey in under 5 minutes. No credit card required.",
     "button": "Create Free Account"
-  },
-  "nav": {
-    "features": "Features",
-    "pricing": "Pricing",
-    "login": "Log In",
-    "signup": "Sign Up"
   }
 }

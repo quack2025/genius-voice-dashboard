@@ -1,74 +1,115 @@
 {
+  "nav": {
+    "features": "Beneficios",
+    "howItWorks": "Cómo Funciona",
+    "pricing": "Precios",
+    "login": "Iniciar Sesión",
+    "signup": "Probar Gratis"
+  },
   "hero": {
-    "title": "Transforma la Voz en",
-    "titleHighlight": "Datos Accionables",
-    "subtitle": "Captura respuestas de voz en tus encuestas y formularios. Transcribe, analiza y exporta insights en tiempo real — potenciado por IA.",
-    "cta": "Empieza Gratis",
-    "ctaSecondary": "Descubre Cómo Funciona",
-    "trustedBy": "Utilizado por equipos de investigación en todo el mundo"
+    "title": "Tus preguntas abiertas merecen",
+    "titleHighlight": "respuestas de verdad",
+    "subtitle": "El 40% de los encuestados se saltan las preguntas abiertas. Con Voice Capture, solo hablan. Tú obtienes transcripciones, sentimiento y keywords — automáticamente.",
+    "cta": "Agrega voz a tu encuesta — gratis",
+    "ctaSecondary": "Mira cómo funciona",
+    "stats": {
+      "responseRate": "3x más respuestas",
+      "responseRateDesc": "vs. texto abierto",
+      "richerData": "5x más palabras",
+      "richerDataDesc": "por respuesta promedio",
+      "faster": "Resultados el mismo día",
+      "fasterDesc": "transcripción en tiempo real"
+    }
+  },
+  "problem": {
+    "sectionTitle": "Las preguntas abiertas están rotas",
+    "sectionSubtitle": "Tus encuestados no quieren escribir. Y cuando lo hacen, obtienes \"bien\", \"ok\", \"nada que agregar\". Pierdes los insights más valiosos de tu estudio.",
+    "pain1": {
+      "title": "Tasas de skip altas",
+      "description": "30-50% de los encuestados se saltan las preguntas de texto libre. Pierdes la mitad de tus datos cualitativos."
+    },
+    "pain2": {
+      "title": "Respuestas superficiales",
+      "description": "Cuando sí responden, escriben 3-5 palabras. No captura emoción, contexto ni matices."
+    },
+    "pain3": {
+      "title": "Procesamiento manual",
+      "description": "Codificar respuestas abiertas a mano toma días. Con 500+ respuestas, es inviable."
+    }
+  },
+  "howItWorks": {
+    "sectionTitle": "Funciona en 3 pasos",
+    "sectionSubtitle": "Sin instalar software. Sin cambiar de plataforma. Voice Capture vive dentro de tu encuesta existente.",
+    "step1": {
+      "title": "Embebe el widget",
+      "description": "Copia un snippet de código en tu encuesta de Alchemer, Qualtrics o cualquier formulario web. 2 minutos."
+    },
+    "step2": {
+      "title": "El encuestado habla",
+      "description": "En vez de escribir, presiona un botón y habla. La transcripción aparece en tiempo real. 9+ idiomas."
+    },
+    "step3": {
+      "title": "Analiza y exporta",
+      "description": "Cada respuesta llega transcrita con sentimiento, keywords y resúmenes por IA. Exporta a CSV, Excel o API."
+    }
   },
   "features": {
-    "sectionTitle": "Todo lo que necesitas para capturar insights de voz",
-    "sectionSubtitle": "Desde transcripción en tiempo real hasta analítica potente, Voice Capture le da voz a tus encuestas.",
+    "sectionTitle": "Construido para equipos de investigación",
+    "sectionSubtitle": "No es otra app de grabación. Es infraestructura de captura de voz que se integra en tu flujo de trabajo existente.",
     "realtime": {
-      "title": "Transcripción en Tiempo Real",
-      "description": "Transcribe respuestas de voz al instante mientras los encuestados hablan. Sin esperas."
+      "title": "Resultados al instante",
+      "description": "Ve las respuestas transcritas mientras llegan. Lanza tu análisis el mismo día, no la próxima semana."
     },
     "multilingual": {
-      "title": "Soporte Multilingüe",
-      "description": "Soporte para más de 9 idiomas listos para usar. Llega a los encuestados en su idioma nativo."
+      "title": "Un estudio, 9+ mercados",
+      "description": "Corre la misma encuesta en español, inglés, portugués, francés, alemán y más. Sin herramientas separadas."
     },
     "integration": {
-      "title": "Integración Fácil",
-      "description": "Agrega captura de voz a Alchemer y otras plataformas con un simple snippet de código."
+      "title": "Vive en tu encuesta",
+      "description": "No es una app aparte. El widget se embebe directamente en Alchemer, Qualtrics o cualquier formulario web con un snippet HTML."
     },
     "export": {
-      "title": "Exportación Flexible",
-      "description": "Exporta transcripciones en CSV, Excel o accede vía API. Tus datos, a tu manera."
+      "title": "Tus datos, tu formato",
+      "description": "Exporta transcripciones en CSV para SPSS, Excel para reportes, o consume vía API para tu pipeline."
     },
     "analytics": {
-      "title": "Analítica con IA",
-      "description": "Obtén análisis de sentimiento, extracción de keywords y resúmenes automáticos."
+      "title": "IA que codifica por ti",
+      "description": "Sentimiento, keywords, categorías y resúmenes automáticos. Lo que antes tomaba días, ahora toma segundos."
     },
     "security": {
-      "title": "Seguridad Empresarial",
-      "description": "Infraestructura SOC2-ready con encriptación en reposo y tránsito. Compatible con GDPR."
+      "title": "Datos protegidos",
+      "description": "Encriptación end-to-end, bloqueo por dominio y control de acceso. Tus datos nunca salen de tu infraestructura."
     }
   },
   "pricing": {
-    "sectionTitle": "Precios simples y transparentes",
-    "sectionSubtitle": "Empieza gratis, escala según crezcas. Sin costos ocultos.",
+    "sectionTitle": "Precios que escalan contigo",
+    "sectionSubtitle": "Empieza gratis para probar. Escala cuando tu volumen lo necesite. Sin contratos, cancela cuando quieras.",
     "monthly": "/mes",
     "popular": "Más Popular",
+    "valueAnchor": "Desde $0.02/respuesta",
     "features": {
       "responses": "{{count}} respuestas/mes",
       "responsesUnlimited": "{{count}} respuestas/mes",
       "projects": "{{count}} proyectos",
       "projectsUnlimited": "Proyectos ilimitados",
-      "duration": "{{count}}s duración máx.",
+      "duration": "Hasta {{count}}s por respuesta",
       "languages": "{{count}} idiomas",
       "allLanguages": "Todos los idiomas",
       "batch": "Transcripción batch",
-      "customThemes": "Temas personalizados",
-      "customDomains": "Dominios personalizados",
+      "customThemes": "Widget personalizable",
+      "customDomains": "Tu dominio propio",
       "apiAccess": "Acceso API",
-      "noBranding": "Sin branding"
+      "noBranding": "Tu marca, sin la nuestra"
     },
     "cta": {
-      "free": "Empieza Gratis",
-      "paid": "Comenzar",
-      "enterprise": "Contactar Ventas"
+      "free": "Probar Gratis",
+      "paid": "Empezar Ahora",
+      "enterprise": "Hablar con Ventas"
     }
   },
   "cta": {
-    "title": "¿Listo para darle voz a tus encuestas?",
-    "subtitle": "Únete a cientos de equipos de investigación que ya usan Voice Capture para recopilar feedback más rico y auténtico.",
+    "title": "Tu próximo estudio puede tener voz",
+    "subtitle": "Configura Voice Capture en tu encuesta en menos de 5 minutos. Sin tarjeta de crédito.",
     "button": "Crear Cuenta Gratis"
-  },
-  "nav": {
-    "features": "Características",
-    "pricing": "Precios",
-    "login": "Iniciar Sesión",
-    "signup": "Registrarse"
   }
 }

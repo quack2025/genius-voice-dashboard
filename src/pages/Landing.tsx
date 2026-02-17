@@ -15,6 +15,12 @@ import {
   Check,
   ArrowRight,
   Headphones,
+  SkipForward,
+  MessageSquare,
+  Clock,
+  Clipboard,
+  AudioLines,
+  BarChart3,
 } from 'lucide-react';
 
 const featureIcons = [Mic, Globe, Code, Download, Brain, Shield];
@@ -35,6 +41,9 @@ export default function Landing() {
             <span className="text-lg font-bold text-foreground">Voice Capture</span>
           </div>
           <div className="hidden items-center gap-6 md:flex">
+            <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t('nav.howItWorks')}
+            </a>
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t('nav.features')}
             </a>
@@ -73,15 +82,81 @@ export default function Landing() {
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <a href="#features">{t('hero.ctaSecondary')}</a>
+              <a href="#how-it-works">{t('hero.ctaSecondary')}</a>
             </Button>
           </div>
-          <p className="mt-10 text-xs text-muted-foreground">{t('hero.trustedBy')}</p>
+
+          {/* Stats strip */}
+          <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3">
+            {(['responseRate', 'richerData', 'faster'] as const).map((key) => (
+              <div key={key} className="text-center">
+                <p className="text-2xl font-bold text-primary">{t(`hero.stats.${key}`)}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t(`hero.stats.${key}Desc`)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Problem */}
+      <section className="border-t border-border py-20 sm:py-28 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl">{t('problem.sectionTitle')}</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t('problem.sectionSubtitle')}</p>
+          </div>
+          <div className="mt-16 grid gap-8 sm:grid-cols-3">
+            {([
+              { key: 'pain1', icon: SkipForward },
+              { key: 'pain2', icon: MessageSquare },
+              { key: 'pain3', icon: Clock },
+            ] as const).map(({ key, icon: Icon }) => (
+              <Card key={key} className="border-destructive/20 bg-card">
+                <CardHeader>
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-destructive/10">
+                    <Icon className="h-5 w-5 text-destructive" />
+                  </div>
+                  <CardTitle className="text-lg">{t(`problem.${key}.title`)}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">{t(`problem.${key}.description`)}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section id="how-it-works" className="py-20 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl">{t('howItWorks.sectionTitle')}</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t('howItWorks.sectionSubtitle')}</p>
+          </div>
+          <div className="mt-16 grid gap-8 sm:grid-cols-3">
+            {([
+              { key: 'step1', icon: Clipboard, num: '1' },
+              { key: 'step2', icon: AudioLines, num: '2' },
+              { key: 'step3', icon: BarChart3, num: '3' },
+            ] as const).map(({ key, icon: Icon, num }) => (
+              <div key={key} className="relative text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                  <span className="absolute -top-2 -right-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+                    {num}
+                  </span>
+                  <Icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold">{t(`howItWorks.${key}.title`)}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{t(`howItWorks.${key}.description`)}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Features */}
-      <section id="features" className="py-20 sm:py-28">
+      <section id="features" className="border-t border-border py-20 sm:py-28 bg-muted/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">{t('features.sectionTitle')}</h2>
@@ -109,11 +184,12 @@ export default function Landing() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-t border-border py-20 sm:py-28">
+      <section id="pricing" className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">{t('pricing.sectionTitle')}</h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t('pricing.sectionSubtitle')}</p>
+            <p className="mt-2 text-sm font-medium text-primary">{t('pricing.valueAnchor')}</p>
           </div>
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {planKeys.map((key) => {
@@ -188,7 +264,7 @@ export default function Landing() {
       </section>
 
       {/* Final CTA */}
-      <section className="border-t border-border py-20 sm:py-28">
+      <section className="border-t border-border py-20 sm:py-28 bg-muted/30">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <h2 className="text-3xl font-bold sm:text-4xl">{t('cta.title')}</h2>
           <p className="mt-4 text-lg text-muted-foreground">{t('cta.subtitle')}</p>
