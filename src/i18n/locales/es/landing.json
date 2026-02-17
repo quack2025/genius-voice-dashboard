@@ -1,0 +1,74 @@
+{
+  "hero": {
+    "title": "Transforma la Voz en",
+    "titleHighlight": "Datos Accionables",
+    "subtitle": "Captura respuestas de voz en tus encuestas y formularios. Transcribe, analiza y exporta insights en tiempo real — potenciado por IA.",
+    "cta": "Empieza Gratis",
+    "ctaSecondary": "Descubre Cómo Funciona",
+    "trustedBy": "Utilizado por equipos de investigación en todo el mundo"
+  },
+  "features": {
+    "sectionTitle": "Todo lo que necesitas para capturar insights de voz",
+    "sectionSubtitle": "Desde transcripción en tiempo real hasta analítica potente, Voice Capture le da voz a tus encuestas.",
+    "realtime": {
+      "title": "Transcripción en Tiempo Real",
+      "description": "Transcribe respuestas de voz al instante mientras los encuestados hablan. Sin esperas."
+    },
+    "multilingual": {
+      "title": "Soporte Multilingüe",
+      "description": "Soporte para más de 9 idiomas listos para usar. Llega a los encuestados en su idioma nativo."
+    },
+    "integration": {
+      "title": "Integración Fácil",
+      "description": "Agrega captura de voz a Alchemer y otras plataformas con un simple snippet de código."
+    },
+    "export": {
+      "title": "Exportación Flexible",
+      "description": "Exporta transcripciones en CSV, Excel o accede vía API. Tus datos, a tu manera."
+    },
+    "analytics": {
+      "title": "Analítica con IA",
+      "description": "Obtén análisis de sentimiento, extracción de keywords y resúmenes automáticos."
+    },
+    "security": {
+      "title": "Seguridad Empresarial",
+      "description": "Infraestructura SOC2-ready con encriptación en reposo y tránsito. Compatible con GDPR."
+    }
+  },
+  "pricing": {
+    "sectionTitle": "Precios simples y transparentes",
+    "sectionSubtitle": "Empieza gratis, escala según crezcas. Sin costos ocultos.",
+    "monthly": "/mes",
+    "popular": "Más Popular",
+    "features": {
+      "responses": "{{count}} respuestas/mes",
+      "responsesUnlimited": "{{count}} respuestas/mes",
+      "projects": "{{count}} proyectos",
+      "projectsUnlimited": "Proyectos ilimitados",
+      "duration": "{{count}}s duración máx.",
+      "languages": "{{count}} idiomas",
+      "allLanguages": "Todos los idiomas",
+      "batch": "Transcripción batch",
+      "customThemes": "Temas personalizados",
+      "customDomains": "Dominios personalizados",
+      "apiAccess": "Acceso API",
+      "noBranding": "Sin branding"
+    },
+    "cta": {
+      "free": "Empieza Gratis",
+      "paid": "Comenzar",
+      "enterprise": "Contactar Ventas"
+    }
+  },
+  "cta": {
+    "title": "¿Listo para darle voz a tus encuestas?",
+    "subtitle": "Únete a cientos de equipos de investigación que ya usan Voice Capture para recopilar feedback más rico y auténtico.",
+    "button": "Crear Cuenta Gratis"
+  },
+  "nav": {
+    "features": "Características",
+    "pricing": "Precios",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse"
+  }
+}
