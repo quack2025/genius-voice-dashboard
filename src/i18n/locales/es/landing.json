@@ -3,6 +3,8 @@
     "features": "Beneficios",
     "howItWorks": "Cómo Funciona",
     "pricing": "Precios",
+    "demo": "Demo",
+    "faq": "FAQ",
     "login": "Iniciar Sesión",
     "signup": "Probar Gratis"
   },
@@ -105,6 +107,39 @@
       "free": "Probar Gratis",
       "paid": "Empezar Ahora",
       "enterprise": "Hablar con Ventas"
+    }
+  },
+  "demo": {
+    "sectionTitle": "Pruébalo ahora mismo",
+    "sectionSubtitle": "Esta es una encuesta real con Voice Capture integrado. Presiona el botón de micrófono y habla — verás la transcripción en tiempo real.",
+    "fallbackCta": "Abrir encuesta demo",
+    "note": "El navegador te pedirá permiso para usar el micrófono. Es necesario para capturar tu voz."
+  },
+  "faq": {
+    "sectionTitle": "Preguntas frecuentes",
+    "q1": {
+      "question": "¿El encuestado necesita instalar algo?",
+      "answer": "No. Voice Capture funciona directamente en el navegador. El único requisito es que el encuestado autorice el uso del micrófono cuando el navegador lo solicite — es un permiso estándar, igual que en Google Meet o Zoom."
+    },
+    "q2": {
+      "question": "¿Me cobran por respuestas abandonadas o fallidas?",
+      "answer": "No. Solo se cuentan las respuestas completadas exitosamente. Si el encuestado abandona antes de enviar, o si la transcripción falla por algún error técnico, no se descuenta de tu cuota mensual."
+    },
+    "q3": {
+      "question": "¿Qué pasa si el encuestado no quiere hablar?",
+      "answer": "El widget incluye un modo texto como alternativa. El encuestado puede escribir su respuesta si prefiere no usar el micrófono. Ambas modalidades cuentan como una respuesta."
+    },
+    "q4": {
+      "question": "¿Funciona en móvil?",
+      "answer": "Sí. Voice Capture funciona en Chrome, Safari, Firefox y Edge — tanto en desktop como en móvil. La experiencia está optimizada para pantallas táctiles."
+    },
+    "q5": {
+      "question": "¿Puedo integrarlo con mi plataforma de encuestas?",
+      "answer": "Sí. Voice Capture se integra con Alchemer, Qualtrics y cualquier formulario web que acepte HTML personalizado. Solo necesitas pegar un snippet de código — no requiere desarrollo."
+    },
+    "q6": {
+      "question": "¿Dónde se almacenan los datos?",
+      "answer": "Los audios y transcripciones se almacenan en infraestructura segura con encriptación en reposo y en tránsito. Puedes configurar bloqueo por dominio para que el widget solo funcione en tus sitios autorizados."
     }
   },
   "cta": {

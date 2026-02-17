@@ -28,9 +28,9 @@ export const PLANS: Record<string, PlanDefinition> = {
     custom_domains: false,
   },
   freelancer: {
-    name: 'Freelancer',
+    name: 'Starter',
     price: 39,
-    max_responses: 1000,
+    max_responses: 1500,
     max_projects: 10,
     max_duration: 180,
     languages: ['es', 'en', 'pt', 'fr', 'de', 'it', 'ja', 'ko', 'zh'],

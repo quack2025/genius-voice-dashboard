@@ -6,6 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { PLANS } from '@/lib/plans';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import {
   Mic,
   Globe,
   Code,
@@ -21,12 +27,19 @@ import {
   Clipboard,
   AudioLines,
   BarChart3,
+  ExternalLink,
+  MicOff,
 } from 'lucide-react';
 
 const featureIcons = [Mic, Globe, Code, Download, Brain, Shield];
 const featureKeys = ['realtime', 'multilingual', 'integration', 'export', 'analytics', 'security'] as const;
 
 const planKeys = ['free', 'freelancer', 'pro', 'enterprise'] as const;
+
+// Replace with your actual Alchemer demo survey URL
+const DEMO_SURVEY_URL = import.meta.env.VITE_DEMO_SURVEY_URL || '';
+
+const faqKeys = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6'] as const;
 
 export default function Landing() {
   const { t } = useTranslation('landing');
@@ -49,6 +62,14 @@ export default function Landing() {
             </a>
             <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t('nav.pricing')}
+            </a>
+            {DEMO_SURVEY_URL && (
+              <a href="#demo" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                {t('nav.demo')}
+              </a>
+            )}
+            <a href="#faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t('nav.faq')}
             </a>
           </div>
           <div className="flex items-center gap-2">
@@ -260,6 +281,63 @@ export default function Landing() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Live Demo */}
+      {DEMO_SURVEY_URL && (
+        <section id="demo" className="border-t border-border py-20 sm:py-28 bg-muted/30">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold sm:text-4xl">{t('demo.sectionTitle')}</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t('demo.sectionSubtitle')}</p>
+            </div>
+            <div className="mt-12">
+              <Card className="overflow-hidden">
+                <div className="aspect-[16/10] w-full">
+                  <iframe
+                    src={DEMO_SURVEY_URL}
+                    className="h-full w-full border-0"
+                    allow="microphone"
+                    title="Voice Capture Demo"
+                  />
+                </div>
+              </Card>
+              <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <MicOff className="h-4 w-4" />
+                {t('demo.note')}
+              </p>
+              <div className="mt-4 text-center">
+                <Button variant="outline" size="sm" asChild>
+                  <a href={DEMO_SURVEY_URL} target="_blank" rel="noopener noreferrer">
+                    {t('demo.fallbackCta')}
+                    <ExternalLink className="ml-2 h-3 w-3" />
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* FAQ */}
+      <section id="faq" className={`py-20 sm:py-28 ${DEMO_SURVEY_URL ? '' : 'border-t border-border bg-muted/30'}`}>
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold sm:text-4xl">{t('faq.sectionTitle')}</h2>
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {faqKeys.map((key) => (
+              <AccordionItem key={key} value={key}>
+                <AccordionTrigger className="text-left text-base">
+                  {t(`faq.${key}.question`)}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {t(`faq.${key}.answer`)}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 

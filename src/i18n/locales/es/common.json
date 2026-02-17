@@ -54,7 +54,7 @@
   "plans": {
     "names": {
       "free": "Free",
-      "freelancer": "Freelancer",
+      "freelancer": "Starter",
       "pro": "Pro",
       "enterprise": "Enterprise"
     },

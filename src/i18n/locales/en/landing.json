@@ -3,6 +3,8 @@
     "features": "Benefits",
     "howItWorks": "How It Works",
     "pricing": "Pricing",
+    "demo": "Demo",
+    "faq": "FAQ",
     "login": "Log In",
     "signup": "Try Free"
   },
@@ -105,6 +107,39 @@
       "free": "Try Free",
       "paid": "Get Started",
       "enterprise": "Talk to Sales"
+    }
+  },
+  "demo": {
+    "sectionTitle": "Try it right now",
+    "sectionSubtitle": "This is a real survey with Voice Capture integrated. Press the microphone button and speak — you'll see the transcription in real time.",
+    "fallbackCta": "Open demo survey",
+    "note": "Your browser will ask for microphone permission. This is required to capture your voice."
+  },
+  "faq": {
+    "sectionTitle": "Frequently asked questions",
+    "q1": {
+      "question": "Does the respondent need to install anything?",
+      "answer": "No. Voice Capture works directly in the browser. The only requirement is that the respondent grants microphone permission when the browser asks — it's a standard permission, just like Google Meet or Zoom."
+    },
+    "q2": {
+      "question": "Am I charged for abandoned or failed responses?",
+      "answer": "No. Only successfully completed responses count. If the respondent abandons before submitting, or if the transcription fails due to a technical error, it does not count against your monthly quota."
+    },
+    "q3": {
+      "question": "What if the respondent doesn't want to speak?",
+      "answer": "The widget includes a text mode as an alternative. The respondent can type their response if they prefer not to use the microphone. Both modes count as one response."
+    },
+    "q4": {
+      "question": "Does it work on mobile?",
+      "answer": "Yes. Voice Capture works on Chrome, Safari, Firefox, and Edge — both desktop and mobile. The experience is optimized for touch screens."
+    },
+    "q5": {
+      "question": "Can I integrate it with my survey platform?",
+      "answer": "Yes. Voice Capture integrates with Alchemer, Qualtrics, and any web form that accepts custom HTML. Just paste a code snippet — no development required."
+    },
+    "q6": {
+      "question": "Where is the data stored?",
+      "answer": "Audio and transcriptions are stored on secure infrastructure with encryption at rest and in transit. You can configure domain locking so the widget only works on your authorized sites."
     }
   },
   "cta": {
