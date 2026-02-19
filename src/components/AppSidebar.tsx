@@ -135,6 +135,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
             {[
               { key: 'adminDashboard', href: '/admin', icon: Shield },
               { key: 'adminUsers', href: '/admin/users', icon: Users },
+              { key: 'adminOrgs', href: '/admin/orgs', icon: Building2 },
             ].map((item) => {
               const isActive = location.pathname === item.href;
               return (

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useFormatters } from '@/hooks/useFormatters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,8 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Shield } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { ArrowLeft, Shield, Trash2, KeyRound } from 'lucide-react';
 import { adminApi, type AdminUserDetail as AdminUserDetailType } from '@/lib/adminApi';
 import { PLANS } from '@/lib/plans';
 import PlanBadge from '@/components/PlanBadge';
@@ -16,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function AdminUserDetail() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { t } = useTranslation('admin');
   const { t: tCommon } = useTranslation('common');
   const { formatDate } = useFormatters();
@@ -23,6 +26,9 @@ export default function AdminUserDetail() {
 
   const [data, setData] = useState<AdminUserDetailType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [togglingAdmin, setTogglingAdmin] = useState(false);
+  const [resettingPassword, setResettingPassword] = useState(false);
 
   // Plan change dialog
   const [showChangePlan, setShowChangePlan] = useState(false);
@@ -61,6 +67,45 @@ export default function AdminUserDetail() {
     if (data) {
       setSelectedPlan(data.user.plan);
       setShowChangePlan(true);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!id) return;
+    setDeleting(true);
+    const result = await adminApi.deleteUser(id);
+    setDeleting(false);
+    if (result.success) {
+      toast({ title: t('deleteUserSuccess') });
+      navigate('/admin/users');
+    } else {
+      toast({ title: result.error || tCommon('errors.generic'), variant: 'destructive' });
+    }
+  };
+
+  const handleToggleAdmin = async () => {
+    if (!id || !data) return;
+    setTogglingAdmin(true);
+    const newValue = !data.user.is_admin;
+    const result = await adminApi.toggleAdmin(id, newValue);
+    setTogglingAdmin(false);
+    if (result.success) {
+      toast({ title: newValue ? t('adminEnabled') : t('adminDisabled') });
+      fetchUser();
+    } else {
+      toast({ title: result.error || tCommon('errors.generic'), variant: 'destructive' });
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!id || !data) return;
+    setResettingPassword(true);
+    const result = await adminApi.resetPassword(id);
+    setResettingPassword(false);
+    if (result.success) {
+      toast({ title: t('resetPasswordSuccess', { email: data.user.email }) });
+    } else {
+      toast({ title: result.error || tCommon('errors.generic'), variant: 'destructive' });
     }
   };
 
@@ -138,6 +183,81 @@ export default function AdminUserDetail() {
               </Button>
             </div>
           </CardHeader>
+        </Card>
+
+        {/* Admin Toggle + Reset Password */}
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">{t('toggleAdmin')}</span>
+              </div>
+              <Switch
+                checked={user.is_admin}
+                onCheckedChange={handleToggleAdmin}
+                disabled={togglingAdmin}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <KeyRound className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium">{t('resetPassword')}</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">{t('resetPasswordDesc')}</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleResetPassword}
+                disabled={resettingPassword}
+              >
+                {resettingPassword ? tCommon('buttons.loading') : t('resetPassword')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Danger Zone */}
+        <Card className="border-destructive/50">
+          <CardHeader>
+            <CardTitle className="text-destructive">{t('dangerZone')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">{t('deleteUser')}</p>
+                <p className="text-sm text-muted-foreground">{t('confirmDeleteUser', { email: user.email })}</p>
+              </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive" size="sm">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {t('deleteUser')}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('deleteUser')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('confirmDeleteUser', { email: user.email })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{tCommon('buttons.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteUser}
+                      disabled={deleting}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      {deleting ? tCommon('buttons.loading') : tCommon('buttons.delete')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </CardContent>
         </Card>
 
         {/* Projects */}

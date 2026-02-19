@@ -22,6 +22,8 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import AdminUserDetail from "./pages/AdminUserDetail";
+import AdminOrgs from "./pages/AdminOrgs";
+import AdminOrgDetail from "./pages/AdminOrgDetail";
 import OrgSettings from "./pages/OrgSettings";
 import NotFound from "./pages/NotFound";
 
@@ -61,6 +63,8 @@ const App = () => (
                 <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/users" element={<AdminUsers />} />
                 <Route path="/admin/users/:id" element={<AdminUserDetail />} />
+                <Route path="/admin/orgs" element={<AdminOrgs />} />
+                <Route path="/admin/orgs/:id" element={<AdminOrgDetail />} />
               </Route>
             </Route>
 

@@ -110,6 +110,19 @@ export interface CreateOrgResult {
   };
 }
 
+export interface AdminOrgDetail {
+  success: boolean;
+  org: AdminOrg & { created_at: string };
+  members: Array<{
+    id: string;
+    email: string;
+    role: string;
+    joined_at: string;
+    responses_this_month: number;
+  }>;
+  usage: { responses_this_month: number; max_responses: number };
+}
+
 // API
 export const adminApi = {
   getStats: () => fetchWithAuth<AdminStats>('/api/admin/stats'),
@@ -135,4 +148,31 @@ export const adminApi = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  deleteUser: (userId: string) =>
+    fetchWithAuth(`/api/admin/users/${userId}`, { method: 'DELETE' }),
+
+  toggleAdmin: (userId: string, isAdmin: boolean) =>
+    fetchWithAuth<{ success: boolean; is_admin: boolean }>(
+      `/api/admin/users/${userId}/admin`,
+      { method: 'PUT', body: JSON.stringify({ is_admin: isAdmin }) }
+    ),
+
+  resetPassword: (userId: string) =>
+    fetchWithAuth<{ success: boolean; email: string }>(
+      `/api/admin/users/${userId}/reset-password`,
+      { method: 'POST' }
+    ),
+
+  getOrgDetail: (orgId: string) =>
+    fetchWithAuth<AdminOrgDetail>(`/api/admin/orgs/${orgId}`),
+
+  updateOrg: (orgId: string, data: { name?: string; plan?: string; maxSeats?: number }) =>
+    fetchWithAuth(`/api/admin/orgs/${orgId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  deleteOrg: (orgId: string) =>
+    fetchWithAuth(`/api/admin/orgs/${orgId}`, { method: 'DELETE' }),
 };

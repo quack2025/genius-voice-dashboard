@@ -40,6 +40,7 @@
     "admin": "Admin",
     "adminDashboard": "Dashboard",
     "adminUsers": "Usuarios",
+    "adminOrgs": "Organizacoes",
     "organization": "Organização",
     "logout": "Sair"
   },
