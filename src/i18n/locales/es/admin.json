@@ -6,7 +6,23 @@
     "totalProjects": "Proyectos Totales",
     "totalRecordings": "Grabaciones Totales",
     "recordingsThisMonth": "Grabaciones Este Mes",
-    "usersByPlan": "Usuarios por Plan"
+    "usersByPlan": "Usuarios por Plan",
+    "totalOrgs": "Organizaciones"
+  },
+  "orgs": {
+    "title": "Organizaciones",
+    "create": "Crear Organizacion",
+    "name": "Nombre",
+    "ownerEmail": "Email del propietario",
+    "plan": "Plan",
+    "maxSeats": "Max. miembros",
+    "creating": "Creando...",
+    "createSuccess": "Organizacion creada exitosamente",
+    "createError": "Error al crear organizacion",
+    "members": "Miembros",
+    "usage": "Uso este mes",
+    "owner": "Propietario",
+    "noOrgs": "No hay organizaciones"
   },
   "users": {
     "title": "Gestion de Usuarios",

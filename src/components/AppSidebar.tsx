@@ -15,7 +15,8 @@ import {
   Mic,
   X,
   Shield,
-  Users
+  Users,
+  Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -37,6 +38,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
   const { t } = useTranslation();
   const [planKey, setPlanKey] = useState<string>('free');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [orgInfo, setOrgInfo] = useState<{ name: string; role: string } | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -44,6 +46,9 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
         if (result.success && result.data) {
           setPlanKey(result.data.plan);
           setIsAdmin(result.data.is_admin);
+          if (result.data.org) {
+            setOrgInfo({ name: result.data.org.name, role: result.data.org.role });
+          }
         }
       });
     }
@@ -100,6 +105,26 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
           );
         })}
 
+        {/* Organization section */}
+        {orgInfo && orgInfo.role === 'owner' && (
+          <>
+            <div className="my-3 border-t border-sidebar-border" />
+            <NavLink
+              to="/org"
+              onClick={onClose}
+              className={cn(
+                'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                location.pathname === '/org'
+                  ? 'bg-sidebar-accent text-sidebar-primary'
+                  : 'text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground'
+              )}
+            >
+              <Building2 className="h-5 w-5" />
+              {t('nav.organization')}
+            </NavLink>
+          </>
+        )}
+
         {/* Admin section */}
         {isAdmin && (
           <>
@@ -146,6 +171,9 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
               {user?.email}
             </p>
             <PlanBadge plan={planKey} />
+            {orgInfo && (
+              <p className="text-xs text-sidebar-muted truncate">{orgInfo.name}</p>
+            )}
           </div>
         </div>
         <div className="px-4 py-2 mb-2">

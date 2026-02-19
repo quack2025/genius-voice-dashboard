@@ -40,6 +40,7 @@
     "admin": "Admin",
     "adminDashboard": "Dashboard",
     "adminUsers": "Users",
+    "organization": "Organization",
     "logout": "Log out"
   },
   "languages": {

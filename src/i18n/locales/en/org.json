@@ -1,0 +1,33 @@
+{
+  "title": "Organization",
+  "orgName": "Organization name",
+  "plan": "Plan",
+  "seats": "{{current}} of {{max}} members",
+  "usage": {
+    "title": "Team usage",
+    "responses": "{{used}} of {{limit}} responses this month",
+    "personal": "Your responses: {{count}}"
+  },
+  "members": {
+    "title": "Members",
+    "email": "Email",
+    "role": "Role",
+    "joined": "Joined",
+    "responsesThisMonth": "Responses",
+    "remove": "Remove",
+    "owner": "Owner",
+    "member": "Member",
+    "confirmRemove": "Are you sure you want to remove {{email}} from the organization?",
+    "removeSuccess": "Member removed",
+    "removeError": "Failed to remove member"
+  },
+  "addMember": {
+    "title": "Add member",
+    "placeholder": "User email",
+    "submit": "Add",
+    "adding": "Adding...",
+    "success": "Member added successfully",
+    "error": "Failed to add member"
+  },
+  "badge": "Organization"
+}

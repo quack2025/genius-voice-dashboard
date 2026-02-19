@@ -92,8 +92,20 @@ export interface UsageData {
   };
   usage: {
     responses_this_month: number;
+    personal_responses_this_month: number;
     projects_count: number;
     per_project: Record<string, number>;
+  };
+  org?: {
+    id: string;
+    name: string;
+    role: 'owner' | 'member';
+    plan: string;
+    plan_name: string;
+    max_seats: number;
+    member_count: number;
+    responses_this_month: number;
+    max_responses: number;
   };
   month: string;
 }

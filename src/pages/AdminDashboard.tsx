@@ -1,23 +1,72 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, FolderKanban, Mic2, Calendar } from 'lucide-react';
-import { adminApi, type AdminStats } from '@/lib/adminApi';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Users, FolderKanban, Mic2, Calendar, Building2, Plus } from 'lucide-react';
+import { adminApi, type AdminStats, type AdminOrg } from '@/lib/adminApi';
 import PlanBadge from '@/components/PlanBadge';
+import { useToast } from '@/hooks/use-toast';
+
+interface OrgForm {
+  name: string;
+  ownerEmail: string;
+  plan: string;
+  maxSeats: string;
+}
 
 export default function AdminDashboard() {
   const { t } = useTranslation('admin');
+  const { toast } = useToast();
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [orgs, setOrgs] = useState<AdminOrg[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateOrg, setShowCreateOrg] = useState(false);
+  const [creatingOrg, setCreatingOrg] = useState(false);
+  const [orgForm, setOrgForm] = useState<OrgForm>({ name: '', ownerEmail: '', plan: 'enterprise', maxSeats: '10' });
 
-  useEffect(() => {
-    adminApi.getStats().then(result => {
-      if (result.success && result.data) {
-        setStats(result.data);
-      }
-      setLoading(false);
+  async function loadData() {
+    const [statsResult, orgsResult] = await Promise.all([
+      adminApi.getStats(),
+      adminApi.getOrgs(),
+    ]);
+    if (statsResult.success && statsResult.data) setStats(statsResult.data);
+    if (orgsResult.success && orgsResult.data) setOrgs((orgsResult.data as any).orgs || []);
+    setLoading(false);
+  }
+
+  useEffect(() => { loadData(); }, []);
+
+  async function handleCreateOrg(e: React.FormEvent) {
+    e.preventDefault();
+    setCreatingOrg(true);
+    const result = await adminApi.createOrg({
+      name: orgForm.name,
+      ownerEmail: orgForm.ownerEmail,
+      plan: orgForm.plan,
+      maxSeats: parseInt(orgForm.maxSeats) || 10,
     });
-  }, []);
+    setCreatingOrg(false);
+
+    if (result.success) {
+      toast({ title: t('orgs.createSuccess') });
+      setOrgForm({ name: '', ownerEmail: '', plan: 'enterprise', maxSeats: '10' });
+      setShowCreateOrg(false);
+      loadData();
+    } else {
+      toast({ title: t('orgs.createError'), description: result.error, variant: 'destructive' });
+    }
+  }
 
   if (loading) {
     return (
@@ -63,7 +112,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Users by Plan */}
-      <Card>
+      <Card className="mb-8">
         <CardHeader>
           <CardTitle>{t('dashboard.usersByPlan')}</CardTitle>
         </CardHeader>
@@ -76,6 +125,100 @@ export default function AdminDashboard() {
               </div>
             ))}
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Organizations */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="h-5 w-5" />
+            {t('orgs.title')}
+          </CardTitle>
+          <Button size="sm" onClick={() => setShowCreateOrg(!showCreateOrg)}>
+            <Plus className="h-4 w-4 mr-1" />
+            {t('orgs.create')}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {/* Create org form */}
+          {showCreateOrg && (
+            <form onSubmit={handleCreateOrg} className="mb-6 p-4 bg-muted/50 rounded-lg space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label>{t('orgs.name')}</Label>
+                  <Input
+                    value={orgForm.name}
+                    onChange={(e) => setOrgForm({ ...orgForm, name: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label>{t('orgs.ownerEmail')}</Label>
+                  <Input
+                    type="email"
+                    value={orgForm.ownerEmail}
+                    onChange={(e) => setOrgForm({ ...orgForm, ownerEmail: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label>{t('orgs.plan')}</Label>
+                  <Select value={orgForm.plan} onValueChange={(v) => setOrgForm({ ...orgForm, plan: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="freelancer">Starter</SelectItem>
+                      <SelectItem value="pro">Pro</SelectItem>
+                      <SelectItem value="enterprise">Enterprise</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>{t('orgs.maxSeats')}</Label>
+                  <Input
+                    type="number"
+                    min="2"
+                    max="100"
+                    value={orgForm.maxSeats}
+                    onChange={(e) => setOrgForm({ ...orgForm, maxSeats: e.target.value })}
+                  />
+                </div>
+              </div>
+              <Button type="submit" disabled={creatingOrg}>
+                {creatingOrg ? t('orgs.creating') : t('orgs.create')}
+              </Button>
+            </form>
+          )}
+
+          {/* Org list */}
+          {orgs.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{t('orgs.noOrgs')}</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('orgs.name')}</TableHead>
+                  <TableHead>{t('orgs.owner')}</TableHead>
+                  <TableHead>{t('orgs.plan')}</TableHead>
+                  <TableHead className="text-center">{t('orgs.members')}</TableHead>
+                  <TableHead className="text-right">{t('orgs.usage')}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {orgs.map((org) => (
+                  <TableRow key={org.id}>
+                    <TableCell className="font-medium">{org.name}</TableCell>
+                    <TableCell>{org.owner_email}</TableCell>
+                    <TableCell><PlanBadge plan={org.plan} /></TableCell>
+                    <TableCell className="text-center">{org.member_count} / {org.max_seats}</TableCell>
+                    <TableCell className="text-right">
+                      {org.responses_this_month.toLocaleString()} / {org.max_responses.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

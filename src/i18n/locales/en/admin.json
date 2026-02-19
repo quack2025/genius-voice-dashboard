@@ -6,7 +6,23 @@
     "totalProjects": "Total Projects",
     "totalRecordings": "Total Recordings",
     "recordingsThisMonth": "Recordings This Month",
-    "usersByPlan": "Users by Plan"
+    "usersByPlan": "Users by Plan",
+    "totalOrgs": "Organizations"
+  },
+  "orgs": {
+    "title": "Organizations",
+    "create": "Create Organization",
+    "name": "Name",
+    "ownerEmail": "Owner email",
+    "plan": "Plan",
+    "maxSeats": "Max members",
+    "creating": "Creating...",
+    "createSuccess": "Organization created successfully",
+    "createError": "Failed to create organization",
+    "members": "Members",
+    "usage": "Usage this month",
+    "owner": "Owner",
+    "noOrgs": "No organizations"
   },
   "users": {
     "title": "User Management",

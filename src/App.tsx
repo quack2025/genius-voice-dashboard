@@ -22,6 +22,7 @@ import ResetPassword from "./pages/ResetPassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import AdminUserDetail from "./pages/AdminUserDetail";
+import OrgSettings from "./pages/OrgSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
                 <Route path="/recordings" element={<Recordings />} />
                 <Route path="/export" element={<Export />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/org" element={<OrgSettings />} />
               </Route>
             </Route>
 

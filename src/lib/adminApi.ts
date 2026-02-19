@@ -83,6 +83,33 @@ export interface PlanChangeResult {
   previous_plan: string;
 }
 
+export interface AdminOrg {
+  id: string;
+  name: string;
+  plan: string;
+  plan_name: string;
+  max_seats: number;
+  max_responses: number;
+  owner_id: string;
+  owner_email: string;
+  member_count: number;
+  responses_this_month: number;
+  created_at: string;
+}
+
+export interface CreateOrgResult {
+  success: boolean;
+  org: {
+    id: string;
+    name: string;
+    plan: string;
+    plan_name: string;
+    max_seats: number;
+    owner_id: string;
+    owner_email: string;
+  };
+}
+
 // API
 export const adminApi = {
   getStats: () => fetchWithAuth<AdminStats>('/api/admin/stats'),
@@ -100,4 +127,12 @@ export const adminApi = {
       `/api/admin/users/${userId}/plan`,
       { method: 'PUT', body: JSON.stringify({ plan }) }
     ),
+
+  getOrgs: () => fetchWithAuth<{ success: boolean; orgs: AdminOrg[] }>('/api/admin/orgs'),
+
+  createOrg: (data: { name: string; ownerEmail: string; plan: string; maxSeats: number }) =>
+    fetchWithAuth<CreateOrgResult>('/api/admin/orgs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 };
