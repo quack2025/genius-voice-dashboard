@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import AppSidebar from '@/components/AppSidebar';
+import HelpChat from '@/components/HelpChat';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -28,6 +29,7 @@ export default function DashboardLayout() {
           <span className="font-semibold text-foreground">Voice Capture</span>
         </div>
         <Outlet />
+        <HelpChat />
       </main>
     </div>
   );

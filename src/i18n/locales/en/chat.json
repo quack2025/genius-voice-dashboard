@@ -1,0 +1,18 @@
+{
+  "title": "AI Assistant",
+  "placeholder": "Type your question...",
+  "send": "Send",
+  "newChat": "New conversation",
+  "conversations": "Conversations",
+  "noConversations": "No conversations yet",
+  "remainingToday": "{{count}} messages remaining today",
+  "limitReached": "Daily limit reached. Come back tomorrow or upgrade your plan.",
+  "uploadImage": "Attach image",
+  "uploading": "Uploading image...",
+  "errorSending": "Failed to send message",
+  "errorLoading": "Failed to load conversations",
+  "close": "Close",
+  "thinking": "Thinking...",
+  "welcomeMessage": "Hi! I'm your Voice Capture assistant. I can help you with widget setup, Alchemer integration, data export, and more. How can I help you?",
+  "imageAttached": "Image attached"
+}

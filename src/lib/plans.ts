@@ -10,6 +10,7 @@ export interface PlanDefinition {
   show_branding: boolean;
   custom_themes: boolean;
   custom_domains: boolean;
+  chat_messages_per_day: number;
 }
 
 export const PLANS: Record<string, PlanDefinition> = {
@@ -22,10 +23,10 @@ export const PLANS: Record<string, PlanDefinition> = {
     languages: ['es'],
     export_formats: ['csv'],
     batch: false,
-
     show_branding: true,
     custom_themes: false,
     custom_domains: false,
+    chat_messages_per_day: 5,
   },
   freelancer: {
     name: 'Starter',
@@ -39,6 +40,7 @@ export const PLANS: Record<string, PlanDefinition> = {
     show_branding: false,
     custom_themes: false,
     custom_domains: false,
+    chat_messages_per_day: 20,
   },
   pro: {
     name: 'Pro',
@@ -52,6 +54,7 @@ export const PLANS: Record<string, PlanDefinition> = {
     show_branding: false,
     custom_themes: true,
     custom_domains: true,
+    chat_messages_per_day: 50,
   },
   enterprise: {
     name: 'Enterprise',
@@ -65,6 +68,7 @@ export const PLANS: Record<string, PlanDefinition> = {
     show_branding: false,
     custom_themes: true,
     custom_domains: true,
+    chat_messages_per_day: 100,
   },
 };
 

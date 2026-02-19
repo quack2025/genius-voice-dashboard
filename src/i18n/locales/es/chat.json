@@ -1,0 +1,18 @@
+{
+  "title": "Asistente IA",
+  "placeholder": "Escribe tu pregunta...",
+  "send": "Enviar",
+  "newChat": "Nueva conversacion",
+  "conversations": "Conversaciones",
+  "noConversations": "Sin conversaciones aun",
+  "remainingToday": "{{count}} mensajes restantes hoy",
+  "limitReached": "Limite diario alcanzado. Vuelve manana o mejora tu plan.",
+  "uploadImage": "Adjuntar imagen",
+  "uploading": "Subiendo imagen...",
+  "errorSending": "Error al enviar el mensaje",
+  "errorLoading": "Error al cargar las conversaciones",
+  "close": "Cerrar",
+  "thinking": "Pensando...",
+  "welcomeMessage": "Hola! Soy tu asistente de Voice Capture. Puedo ayudarte con la configuracion del widget, integracion con Alchemer, exportacion de datos y mas. Como puedo ayudarte?",
+  "imageAttached": "Imagen adjunta"
+}
