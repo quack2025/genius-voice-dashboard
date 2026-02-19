@@ -1,195 +1,103 @@
-# Voice Capture Dashboard - Contexto para Claude
+# Voice Capture Dashboard — Frontend
 
-## Descripcion
+React + TypeScript dashboard for managing voice capture projects, transcriptions, organizations, and a super admin backoffice. Includes an AI help chat widget powered by Claude.
 
-Dashboard frontend para gestionar proyectos de captura de voz con transcripcion automatica usando OpenAI Whisper. Los usuarios crean proyectos, obtienen un snippet para embeber en encuestas Alchemer, y gestionan las transcripciones resultantes.
+**Part of:** Genius Labs AI Suite
+**Repos:** [Backend API](https://github.com/quack2025/genius-voice-capture) + Frontend (this)
 
-## Stack
+## Quick Reference
 
-- **Frontend**: Vite + React 18 + TypeScript
-- **Estilos**: Tailwind CSS + shadcn/ui
-- **Estado**: React Context + TanStack Query
-- **i18n**: i18next (ES/EN/PT)
-- **Auth**: Supabase Auth
-- **Database**: Supabase PostgreSQL (lectura directa)
-- **Backend API**: Express.js en Railway (export, retranscribe)
-- **Deploy**: Lovable (auto-deploy desde GitHub)
-
-## URLs
-
-| Servicio | URL |
-|----------|-----|
+| Item | Value |
+|------|-------|
+| Framework | Vite + React 18 + TypeScript |
+| Styles | Tailwind CSS + shadcn/ui |
+| State | React Context + TanStack Query |
+| i18n | i18next (es/en/pt) — 8 namespaces |
+| Auth | Supabase Auth |
+| Deploy | Lovable (auto-deploy from GitHub) |
 | Backend API | https://voice-capture-api-production.up.railway.app |
 | Supabase | https://hggwsdqjkwydiubhvrvq.supabase.co |
-| GitHub (Frontend) | https://github.com/quack2025/genius-voice-dashboard |
-| GitHub (Backend) | https://github.com/quack2025/genius-voice-capture |
 
-## Arquitectura
-
-```
-Widget (voice.js) --POST /api/transcribe--> Backend --Whisper--> DB (solo texto)
-Dashboard (este repo) --lectura directa--> Supabase (projects, recordings)
-Dashboard --API calls--> Backend (export CSV, retranscribe)
-```
-
-- **Transcripcion inmediata:** El widget envia audio al backend, Whisper transcribe en memoria, solo se guarda texto
-- **audio_path nullable:** Recordings exitosos tienen audio_path = null. Solo los fallback (Whisper fallo 3x) tienen audio almacenado
-- **Play button condicional:** Solo aparece si `recording.audio_path` existe
-
----
-
-## Estructura del Proyecto
+## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── ui/                    # shadcn/ui components
-│   ├── DashboardLayout.tsx    # Layout responsive con sidebar mobile
-│   ├── AppSidebar.tsx         # Navegacion con slide-in mobile
-│   ├── ProtectedRoute.tsx     # Auth guard
-│   ├── ErrorBoundary.tsx      # Error boundary global
-│   ├── AudioPlayerModal.tsx   # Reproductor (solo fallback recordings)
-│   └── LanguageSwitcher.tsx   # Selector de idioma UI
+│   ├── ui/                      # shadcn/ui (don't modify directly)
+│   ├── DashboardLayout.tsx      # Layout: sidebar + outlet + HelpChat
+│   ├── AppSidebar.tsx           # Navigation (user/admin/org sections)
+│   ├── HelpChat.tsx             # Floating AI chat widget
+│   ├── ProtectedRoute.tsx       # Auth guard
+│   ├── AdminProtectedRoute.tsx  # Admin guard
+│   ├── PlanBadge.tsx            # Plan badge component
+│   ├── UsageBadge.tsx           # Usage indicator
+│   ├── LanguageSwitcher.tsx     # Language selector
+│   └── ErrorBoundary.tsx        # Error boundary
 ├── contexts/
-│   └── AuthContext.tsx        # Auth Supabase (login, register, signOut)
+│   └── AuthContext.tsx           # Auth (login, register, signOut, forgotPassword)
 ├── hooks/
 │   ├── use-toast.ts
-│   └── useFormatters.ts      # Formateo locale-aware (fecha, numero, moneda, duracion)
+│   └── useFormatters.ts         # Locale-aware formatting (date, number, currency, duration)
 ├── i18n/
-│   ├── index.ts              # Config i18n (namespaces: common, auth, dashboard, projects)
-│   └── locales/{es,en,pt}/   # Traducciones
+│   ├── index.ts                 # Config (8 namespaces: common, auth, dashboard, projects, landing, admin, org, chat)
+│   └── locales/{es,en,pt}/      # Translation JSONs
 ├── integrations/supabase/
-│   └── client.ts             # Cliente Supabase + tipos (audio_path: string | null)
+│   └── client.ts                # Supabase client + generated types
 ├── lib/
-│   ├── api.ts                # API client backend (exportApi, healthApi)
-│   └── utils.ts              # cn() helper
+│   ├── api.ts                   # Main API client (export, health, account)
+│   ├── adminApi.ts              # Admin API client (users, orgs, stats)
+│   ├── chatApi.ts               # Chat API client (conversations, messages, images)
+│   ├── orgApi.ts                # Organization API client
+│   ├── plans.ts                 # Plan definitions (mirrors backend)
+│   └── utils.ts                 # cn() helper
 ├── pages/
-│   ├── Login.tsx
-│   ├── Register.tsx
-│   ├── Dashboard.tsx          # Lista proyectos (contadores optimizados)
-│   ├── NewProject.tsx         # Crear proyecto + snippet widget
-│   ├── ProjectDetail.tsx      # 2 tabs: Recordings + Export
-│   ├── Recordings.tsx         # Lista global todas las grabaciones
-│   ├── Export.tsx             # Export CSV via backend API
-│   └── Settings.tsx
-├── App.tsx                    # Router (BrowserRouter)
-└── main.tsx                   # Entry point
+│   ├── Landing.tsx              # Public landing page
+│   ├── Login.tsx, Register.tsx  # Auth pages
+│   ├── ForgotPassword.tsx       # Forgot password
+│   ├── ResetPassword.tsx        # Reset password (from email link)
+│   ├── Dashboard.tsx            # Project list with counters
+│   ├── NewProject.tsx           # Create project + widget snippet
+│   ├── ProjectDetail.tsx        # Recordings tab + Export tab
+│   ├── Recordings.tsx           # Global recordings list
+│   ├── Export.tsx               # CSV export via backend
+│   ├── Settings.tsx             # Account settings
+│   ├── OrgSettings.tsx          # Organization management (owner)
+│   ├── AdminDashboard.tsx       # Admin stats + users by plan
+│   ├── AdminUsers.tsx           # Paginated user list + search
+│   ├── AdminUserDetail.tsx      # User detail + change plan + toggle admin + reset password + delete
+│   ├── AdminOrgs.tsx            # Organization list + create + search
+│   └── AdminOrgDetail.tsx       # Org detail + edit + members + delete
+├── App.tsx                      # Router (public, protected, admin routes)
+└── main.tsx                     # Entry point
 ```
 
----
+## Plans (4 tiers, mirrored from backend)
 
-## Modelo de Datos (tipos en client.ts)
+| Key | Display Name | Price | Responses/mo |
+|-----|-------------|-------|-------------|
+| free | Free | $0 | 100 |
+| freelancer | Starter | $39 | 1,500 |
+| pro | Pro | $199 | 10,000 |
+| enterprise | Enterprise | $499 | 50,000 |
 
-### Project
-```typescript
-{
-  id: string;
-  user_id: string;
-  name: string;
-  public_key: string;        // proj_xxx
-  language: string;           // es, en, pt
-  transcription_mode: string; // siempre 'realtime'
-  created_at: string;
-}
-```
+DB key is `freelancer`, display name is `Starter`.
 
-### Recording
-```typescript
-{
-  id: string;
-  project_id: string;
-  session_id: string;
-  audio_path: string | null;  // null = transcripcion exitosa (audio descartado)
-  duration_seconds: number;
-  status: string;              // pending | processing | completed | failed
-  transcription: string | null;
-  created_at: string;
-}
-```
-
----
-
-## Paginas y Funcionalidad
-
-| Pagina | Funcion |
-|--------|---------|
-| Dashboard | Lista proyectos con contadores de recordings (query optimizada) |
-| NewProject | Formulario nombre + idioma. Al crear muestra snippet para Alchemer |
-| ProjectDetail | Tab Recordings (tabla paginada + Play condicional) + Tab Export (CSV) |
-| Recordings | Lista global de recordings de todos los proyectos |
-| Export | Seleccionar proyecto + exportar CSV via backend |
-| Settings | Configuracion de cuenta |
-
----
-
-## API Client (api.ts)
-
-```typescript
-// Export CSV via backend
-exportApi.exportCsv(projectId, status) -> { blob, filename }
-
-// Health check
-healthApi.check() -> { status, timestamp, version }
-```
-
-Todas las llamadas usan JWT de Supabase Auth via `Authorization: Bearer <token>`.
-
----
-
-## Internacionalizacion (i18n)
-
-- **Idiomas**: Espanol (es), English (en), Portugues (pt)
-- **Namespaces**: common, auth, dashboard, projects
-- **Deteccion**: Automatica por navegador
-- **Persistencia**: localStorage (`ui_language`)
-- **Selector**: LanguageSwitcher en sidebar y paginas auth
-- **Hook**: `useTranslation('namespace')` para textos
-- **Hook**: `useFormatters()` para fechas/numeros locale-aware
-
-**Importante**: El idioma de UI es independiente del idioma de transcripcion del proyecto.
-
----
-
-## Responsive Design
-
-- **Desktop**: Sidebar fija a la izquierda (w-64, md:translate-x-0)
-- **Mobile**: Hamburger menu + sidebar slide-in + backdrop overlay
-- **DashboardLayout**: Controla estado open/close del sidebar
-- **AppSidebar**: Acepta props `open`/`onClose`, cierra al navegar
-
----
-
-## Deployment (Lovable)
-
-**CRITICO**: El archivo `.env` DEBE estar commiteado en git. Lovable lee las variables `VITE_*` directamente del `.env` en el repo. No inyecta env vars de su dashboard al build de Vite.
-
-```env
-VITE_API_URL=https://voice-capture-api-production.up.railway.app
-VITE_SUPABASE_URL=https://hggwsdqjkwydiubhvrvq.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJ...  # Clave publica (anon), segura en git
-```
-
-Usar `.env.local` (gitignored) para secretos locales.
-
----
-
-## Comandos
+## Commands
 
 ```bash
-npm install      # Instalar dependencias
-npm run dev      # Desarrollo local (http://localhost:5173)
-npm run build    # Build produccion
+npm install      # Install deps
+npm run dev      # Dev (http://localhost:5173)
+npm run build    # Production build
 npm run preview  # Preview build
+npm test         # Vitest
 ```
 
----
+## Critical: Lovable Deploy
 
-## Convenciones
+**NEVER remove `.env` from git.** Lovable reads `VITE_*` vars from the committed `.env` file. Removing it causes `supabaseUrl is required` crash.
 
-- `useTranslation('namespace')` para todos los textos visibles
-- `useFormatters()` para fechas, numeros, moneda, duracion
-- Componentes en PascalCase
-- Paginas en `src/pages/`
-- UI components de shadcn/ui en `src/components/ui/`
-- Tipos en el mismo archivo o en `client.ts`
-- No usar emojis en codigo
+## Detailed Docs
+
+- [agent_docs/architecture.md](agent_docs/architecture.md) — Routes, page map, API clients, data flow
+- [agent_docs/building_and_deploying.md](agent_docs/building_and_deploying.md) — Env vars, Lovable deploy, Supabase
+- [agent_docs/code_conventions.md](agent_docs/code_conventions.md) — Patterns, i18n, component conventions
