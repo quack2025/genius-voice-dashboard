@@ -4,13 +4,41 @@
   "newProject": "Nuevo Proyecto",
   "searchPlaceholder": "Buscar proyectos...",
   "noResults": "No se encontraron proyectos",
-  "noResultsHint": "No hay proyectos que coincidan con tu búsqueda",
-  "createFirst": "Crea tu primer proyecto",
-  "createFirstHint": "Comienza creando un proyecto para capturar y transcribir grabaciones de voz de tus encuestas",
+  "noResultsHint": "No hay proyectos que coincidan con tu busqueda",
+  "createFirst": "Aun no tienes proyectos",
+  "createFirstHint": "Instala el widget de Voice Capture en tu encuesta para comenzar a grabar y transcribir respuestas automaticamente.",
+  "stats": {
+    "totalRecordings": "Grabaciones Transcritas",
+    "hoursProcessed": "Horas de Audio Procesadas",
+    "activeProjects": "Proyectos Activos",
+    "creditsUsed": "Creditos Usados Este Mes"
+  },
   "table": {
-    "name": "Nombre del proyecto",
-    "mode": "Modo",
+    "name": "Nombre del Proyecto",
+    "status": "Estado",
     "recordings": "Grabaciones",
-    "createdAt": "Fecha de creación"
+    "duration": "Duracion Total",
+    "actions": "Acciones"
+  },
+  "tabs": {
+    "active": "Activos",
+    "archived": "Archivados"
+  },
+  "projectStatus": {
+    "active": "Activo",
+    "processing": "En proceso",
+    "complete": "Completado",
+    "archived": "Archivado",
+    "error": "Error",
+    "pending": "Pendiente"
+  },
+  "actions": {
+    "view": "Ver",
+    "archive": "Archivar",
+    "unarchive": "Desarchivar",
+    "delete": "Eliminar"
+  },
+  "progress": {
+    "transcribed": "{{percent}}% transcrito"
   }
 }

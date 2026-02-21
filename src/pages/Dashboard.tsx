@@ -9,25 +9,86 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, FolderOpen, Mic } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Progress } from '@/components/ui/progress';
+import { Plus, Search, Mic, MoreHorizontal, Eye, Archive, Trash2, Mic2, Clock, FolderOpen, CreditCard } from 'lucide-react';
 import { accountApi } from '@/lib/api';
 import type { UsageData } from '@/lib/plans';
-import PlanBadge from '@/components/PlanBadge';
-import UsageBadge from '@/components/UsageBadge';
 
-interface ProjectWithCount extends Project {
+// --- Types ---
+
+type ProjectStatus = 'active' | 'processing' | 'complete' | 'archived' | 'error' | 'pending';
+
+interface ProjectWithStats extends Project {
   recording_count: number;
+  transcribed_count: number;
+  total_duration_seconds: number;
+  derived_status: ProjectStatus;
 }
+
+// --- Status badge config (DESIGN_SYSTEM.md section 6.3) ---
+
+const statusConfig: Record<ProjectStatus, { class: string }> = {
+  active:     { class: 'bg-primary/10 text-primary border-transparent' },
+  processing: { class: 'bg-[hsl(var(--warning))]/10 text-[hsl(var(--warning))] border-transparent' },
+  complete:   { class: 'bg-[hsl(var(--success))]/10 text-[hsl(var(--success))] border-transparent' },
+  archived:   { class: 'bg-muted text-muted-foreground border-transparent' },
+  error:      { class: 'bg-destructive/10 text-destructive border-transparent' },
+  pending:    { class: 'bg-muted text-muted-foreground border-transparent' },
+};
+
+// --- Helpers ---
+
+function deriveProjectStatus(
+  recordingCount: number,
+  transcribedCount: number,
+  failedCount: number,
+  processingCount: number,
+): ProjectStatus {
+  if (recordingCount === 0) return 'active';
+  if (failedCount > 0 && failedCount === recordingCount) return 'error';
+  if (processingCount > 0) return 'processing';
+  if (transcribedCount === recordingCount) return 'complete';
+  if (transcribedCount > 0) return 'processing';
+  return 'pending';
+}
+
+function formatHours(totalSeconds: number): string {
+  const hours = totalSeconds / 3600;
+  if (hours < 0.1) return '0h';
+  if (hours < 10) return `${hours.toFixed(1)}h`;
+  return `${Math.round(hours)}h`;
+}
+
+function formatDurationCompact(totalSeconds: number): string {
+  if (totalSeconds === 0) return '0:00';
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = Math.round(totalSeconds % 60);
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+// --- Component ---
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { t } = useTranslation('dashboard');
-  const { t: tCommon } = useTranslation('common');
-  const { formatDate } = useFormatters();
-  const [projects, setProjects] = useState<ProjectWithCount[]>([]);
+  const { formatNumber } = useFormatters();
+  const [projects, setProjects] = useState<ProjectWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [usage, setUsage] = useState<UsageData | null>(null);
+  const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
 
   useEffect(() => {
     if (user) {
@@ -63,35 +124,86 @@ export default function Dashboard() {
       return;
     }
 
-    // Single query for all recording counts (instead of N+1)
+    // Fetch all recordings for the user's projects in a single query
     const projectIds = projectsData.map(p => p.id);
-    const { data: countData } = await supabase
+    const { data: recordingsData } = await supabase
       .from('recordings')
-      .select('project_id')
+      .select('project_id, status, duration_seconds')
       .in('project_id', projectIds);
 
-    const counts: Record<string, number> = {};
-    if (countData) {
-      for (const rec of countData) {
-        counts[rec.project_id] = (counts[rec.project_id] || 0) + 1;
+    // Aggregate per project
+    const statsMap: Record<string, {
+      count: number;
+      transcribed: number;
+      failed: number;
+      processing: number;
+      totalDuration: number;
+    }> = {};
+
+    if (recordingsData) {
+      for (const rec of recordingsData) {
+        if (!statsMap[rec.project_id]) {
+          statsMap[rec.project_id] = { count: 0, transcribed: 0, failed: 0, processing: 0, totalDuration: 0 };
+        }
+        const s = statsMap[rec.project_id];
+        s.count++;
+        s.totalDuration += rec.duration_seconds || 0;
+        if (rec.status === 'completed') s.transcribed++;
+        else if (rec.status === 'failed') s.failed++;
+        else if (rec.status === 'processing') s.processing++;
       }
     }
 
-    const projectsWithCounts: ProjectWithCount[] = projectsData.map(project => ({
-      ...project,
-      recording_count: counts[project.id] || 0,
-    }));
+    const projectsWithStats: ProjectWithStats[] = projectsData.map(project => {
+      const stats = statsMap[project.id] || { count: 0, transcribed: 0, failed: 0, processing: 0, totalDuration: 0 };
+      return {
+        ...project,
+        recording_count: stats.count,
+        transcribed_count: stats.transcribed,
+        total_duration_seconds: stats.totalDuration,
+        derived_status: deriveProjectStatus(stats.count, stats.transcribed, stats.failed, stats.processing),
+      };
+    });
 
-    setProjects(projectsWithCounts);
+    setProjects(projectsWithStats);
     setLoading(false);
   };
 
-  const filteredProjects = projects.filter((project) =>
+  // --- Computed values ---
+
+  // For now, all projects are considered "active" (no archived field in DB).
+  // When the backend adds an `archived_at` column, filter here.
+  const activeProjects = projects.filter(() => true);
+  const archivedProjects: ProjectWithStats[] = [];
+
+  const displayedProjects = activeTab === 'active' ? activeProjects : archivedProjects;
+
+  const filteredProjects = displayedProjects.filter((project) =>
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getModeLabel = (mode: string) => {
-    return tCommon(`transcriptionModes.${mode}`);
+  // Stat card values
+  const totalTranscribed = projects.reduce((sum, p) => sum + p.transcribed_count, 0);
+  const totalDurationSeconds = projects.reduce((sum, p) => sum + p.total_duration_seconds, 0);
+  const activeProjectCount = activeProjects.length;
+  const creditsUsed = usage?.usage.responses_this_month ?? 0;
+
+  // Progress: % of recordings transcribed
+  const getTranscriptionProgress = (p: ProjectWithStats) => {
+    if (p.recording_count === 0) return 0;
+    return Math.round((p.transcribed_count / p.recording_count) * 100);
+  };
+
+  // --- Status badge (section 6.3 — whitespace-nowrap always) ---
+
+  const renderStatusBadge = (status: ProjectStatus) => {
+    const config = statusConfig[status];
+    return (
+      <Badge className={`whitespace-nowrap ${config.class}`}>
+        <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5" />
+        {t(`projectStatus.${status}`)}
+      </Badge>
+    );
   };
 
   return (
@@ -110,116 +222,221 @@ export default function Dashboard() {
         </Button>
       </div>
 
-      {/* Usage Card */}
-      {usage && (
-        <Card className="mb-6">
-          <CardContent className="py-4">
-            <div className="flex items-center gap-3 mb-4">
-              <PlanBadge plan={usage.plan} size="md" />
-              <span className="text-sm text-muted-foreground">
-                {tCommon('plans.month', { month: usage.month })}
-              </span>
+      {/* F3.1 — Stat Cards (4 cards, section 6.1 structure) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-1">
+              <Mic2 className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">{t('stats.totalRecordings')}</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <UsageBadge
-                current={usage.usage.responses_this_month}
-                limit={usage.limits.max_responses}
-                label={tCommon('plans.responses')}
-              />
-              <UsageBadge
-                current={usage.usage.projects_count}
-                limit={usage.limits.max_projects}
-                label={tCommon('plans.projects')}
-              />
-            </div>
+            <p className="text-3xl font-bold mt-1">{loading ? '-' : formatNumber(totalTranscribed)}</p>
           </CardContent>
         </Card>
-      )}
-
-      {/* Search */}
-      <div className="mb-6">
-        <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={t('searchPlaceholder')}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-      </div>
-
-      {/* Content */}
-      {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      ) : filteredProjects.length === 0 ? (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-              <FolderOpen className="h-8 w-8 text-muted-foreground" />
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-1">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">{t('stats.hoursProcessed')}</p>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">
-              {searchQuery ? t('noResults') : t('createFirst')}
-            </h3>
-            <p className="text-muted-foreground text-center max-w-sm mb-6">
-              {searchQuery ? t('noResultsHint') : t('createFirstHint')}
+            <p className="text-3xl font-bold mt-1">{loading ? '-' : formatHours(totalDurationSeconds)}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-1">
+              <FolderOpen className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">{t('stats.activeProjects')}</p>
+            </div>
+            <p className="text-3xl font-bold mt-1">{loading ? '-' : formatNumber(activeProjectCount)}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-2 mb-1">
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">{t('stats.creditsUsed')}</p>
+            </div>
+            <p className="text-3xl font-bold mt-1">
+              {loading ? '-' : (
+                usage ? `${formatNumber(creditsUsed)}${usage.limits.max_responses ? ` / ${formatNumber(usage.limits.max_responses)}` : ''}` : '-'
+              )}
             </p>
-            {!searchQuery && (
-              <Button asChild>
-                <Link to="/projects/new">
-                  <Plus className="h-4 w-4 mr-2" />
-                  {t('newProject')}
-                </Link>
-              </Button>
+            {usage && usage.limits.max_responses && (
+              <div className="mt-2">
+                <Progress value={Math.min((creditsUsed / usage.limits.max_responses) * 100, 100)} className="h-1.5" />
+              </div>
             )}
           </CardContent>
         </Card>
-      ) : (
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t('table.name')}</TableHead>
-                <TableHead>{t('table.mode')}</TableHead>
-                <TableHead>{t('table.recordings')}</TableHead>
-                <TableHead>{t('table.createdAt')}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredProjects.map((project) => (
-                <TableRow key={project.id} className="cursor-pointer hover:bg-muted/50">
+      </div>
+
+      {/* F3.4 — Tabs: Active / Archived */}
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'active' | 'archived')}>
+        <div className="flex items-center justify-between mb-4">
+          <TabsList>
+            <TabsTrigger value="active">
+              {t('tabs.active')} ({activeProjects.length})
+            </TabsTrigger>
+            <TabsTrigger value="archived">
+              {t('tabs.archived')} ({archivedProjects.length})
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Search */}
+          <div className="relative max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('searchPlaceholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        {/* Active tab content */}
+        <TabsContent value="active">
+          {renderProjectList(filteredProjects)}
+        </TabsContent>
+
+        {/* Archived tab content */}
+        <TabsContent value="archived">
+          {renderProjectList(filteredProjects)}
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+
+  // --- Render helpers ---
+
+  function renderProjectList(projectList: ProjectWithStats[]) {
+    // Loading state — skeleton (section 8.5)
+    if (loading) {
+      return (
+        <div className="space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full rounded-lg" />
+          ))}
+        </div>
+      );
+    }
+
+    // F3.5 — Empty state (section 6.6)
+    if (projectList.length === 0) {
+      // If searching, show "no results" message
+      if (searchQuery) {
+        return (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+              <Search className="w-12 h-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">{t('noResults')}</h3>
+              <p className="text-muted-foreground text-sm max-w-sm">
+                {t('noResultsHint')}
+              </p>
+            </CardContent>
+          </Card>
+        );
+      }
+
+      // Empty state for "no projects yet" — references installing the voice capture widget
+      return (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Mic className="w-12 h-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold mb-2">{t('createFirst')}</h3>
+          <p className="text-muted-foreground text-sm max-w-sm mb-6">
+            {t('createFirstHint')}
+          </p>
+          <Button asChild>
+            <Link to="/projects/new">
+              <Plus className="w-4 h-4 mr-2" />
+              {t('newProject')}
+            </Link>
+          </Button>
+        </div>
+      );
+    }
+
+    // F3.2 — Projects table: Project Name | Status | Recordings | Duration | Actions
+    return (
+      <Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('table.name')}</TableHead>
+              <TableHead>{t('table.status')}</TableHead>
+              <TableHead>{t('table.recordings')}</TableHead>
+              <TableHead>{t('table.duration')}</TableHead>
+              <TableHead className="text-right">{t('table.actions')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {projectList.map((project) => {
+              const progress = getTranscriptionProgress(project);
+              return (
+                <TableRow key={project.id} className="hover:bg-muted/50">
                   <TableCell>
                     <Link
                       to={`/projects/${project.id}`}
                       className="flex items-center gap-3 font-medium text-foreground hover:text-primary"
                     >
-                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
                         <Mic className="h-4 w-4 text-primary" />
                       </div>
-                      {project.name}
+                      <div className="min-w-0">
+                        <p className="truncate">{project.name}</p>
+                        {project.recording_count > 0 && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <Progress value={progress} className="h-1.5 flex-1 max-w-[120px]" />
+                            <span className="text-xs text-muted-foreground w-12 text-right">
+                              {progress}%
+                            </span>
+                          </div>
+                        )}
+                      </div>
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={project.transcription_mode === 'realtime' ? 'default' : 'secondary'}
-                    >
-                      {getModeLabel(project.transcription_mode)}
-                    </Badge>
+                    {/* F3.3 — Status badges with whitespace-nowrap */}
+                    {renderStatusBadge(project.derived_status)}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {project.recording_count}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatDate(project.created_at)}
+                    {formatDurationCompact(project.total_duration_seconds)}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link to={`/projects/${project.id}`} className="flex items-center gap-2">
+                            <Eye className="h-4 w-4" />
+                            {t('actions.view')}
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="flex items-center gap-2">
+                          <Archive className="h-4 w-4" />
+                          {t('actions.archive')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="flex items-center gap-2 text-destructive focus:text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                          {t('actions.delete')}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
-      )}
-    </div>
-  );
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Card>
+    );
+  }
 }
