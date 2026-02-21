@@ -12,7 +12,6 @@ import {
   Download,
   Settings,
   LogOut,
-  Mic,
   X,
   Shield,
   Users,
@@ -56,29 +55,23 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
 
   return (
     <aside className={cn(
-      "w-64 bg-sidebar border-r border-sidebar-border flex flex-col h-screen fixed left-0 top-0 z-50 transition-transform duration-200",
+      "w-64 bg-[hsl(var(--sidebar-bg))] border-r border-sidebar-border flex flex-col h-screen fixed left-0 top-0 z-50 transition-transform duration-200",
       open ? "translate-x-0" : "-translate-x-full",
       "md:translate-x-0"
     )}>
-      {/* Logo */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-sidebar-primary rounded-lg">
-              <Mic className="h-5 w-5 text-sidebar-primary-foreground" />
-            </div>
-            <span className="text-lg font-semibold text-sidebar-foreground">Voice Capture</span>
-          </div>
-          {/* Close button on mobile */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-sidebar-muted hover:text-sidebar-foreground"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
+      {/* Logo Block */}
+      <div className="m-3 p-3 bg-white rounded-lg flex items-center gap-3">
+        <img src="/genius-labs-logo.webp" alt="Voice Capture" className="w-8 h-8 object-contain" />
+        <span className="font-semibold text-sm text-foreground truncate">Voice Capture</span>
+        {/* Close button on mobile */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden ml-auto text-sidebar-muted hover:text-sidebar-foreground"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Navigation */}
@@ -95,8 +88,8 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                 isActive
-                  ? 'bg-sidebar-accent text-sidebar-primary'
-                  : 'text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                  ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-foreground))]'
+                  : 'text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))]'
               )}
             >
               <item.icon className="h-5 w-5" />
@@ -115,8 +108,8 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                 location.pathname === '/org'
-                  ? 'bg-sidebar-accent text-sidebar-primary'
-                  : 'text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                  ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-foreground))]'
+                  : 'text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))]'
               )}
             >
               <Building2 className="h-5 w-5" />
@@ -129,7 +122,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
         {isAdmin && (
           <>
             <div className="my-3 border-t border-sidebar-border" />
-            <p className="px-4 py-1 text-xs font-semibold text-sidebar-muted uppercase tracking-wider">
+            <p className="px-4 py-1 text-xs font-semibold text-[hsl(var(--sidebar-foreground))]/60 uppercase tracking-wider">
               {t('nav.admin')}
             </p>
             {[
@@ -146,8 +139,8 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
                   className={cn(
                     'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-sidebar-accent text-sidebar-primary'
-                      : 'text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground'
+                      ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-foreground))]'
+                      : 'text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))]'
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -159,21 +152,21 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
         )}
       </nav>
 
-      {/* User section */}
-      <div className="p-4 border-t border-sidebar-border">
+      {/* User section — always at bottom */}
+      <div className="p-4 border-t border-sidebar-border mt-auto">
         <div className="flex items-center gap-3 px-4 py-2 mb-2">
-          <div className="w-8 h-8 rounded-full bg-sidebar-accent flex items-center justify-center">
-            <span className="text-xs font-medium text-sidebar-foreground">
+          <div className="w-8 h-8 rounded-full bg-[hsl(var(--sidebar-hover-bg))] flex items-center justify-center">
+            <span className="text-xs font-medium text-[hsl(var(--sidebar-foreground))]">
               {user?.email?.charAt(0).toUpperCase()}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-sidebar-foreground truncate">
+            <p className="text-sm font-medium text-[hsl(var(--sidebar-foreground))] truncate">
               {user?.email}
             </p>
             <PlanBadge plan={planKey} />
             {orgInfo && (
-              <p className="text-xs text-sidebar-muted truncate">{orgInfo.name}</p>
+              <p className="text-xs text-[hsl(var(--sidebar-foreground))]/60 truncate">{orgInfo.name}</p>
             )}
           </div>
         </div>
@@ -182,7 +175,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
         </div>
         <button
           onClick={signOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-sidebar-muted hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))] transition-colors"
         >
           <LogOut className="h-5 w-5" />
           {t('nav.logout')}

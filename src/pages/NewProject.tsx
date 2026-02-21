@@ -129,7 +129,7 @@ export default function NewProject() {
   };
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
+    <div className="p-4 md:p-8 max-w-2xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <button
