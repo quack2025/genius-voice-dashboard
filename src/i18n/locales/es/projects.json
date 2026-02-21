@@ -110,6 +110,42 @@
     "title": "Configuración",
     "subtitle": "Administra las preferencias de tu cuenta",
     "generalTitle": "Configuración general",
-    "comingSoon": "Las opciones de configuración estarán disponibles próximamente."
+    "comingSoon": "Las opciones de configuración estarán disponibles próximamente.",
+    "tabs": {
+      "myAccount": "Mi Cuenta",
+      "organization": "Organización",
+      "members": "Miembros",
+      "planBilling": "Plan y Facturación",
+      "dangerZone": "Zona de Peligro"
+    },
+    "myAccount": {
+      "title": "Información de la cuenta",
+      "email": "Email",
+      "emailReadonly": "Para cambiar tu email, contacta a soporte.",
+      "language": "Idioma preferido",
+      "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña actual",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "updatePassword": "Actualizar contraseña",
+      "updatingPassword": "Actualizando...",
+      "passwordUpdated": "Contraseña actualizada correctamente",
+      "passwordError": "Error al actualizar la contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+    },
+    "dangerZone": {
+      "title": "Zona de Peligro",
+      "deleteAccount": "Eliminar cuenta",
+      "deleteAccountDescription": "Esta acción es permanente y no se puede deshacer.",
+      "deleteButton": "Eliminar cuenta",
+      "dialogTitle": "¿Eliminar tu cuenta?",
+      "dialogDescription": "Esto eliminará permanentemente tu cuenta y todos los datos asociados. Esta acción no se puede deshacer.",
+      "dialogCancel": "Cancelar",
+      "dialogConfirm": "Eliminar mi cuenta",
+      "deleting": "Eliminando...",
+      "deleteSuccess": "Cuenta eliminada correctamente",
+      "deleteError": "Error al eliminar la cuenta"
+    }
   }
 }

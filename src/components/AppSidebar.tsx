@@ -103,11 +103,11 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
           <>
             <div className="my-3 border-t border-sidebar-border" />
             <NavLink
-              to="/org"
+              to="/settings?tab=organization"
               onClick={onClose}
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                location.pathname === '/org'
+                location.pathname === '/settings' && location.search.includes('tab=organization')
                   ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-foreground))]'
                   : 'text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))]'
               )}
