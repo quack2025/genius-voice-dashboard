@@ -40,5 +40,12 @@
   },
   "progress": {
     "transcribed": "{{percent}}% transcribed"
+  },
+  "deleteDialog": {
+    "title": "Delete \"{{name}}\"?",
+    "description": "This action cannot be undone. The project and all its recordings will be permanently deleted.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "deleting": "Deleting..."
   }
 }

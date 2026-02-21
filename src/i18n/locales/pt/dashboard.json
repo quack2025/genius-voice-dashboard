@@ -40,5 +40,12 @@
   },
   "progress": {
     "transcribed": "{{percent}}% transcrito"
+  },
+  "deleteDialog": {
+    "title": "Excluir \"{{name}}\"?",
+    "description": "Esta acao nao pode ser desfeita. O projeto e todas as suas gravacoes serao excluidos permanentemente.",
+    "cancel": "Cancelar",
+    "confirm": "Excluir",
+    "deleting": "Excluindo..."
   }
 }

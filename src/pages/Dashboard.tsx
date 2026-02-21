@@ -17,6 +17,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Progress } from '@/components/ui/progress';
 import { Plus, Search, Mic, MoreHorizontal, Eye, Archive, Trash2, Mic2, Clock, FolderOpen, CreditCard } from 'lucide-react';
 import { accountApi } from '@/lib/api';
@@ -89,6 +99,8 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [usage, setUsage] = useState<UsageData | null>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
+  const [deletingProject, setDeletingProject] = useState<ProjectWithStats | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -167,6 +179,20 @@ export default function Dashboard() {
 
     setProjects(projectsWithStats);
     setLoading(false);
+  };
+
+  const handleDeleteProject = async () => {
+    if (!deletingProject) return;
+    setIsDeleting(true);
+    const { error } = await supabase
+      .from('projects')
+      .delete()
+      .eq('id', deletingProject.id);
+    setIsDeleting(false);
+    setDeletingProject(null);
+    if (!error) {
+      fetchProjects();
+    }
   };
 
   // --- Computed values ---
@@ -305,6 +331,30 @@ export default function Dashboard() {
           {renderProjectList(filteredProjects)}
         </TabsContent>
       </Tabs>
+
+      {/* AlertDialog for project deletion (DESIGN_SYSTEM.md section 8.4) */}
+      <AlertDialog open={!!deletingProject} onOpenChange={() => setDeletingProject(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {deletingProject ? t('deleteDialog.title', { name: deletingProject.name }) : ''}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('deleteDialog.description')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('deleteDialog.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteProject}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? t('deleteDialog.deleting') : t('deleteDialog.confirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 
@@ -424,7 +474,10 @@ export default function Dashboard() {
                           <Archive className="h-4 w-4" />
                           {t('actions.archive')}
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center gap-2 text-destructive focus:text-destructive">
+                        <DropdownMenuItem
+                          className="flex items-center gap-2 text-destructive focus:text-destructive"
+                          onClick={() => setDeletingProject(project)}
+                        >
                           <Trash2 className="h-4 w-4" />
                           {t('actions.delete')}
                         </DropdownMenuItem>

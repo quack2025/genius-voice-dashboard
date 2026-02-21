@@ -40,5 +40,12 @@
   },
   "progress": {
     "transcribed": "{{percent}}% transcrito"
+  },
+  "deleteDialog": {
+    "title": "Eliminar \"{{name}}\"?",
+    "description": "Esta accion no se puede deshacer. Se eliminara permanentemente el proyecto y todas sus grabaciones.",
+    "cancel": "Cancelar",
+    "confirm": "Eliminar",
+    "deleting": "Eliminando..."
   }
 }
