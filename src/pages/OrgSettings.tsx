@@ -90,7 +90,7 @@ export default function OrgSettings() {
     : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
       <div className="flex items-center gap-3">
         <Building2 className="h-7 w-7 text-primary" />
         <div>

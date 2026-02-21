@@ -5,12 +5,47 @@
   "searchPlaceholder": "Search projects...",
   "noResults": "No projects found",
   "noResultsHint": "No projects match your search",
-  "createFirst": "Create your first project",
-  "createFirstHint": "Start by creating a project to capture and transcribe voice recordings from your surveys",
+  "createFirst": "No projects yet",
+  "createFirstHint": "Install the Voice Capture widget on your survey to start recording and transcribing responses automatically.",
+  "stats": {
+    "totalRecordings": "Total Recordings Transcribed",
+    "hoursProcessed": "Hours of Audio Processed",
+    "activeProjects": "Active Projects",
+    "creditsUsed": "Credits Used This Month"
+  },
   "table": {
-    "name": "Project name",
-    "mode": "Mode",
+    "name": "Project Name",
+    "status": "Status",
     "recordings": "Recordings",
-    "createdAt": "Created at"
+    "duration": "Total Duration",
+    "actions": "Actions"
+  },
+  "tabs": {
+    "active": "Active",
+    "archived": "Archived"
+  },
+  "projectStatus": {
+    "active": "Active",
+    "processing": "Processing",
+    "complete": "Complete",
+    "archived": "Archived",
+    "error": "Error",
+    "pending": "Pending"
+  },
+  "actions": {
+    "view": "View",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "delete": "Delete"
+  },
+  "progress": {
+    "transcribed": "{{percent}}% transcribed"
+  },
+  "deleteDialog": {
+    "title": "Delete \"{{name}}\"?",
+    "description": "This action cannot be undone. The project and all its recordings will be permanently deleted.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "deleting": "Deleting..."
   }
 }

@@ -110,6 +110,42 @@
     "title": "Settings",
     "subtitle": "Manage your account preferences",
     "generalTitle": "General settings",
-    "comingSoon": "Configuration options will be available soon."
+    "comingSoon": "Configuration options will be available soon.",
+    "tabs": {
+      "myAccount": "My Account",
+      "organization": "Organization",
+      "members": "Members",
+      "planBilling": "Plan & Billing",
+      "dangerZone": "Danger Zone"
+    },
+    "myAccount": {
+      "title": "Account Information",
+      "email": "Email",
+      "emailReadonly": "To change your email, contact support.",
+      "language": "Preferred language",
+      "changePassword": "Change Password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "updatePassword": "Update password",
+      "updatingPassword": "Updating...",
+      "passwordUpdated": "Password updated successfully",
+      "passwordError": "Failed to update password",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters"
+    },
+    "dangerZone": {
+      "title": "Danger Zone",
+      "deleteAccount": "Delete account",
+      "deleteAccountDescription": "This action is permanent and cannot be undone.",
+      "deleteButton": "Delete account",
+      "dialogTitle": "Delete your account?",
+      "dialogDescription": "This will permanently delete your account and all associated data. This action cannot be undone.",
+      "dialogCancel": "Cancel",
+      "dialogConfirm": "Delete my account",
+      "deleting": "Deleting...",
+      "deleteSuccess": "Account deleted successfully",
+      "deleteError": "Failed to delete account"
+    }
   }
 }

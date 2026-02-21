@@ -24,7 +24,6 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminUserDetail from "./pages/AdminUserDetail";
 import AdminOrgs from "./pages/AdminOrgs";
 import AdminOrgDetail from "./pages/AdminOrgDetail";
-import OrgSettings from "./pages/OrgSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,7 +34,7 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <Toaster />
-        <Sonner />
+        <Sonner position="bottom-right" />
         <BrowserRouter>
           <Routes>
             {/* Public routes */}
@@ -53,7 +52,7 @@ const App = () => (
                 <Route path="/recordings" element={<Recordings />} />
                 <Route path="/export" element={<Export />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/org" element={<OrgSettings />} />
+                <Route path="/org" element={<Navigate to="/settings?tab=organization" replace />} />
               </Route>
             </Route>
 

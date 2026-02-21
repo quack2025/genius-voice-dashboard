@@ -110,6 +110,42 @@
     "title": "Configurações",
     "subtitle": "Gerencie as preferências da sua conta",
     "generalTitle": "Configurações gerais",
-    "comingSoon": "As opções de configuração estarão disponíveis em breve."
+    "comingSoon": "As opções de configuração estarão disponíveis em breve.",
+    "tabs": {
+      "myAccount": "Minha Conta",
+      "organization": "Organização",
+      "members": "Membros",
+      "planBilling": "Plano e Cobrança",
+      "dangerZone": "Zona de Perigo"
+    },
+    "myAccount": {
+      "title": "Informações da conta",
+      "email": "Email",
+      "emailReadonly": "Para alterar seu email, entre em contato com o suporte.",
+      "language": "Idioma preferido",
+      "changePassword": "Alterar Senha",
+      "currentPassword": "Senha atual",
+      "newPassword": "Nova senha",
+      "confirmPassword": "Confirmar nova senha",
+      "updatePassword": "Atualizar senha",
+      "updatingPassword": "Atualizando...",
+      "passwordUpdated": "Senha atualizada com sucesso",
+      "passwordError": "Erro ao atualizar a senha",
+      "passwordMismatch": "As senhas não coincidem",
+      "passwordTooShort": "A senha deve ter pelo menos 6 caracteres"
+    },
+    "dangerZone": {
+      "title": "Zona de Perigo",
+      "deleteAccount": "Excluir conta",
+      "deleteAccountDescription": "Esta ação é permanente e não pode ser desfeita.",
+      "deleteButton": "Excluir conta",
+      "dialogTitle": "Excluir sua conta?",
+      "dialogDescription": "Isso excluirá permanentemente sua conta e todos os dados associados. Esta ação não pode ser desfeita.",
+      "dialogCancel": "Cancelar",
+      "dialogConfirm": "Excluir minha conta",
+      "deleting": "Excluindo...",
+      "deleteSuccess": "Conta excluída com sucesso",
+      "deleteError": "Erro ao excluir a conta"
+    }
   }
 }

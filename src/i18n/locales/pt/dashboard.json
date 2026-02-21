@@ -4,13 +4,48 @@
   "newProject": "Novo Projeto",
   "searchPlaceholder": "Buscar projetos...",
   "noResults": "Nenhum projeto encontrado",
-  "noResultsHint": "Nenhum projeto corresponde à sua busca",
-  "createFirst": "Crie seu primeiro projeto",
-  "createFirstHint": "Comece criando um projeto para capturar e transcrever gravações de voz de suas pesquisas",
+  "noResultsHint": "Nenhum projeto corresponde a sua busca",
+  "createFirst": "Voce ainda nao tem projetos",
+  "createFirstHint": "Instale o widget de Voice Capture em sua pesquisa para comecar a gravar e transcrever respostas automaticamente.",
+  "stats": {
+    "totalRecordings": "Gravacoes Transcritas",
+    "hoursProcessed": "Horas de Audio Processadas",
+    "activeProjects": "Projetos Ativos",
+    "creditsUsed": "Creditos Usados Este Mes"
+  },
   "table": {
-    "name": "Nome do projeto",
-    "mode": "Modo",
-    "recordings": "Gravações",
-    "createdAt": "Data de criação"
+    "name": "Nome do Projeto",
+    "status": "Status",
+    "recordings": "Gravacoes",
+    "duration": "Duracao Total",
+    "actions": "Acoes"
+  },
+  "tabs": {
+    "active": "Ativos",
+    "archived": "Arquivados"
+  },
+  "projectStatus": {
+    "active": "Ativo",
+    "processing": "Processando",
+    "complete": "Concluido",
+    "archived": "Arquivado",
+    "error": "Erro",
+    "pending": "Pendente"
+  },
+  "actions": {
+    "view": "Ver",
+    "archive": "Arquivar",
+    "unarchive": "Desarquivar",
+    "delete": "Excluir"
+  },
+  "progress": {
+    "transcribed": "{{percent}}% transcrito"
+  },
+  "deleteDialog": {
+    "title": "Excluir \"{{name}}\"?",
+    "description": "Esta acao nao pode ser desfeita. O projeto e todas as suas gravacoes serao excluidos permanentemente.",
+    "cancel": "Cancelar",
+    "confirm": "Excluir",
+    "deleting": "Excluindo..."
   }
 }

@@ -7,11 +7,12 @@ interface PlanBadgeProps {
   size?: 'sm' | 'md';
 }
 
-const planConfig: Record<string, { icon: typeof Crown; variant: 'default' | 'secondary' | 'outline'; className: string }> = {
-  enterprise: { icon: Crown, variant: 'default', className: 'bg-amber-600 hover:bg-amber-700' },
-  pro: { icon: Crown, variant: 'default', className: 'bg-violet-600 hover:bg-violet-700' },
-  freelancer: { icon: Zap, variant: 'default', className: 'bg-blue-600 hover:bg-blue-700' },
-  free: { icon: User, variant: 'secondary', className: '' },
+// DESIGN_SYSTEM.md section 8.1 — PlanBadge colors
+const planConfig: Record<string, { icon: typeof Crown; className: string }> = {
+  free:       { icon: User,  className: 'bg-muted text-muted-foreground' },
+  freelancer: { icon: Zap,   className: 'bg-blue-100 text-blue-700' },
+  pro:        { icon: Crown, className: 'bg-amber-100 text-amber-700' },
+  enterprise: { icon: Crown, className: 'bg-emerald-100 text-emerald-700' },
 };
 
 export default function PlanBadge({ plan, size = 'sm' }: PlanBadgeProps) {
@@ -20,7 +21,7 @@ export default function PlanBadge({ plan, size = 'sm' }: PlanBadgeProps) {
   const Icon = config.icon;
 
   return (
-    <Badge variant={config.variant} className={`${config.className} ${size === 'md' ? 'text-sm px-3 py-1' : ''}`}>
+    <Badge variant="secondary" className={`${config.className} border-transparent ${size === 'md' ? 'text-sm px-3 py-1' : ''}`}>
       <Icon className={`${size === 'md' ? 'h-3.5 w-3.5' : 'h-3 w-3'} mr-1`} />
       {t(`plans.names.${plan}`, plan.charAt(0).toUpperCase() + plan.slice(1))}
     </Badge>
