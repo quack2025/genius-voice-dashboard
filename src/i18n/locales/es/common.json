@@ -42,6 +42,8 @@
     "adminUsers": "Usuarios",
     "adminOrgs": "Organizaciones",
     "organization": "Organización",
+    "usage": "Uso",
+    "billing": "Facturación",
     "logout": "Cerrar sesión"
   },
   "languages": {
