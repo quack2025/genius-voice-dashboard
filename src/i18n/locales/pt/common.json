@@ -82,5 +82,16 @@
     "limitReached": "Limite atingido",
     "projectLimitReached": "Voc\u00ea atingiu o limite de projetos do seu plano",
     "upgradeToContinue": "Melhore seu plano para continuar"
+  },
+  "folders": {
+    "title": "Pastas",
+    "create": "Nova Pasta",
+    "all": "Todos",
+    "unorganized": "Sem pasta",
+    "namePlaceholder": "Nome da pasta",
+    "color": "Cor",
+    "rename": "Renomear Pasta",
+    "deleteTitle": "Excluir \"{{name}}\"?",
+    "deleteDescription": "Os projetos nesta pasta não serão excluídos, apenas desagrupados."
   }
 }

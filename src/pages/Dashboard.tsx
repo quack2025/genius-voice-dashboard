@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase, Project } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFolders } from '@/contexts/FolderContext';
 import { useFormatters } from '@/hooks/useFormatters';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,7 +29,9 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Search, Mic, MoreHorizontal, Eye, Archive, Trash2, Mic2, Clock, FolderOpen, CreditCard } from 'lucide-react';
+import { Plus, Search, Mic, MoreHorizontal, Eye, Archive, Trash2, Mic2, Clock, FolderOpen, CreditCard, GripVertical } from 'lucide-react';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 import { accountApi } from '@/lib/api';
 import type { UsageData } from '@/lib/plans';
 
@@ -88,12 +91,41 @@ function formatDurationCompact(totalSeconds: number): string {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
+// --- Draggable Table Row ---
+
+function DraggableTableRow({ project, children }: { project: ProjectWithStats; children: React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: project.id,
+    data: { type: 'project', project },
+  });
+
+  const style = transform
+    ? { transform: CSS.Translate.toString(transform), zIndex: isDragging ? 50 : undefined, opacity: isDragging ? 0.5 : undefined }
+    : undefined;
+
+  return (
+    <TableRow ref={setNodeRef} style={style} className="hover:bg-muted/50 group">
+      <TableCell className="w-8 px-2">
+        <div
+          {...listeners}
+          {...attributes}
+          className="opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-1"
+        >
+          <GripVertical className="w-4 h-4 text-muted-foreground" />
+        </div>
+      </TableCell>
+      {children}
+    </TableRow>
+  );
+}
+
 // --- Component ---
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { t } = useTranslation('dashboard');
   const { formatNumber } = useFormatters();
+  const { selectedFolderId, refreshProjectCounts } = useFolders();
   const [projects, setProjects] = useState<ProjectWithStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -179,6 +211,7 @@ export default function Dashboard() {
 
     setProjects(projectsWithStats);
     setLoading(false);
+    refreshProjectCounts();
   };
 
   const handleDeleteProject = async () => {
@@ -192,6 +225,7 @@ export default function Dashboard() {
     setDeletingProject(null);
     if (!error) {
       fetchProjects();
+      refreshProjectCounts();
     }
   };
 
@@ -204,7 +238,14 @@ export default function Dashboard() {
 
   const displayedProjects = activeTab === 'active' ? activeProjects : archivedProjects;
 
-  const filteredProjects = displayedProjects.filter((project) =>
+  // Apply folder filter
+  const folderFilteredProjects = displayedProjects.filter((project) => {
+    if (selectedFolderId === null) return true; // "All"
+    if (selectedFolderId === 'unorganized') return !project.folder_id;
+    return project.folder_id === selectedFolderId;
+  });
+
+  const filteredProjects = folderFilteredProjects.filter((project) =>
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -407,12 +448,13 @@ export default function Dashboard() {
       );
     }
 
-    // F3.2 — Projects table: Project Name | Status | Recordings | Duration | Actions
+    // F3.2 — Projects table: Drag | Project Name | Status | Recordings | Duration | Actions
     return (
       <Card>
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8 px-2" />
               <TableHead>{t('table.name')}</TableHead>
               <TableHead>{t('table.status')}</TableHead>
               <TableHead>{t('table.recordings')}</TableHead>
@@ -424,7 +466,7 @@ export default function Dashboard() {
             {projectList.map((project) => {
               const progress = getTranscriptionProgress(project);
               return (
-                <TableRow key={project.id} className="hover:bg-muted/50">
+                <DraggableTableRow key={project.id} project={project}>
                   <TableCell>
                     <Link
                       to={`/projects/${project.id}`}
@@ -484,7 +526,7 @@ export default function Dashboard() {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
-                </TableRow>
+                </DraggableTableRow>
               );
             })}
           </TableBody>

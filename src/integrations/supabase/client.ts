@@ -17,6 +17,7 @@ export interface Project {
   public_key: string;
   language: string;
   transcription_mode: string;
+  folder_id: string | null;
   created_at: string;
   updated_at: string;
 }

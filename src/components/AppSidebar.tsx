@@ -3,8 +3,10 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFolders } from '@/contexts/FolderContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import PlanBadge from '@/components/PlanBadge';
+import { FolderSection } from '@/components/folders/FolderSection';
 import { accountApi } from '@/lib/api';
 import {
   FolderKanban,
@@ -42,6 +44,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
   const location = useLocation();
   const { signOut, user } = useAuth();
   const { t } = useTranslation();
+  const { selectedFolderId, setSelectedFolderId, projectCounts, totalProjects } = useFolders();
   const [planKey, setPlanKey] = useState<string>('free');
   const [isAdmin, setIsAdmin] = useState(false);
   const [orgInfo, setOrgInfo] = useState<{ name: string; role: string } | null>(null);
@@ -106,7 +109,18 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
           );
         })}
 
-        {/* Separator between Core and Account zones */}
+        {/* Separator between Core and Folders */}
+        <div className="my-3 border-t border-sidebar-border" />
+
+        {/* Folders Zone */}
+        <FolderSection
+          selectedFolderId={selectedFolderId}
+          onSelectFolder={setSelectedFolderId}
+          projectCounts={projectCounts}
+          totalProjects={totalProjects}
+        />
+
+        {/* Separator between Folders and Account zones */}
         <div className="my-3 border-t border-sidebar-border" />
 
         {/* Account Zone */}

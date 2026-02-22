@@ -82,5 +82,16 @@
     "limitReached": "L\u00edmite alcanzado",
     "projectLimitReached": "Has alcanzado el l\u00edmite de proyectos de tu plan",
     "upgradeToContinue": "Mejora tu plan para continuar"
+  },
+  "folders": {
+    "title": "Carpetas",
+    "create": "Nueva Carpeta",
+    "all": "Todos",
+    "unorganized": "Sin carpeta",
+    "namePlaceholder": "Nombre de la carpeta",
+    "color": "Color",
+    "rename": "Renombrar Carpeta",
+    "deleteTitle": "¿Eliminar \"{{name}}\"?",
+    "deleteDescription": "Los proyectos en esta carpeta no se eliminarán, solo se desagruparán."
   }
 }
