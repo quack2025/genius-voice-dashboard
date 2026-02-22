@@ -12,6 +12,18 @@ VITE_SUPABASE_ANON_KEY=eyJ...   # Public anon key (safe in git)
 
 Use `.env.local` (gitignored) for local-only overrides.
 
+## Dependencies
+
+Key dependencies beyond the base stack (React, Vite, Tailwind, shadcn/ui):
+
+| Package | Purpose |
+|---------|---------|
+| `@dnd-kit/core` | Drag-and-drop primitives (DndContext, useDraggable, useDroppable) |
+| `@dnd-kit/utilities` | DnD utility helpers (CSS transform) |
+| `i18next` + `react-i18next` | Internationalization (9 namespaces, 3 locales) |
+| `@supabase/supabase-js` | Supabase client |
+| `@tanstack/react-query` | Server state management |
+
 ## Local Development
 
 ```bash
@@ -76,6 +88,19 @@ The frontend reads directly from Supabase for:
 - `recordings` — recordings per project
 
 Row Level Security (RLS) policies ensure users only see their own data.
+
+### Migrations
+
+SQL migrations live in `supabase/migrations/`. They are NOT auto-deployed by Lovable for this project -- they must be run manually against the Supabase project.
+
+| Migration | Purpose |
+|-----------|---------|
+| `003_project_folders.sql` | Creates `project_folders` table (user_id scoped, gen_random_uuid()), adds `folder_id` FK to `projects`, sets up RLS policies |
+
+To apply a migration manually:
+1. Go to the Supabase dashboard SQL editor for project `hggwsdqjkwydiubhvrvq`
+2. Paste the migration SQL and run it
+3. Alternatively, use `npx supabase db push` if the CLI is linked to the project
 
 ### Generated Types
 

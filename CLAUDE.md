@@ -12,7 +12,8 @@ React + TypeScript dashboard for managing voice capture projects, transcriptions
 | Framework | Vite + React 18 + TypeScript |
 | Styles | Tailwind CSS + shadcn/ui |
 | State | React Context + TanStack Query |
-| i18n | i18next (es/en/pt) — 8 namespaces |
+| Drag-and-drop | @dnd-kit/core + @dnd-kit/utilities |
+| i18n | i18next (es/en/pt) — 9 namespaces |
 | Auth | Supabase Auth |
 | Deploy | Lovable (auto-deploy from GitHub) |
 | Backend API | https://voice-capture-api-production.up.railway.app |
@@ -24,8 +25,8 @@ React + TypeScript dashboard for managing voice capture projects, transcriptions
 src/
 ├── components/
 │   ├── ui/                      # shadcn/ui (don't modify directly)
-│   ├── DashboardLayout.tsx      # Layout: sidebar + outlet + HelpChat
-│   ├── AppSidebar.tsx           # Navigation (user/admin/org sections)
+│   ├── DashboardLayout.tsx      # Layout: DndContext + FolderProvider + sidebar + outlet + HelpChat
+│   ├── AppSidebar.tsx           # Two-zone navigation: Core Zone + Account Zone
 │   ├── HelpChat.tsx             # Floating AI chat widget
 │   ├── ProtectedRoute.tsx       # Auth guard
 │   ├── AdminProtectedRoute.tsx  # Admin guard
@@ -33,13 +34,19 @@ src/
 │   ├── UsageBadge.tsx           # Usage indicator
 │   ├── LanguageSwitcher.tsx     # Language selector
 │   └── ErrorBoundary.tsx        # Error boundary
+│   ├── folders/
+│   │   ├── FolderSection.tsx        # Folder CRUD + 8-color picker in sidebar
+│   │   └── DroppableFolderItem.tsx  # @dnd-kit useDroppable folder target
+│   ├── dashboard/
+│   │   └── DraggableProjectCard.tsx # @dnd-kit useDraggable with GripVertical handle
 ├── contexts/
-│   └── AuthContext.tsx           # Auth (login, register, signOut, forgotPassword)
+│   ├── AuthContext.tsx           # Auth (login, register, signOut, forgotPassword)
+│   └── FolderContext.tsx         # Folder state (CRUD, selectedFolderId, drag-to-folder)
 ├── hooks/
 │   ├── use-toast.ts
 │   └── useFormatters.ts         # Locale-aware formatting (date, number, currency, duration)
 ├── i18n/
-│   ├── index.ts                 # Config (8 namespaces: common, auth, dashboard, projects, landing, admin, org, chat)
+│   ├── index.ts                 # Config (9 namespaces: common, auth, dashboard, projects, landing, admin, org, chat, folders)
 │   └── locales/{es,en,pt}/      # Translation JSONs
 ├── integrations/supabase/
 │   └── client.ts                # Supabase client + generated types
@@ -96,8 +103,13 @@ npm test         # Vitest
 
 **NEVER remove `.env` from git.** Lovable reads `VITE_*` vars from the committed `.env` file. Removing it causes `supabaseUrl is required` crash.
 
+## Genius Labs AI Suite
+
+Voice Capture is part of a 4-product suite sharing a unified HSL-based design system (primary #1E40AF), Genius Labs logo, consistent sidebar hierarchy, and shadcn/ui components. See [agent_docs/cross_product_context.md](agent_docs/cross_product_context.md) for cross-product details.
+
 ## Detailed Docs
 
-- [agent_docs/architecture.md](agent_docs/architecture.md) — Routes, page map, API clients, data flow
-- [agent_docs/building_and_deploying.md](agent_docs/building_and_deploying.md) — Env vars, Lovable deploy, Supabase
-- [agent_docs/code_conventions.md](agent_docs/code_conventions.md) — Patterns, i18n, component conventions
+- [agent_docs/architecture.md](agent_docs/architecture.md) — Routes, page map, API clients, data flow, folder system
+- [agent_docs/building_and_deploying.md](agent_docs/building_and_deploying.md) — Env vars, Lovable deploy, Supabase, migrations
+- [agent_docs/code_conventions.md](agent_docs/code_conventions.md) — Patterns, i18n, component conventions, DnD
+- [agent_docs/cross_product_context.md](agent_docs/cross_product_context.md) — Cross-product context: the 4 Genius Labs AI Suite products, shared design system, sidebar structure

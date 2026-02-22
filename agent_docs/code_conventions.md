@@ -46,8 +46,8 @@ export default function MyPage() {
 
 ## Internationalization (i18n)
 
-### 8 Namespaces
-`common`, `auth`, `dashboard`, `projects`, `landing`, `admin`, `org`, `chat`
+### 9 Namespaces
+`common`, `auth`, `dashboard`, `projects`, `landing`, `admin`, `org`, `chat`, `folders`
 
 ### Languages
 Spanish (es), English (en), Portuguese (pt). Fallback: `es`.
@@ -96,9 +96,43 @@ Response type: `{ success: boolean; data?: T; error?: string }`
 ## State Management
 
 - **Auth**: `AuthContext` (Supabase auth state)
+- **Folders**: `FolderContext` (folder CRUD, `selectedFolderId`, `assignProjectToFolder`)
 - **Server state**: Direct API calls in `useEffect` + local `useState` (no TanStack Query for API calls currently)
 - **Supabase reads**: Direct `supabase.from().select()` in components
 - **No global state store** (Redux/Zustand) — each page manages its own state
+
+## Drag-and-Drop (Folder Assignment)
+
+Uses `@dnd-kit/core` and `@dnd-kit/utilities`.
+
+- `DndContext` wraps the dashboard layout in `DashboardLayout.tsx`
+- `useDraggable` on `DraggableProjectCard` (with `GripVertical` handle icon)
+- `useDroppable` on `DroppableFolderItem` (each folder in sidebar)
+- `onDragEnd` in `DashboardLayout` calls `FolderContext.assignProjectToFolder(projectId, folderId)`
+
+Pattern:
+```tsx
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+
+function DashboardLayout() {
+  const { assignProjectToFolder } = useFolders();
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over) {
+      assignProjectToFolder(active.id as string, over.id as string);
+    }
+  };
+
+  return (
+    <DndContext onDragEnd={handleDragEnd}>
+      <FolderProvider>
+        {/* sidebar + outlet */}
+      </FolderProvider>
+    </DndContext>
+  );
+}
+```
 
 ## Routing
 
