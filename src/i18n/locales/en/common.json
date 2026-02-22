@@ -42,6 +42,8 @@
     "adminUsers": "Users",
     "adminOrgs": "Organizations",
     "organization": "Organization",
+    "usage": "Usage",
+    "billing": "Billing",
     "logout": "Log out"
   },
   "languages": {
@@ -80,5 +82,16 @@
     "limitReached": "Limit reached",
     "projectLimitReached": "You have reached your plan's project limit",
     "upgradeToContinue": "Upgrade your plan to continue"
+  },
+  "folders": {
+    "title": "Folders",
+    "create": "New Folder",
+    "all": "All",
+    "unorganized": "No folder",
+    "namePlaceholder": "Folder name",
+    "color": "Color",
+    "rename": "Rename Folder",
+    "deleteTitle": "Delete \"{{name}}\"?",
+    "deleteDescription": "Projects in this folder will not be deleted, just ungrouped."
   }
 }

@@ -3,8 +3,10 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFolders } from '@/contexts/FolderContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import PlanBadge from '@/components/PlanBadge';
+import { FolderSection } from '@/components/folders/FolderSection';
 import { accountApi } from '@/lib/api';
 import {
   FolderKanban,
@@ -15,14 +17,21 @@ import {
   X,
   Shield,
   Users,
-  Building2
+  Building2,
+  BarChart3,
+  CreditCard,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const navItems = [
+const coreItems = [
   { key: 'projects', href: '/dashboard', icon: FolderKanban },
   { key: 'recordings', href: '/recordings', icon: Mic2 },
   { key: 'export', href: '/export', icon: Download },
+];
+
+const accountItems = [
+  { key: 'usage', href: '/settings?tab=usage', icon: BarChart3 },
+  { key: 'billing', href: '/settings?tab=billing', icon: CreditCard },
   { key: 'settings', href: '/settings', icon: Settings },
 ];
 
@@ -35,6 +44,7 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
   const location = useLocation();
   const { signOut, user } = useAuth();
   const { t } = useTranslation();
+  const { selectedFolderId, setSelectedFolderId, projectCounts, totalProjects } = useFolders();
   const [planKey, setPlanKey] = useState<string>('free');
   const [isAdmin, setIsAdmin] = useState(false);
   const [orgInfo, setOrgInfo] = useState<{ name: string; role: string } | null>(null);
@@ -76,7 +86,8 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
-        {navItems.map((item) => {
+        {/* Core Zone */}
+        {coreItems.map((item) => {
           const isActive = location.pathname === item.href ||
             (item.href === '/dashboard' && location.pathname.startsWith('/projects'));
 
@@ -98,25 +109,43 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
           );
         })}
 
-        {/* Organization section */}
-        {orgInfo && orgInfo.role === 'owner' && (
-          <>
-            <div className="my-3 border-t border-sidebar-border" />
+        {/* Separator between Core and Folders */}
+        <div className="my-3 border-t border-sidebar-border" />
+
+        {/* Folders Zone */}
+        <FolderSection
+          selectedFolderId={selectedFolderId}
+          onSelectFolder={setSelectedFolderId}
+          projectCounts={projectCounts}
+          totalProjects={totalProjects}
+        />
+
+        {/* Separator between Folders and Account zones */}
+        <div className="my-3 border-t border-sidebar-border" />
+
+        {/* Account Zone */}
+        {accountItems.map((item) => {
+          const isActive = item.href.includes('?')
+            ? location.pathname === '/settings' && location.search.includes(item.href.split('?')[1])
+            : location.pathname === item.href && !location.search;
+
+          return (
             <NavLink
-              to="/settings?tab=organization"
+              key={item.key}
+              to={item.href}
               onClick={onClose}
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
-                location.pathname === '/settings' && location.search.includes('tab=organization')
+                isActive
                   ? 'bg-[hsl(var(--sidebar-active-bg))] text-[hsl(var(--sidebar-active-foreground))]'
                   : 'text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))]'
               )}
             >
-              <Building2 className="h-5 w-5" />
-              {t('nav.organization')}
+              <item.icon className="h-5 w-5" />
+              {t(`nav.${item.key}`)}
             </NavLink>
-          </>
-        )}
+          );
+        })}
 
         {/* Admin section */}
         {isAdmin && (
