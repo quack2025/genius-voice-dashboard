@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Pencil, Trash2, FolderOpen } from 'lucide-react';
+import { Plus, Pencil, Trash2, FolderOpen, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -168,7 +168,13 @@ export function FolderSection({
     setDeletingFolder(null);
   };
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-4">
+        <Loader2 className="h-4 w-4 animate-spin text-[hsl(var(--sidebar-foreground))]/60" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-1">

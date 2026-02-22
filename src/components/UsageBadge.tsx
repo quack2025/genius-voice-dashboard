@@ -31,13 +31,13 @@ export default function UsageBadge({ current, limit, label, className = '' }: Us
     <div className={className}>
       <div className="flex items-center justify-between mb-1.5">
         <span className="text-sm text-muted-foreground">{label}</span>
-        <span className={`text-sm font-medium ${isCritical ? 'text-red-600' : isWarning ? 'text-amber-600' : ''}`}>
+        <span className={`text-sm font-medium ${isCritical ? 'text-destructive' : isWarning ? 'text-[hsl(var(--warning))]' : ''}`}>
           {current} / {limit}
         </span>
       </div>
       <Progress
         value={percentage}
-        className={`h-2 ${isCritical ? '[&>div]:bg-red-500' : isWarning ? '[&>div]:bg-amber-500' : ''}`}
+        className={`h-2 ${isCritical ? '[&>div]:bg-destructive' : isWarning ? '[&>div]:bg-[hsl(var(--warning))]' : ''}`}
       />
     </div>
   );

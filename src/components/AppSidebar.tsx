@@ -202,13 +202,14 @@ export default function AppSidebar({ open, onClose }: AppSidebarProps) {
         <div className="px-4 py-2 mb-2">
           <LanguageSwitcher />
         </div>
-        <button
+        <Button
+          variant="ghost"
           onClick={signOut}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))] transition-colors"
+          className="w-full justify-start gap-3 px-4 py-3 text-sm font-medium text-[hsl(var(--sidebar-foreground))] hover:bg-[hsl(var(--sidebar-hover-bg))]"
         >
           <LogOut className="h-5 w-5" />
           {t('nav.logout')}
-        </button>
+        </Button>
       </div>
     </aside>
   );

@@ -4,21 +4,21 @@
   "newProject": "Novo Projeto",
   "searchPlaceholder": "Buscar projetos...",
   "noResults": "Nenhum projeto encontrado",
-  "noResultsHint": "Nenhum projeto corresponde a sua busca",
-  "createFirst": "Voce ainda nao tem projetos",
-  "createFirstHint": "Instale o widget de Voice Capture em sua pesquisa para comecar a gravar e transcrever respostas automaticamente.",
+  "noResultsHint": "Nenhum projeto corresponde à sua busca",
+  "createFirst": "Você ainda não tem projetos",
+  "createFirstHint": "Instale o widget de Voice Capture em sua pesquisa para começar a gravar e transcrever respostas automaticamente.",
   "stats": {
-    "totalRecordings": "Gravacoes Transcritas",
-    "hoursProcessed": "Horas de Audio Processadas",
+    "totalRecordings": "Gravações Transcritas",
+    "hoursProcessed": "Horas de Áudio Processadas",
     "activeProjects": "Projetos Ativos",
-    "creditsUsed": "Creditos Usados Este Mes"
+    "creditsUsed": "Créditos Usados Este Mês"
   },
   "table": {
     "name": "Nome do Projeto",
     "status": "Status",
-    "recordings": "Gravacoes",
-    "duration": "Duracao Total",
-    "actions": "Acoes"
+    "recordings": "Gravações",
+    "duration": "Duração Total",
+    "actions": "Ações"
   },
   "tabs": {
     "active": "Ativos",
@@ -27,7 +27,7 @@
   "projectStatus": {
     "active": "Ativo",
     "processing": "Processando",
-    "complete": "Concluido",
+    "complete": "Concluído",
     "archived": "Arquivado",
     "error": "Erro",
     "pending": "Pendente"
@@ -43,7 +43,7 @@
   },
   "deleteDialog": {
     "title": "Excluir \"{{name}}\"?",
-    "description": "Esta acao nao pode ser desfeita. O projeto e todas as suas gravacoes serao excluidos permanentemente.",
+    "description": "Esta ação não pode ser desfeita. O projeto e todas as suas gravações serão excluídos permanentemente.",
     "cancel": "Cancelar",
     "confirm": "Excluir",
     "deleting": "Excluindo..."

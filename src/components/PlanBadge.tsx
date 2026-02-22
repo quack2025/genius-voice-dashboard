@@ -10,9 +10,9 @@ interface PlanBadgeProps {
 // DESIGN_SYSTEM.md section 8.1 — PlanBadge colors
 const planConfig: Record<string, { icon: typeof Crown; className: string }> = {
   free:       { icon: User,  className: 'bg-muted text-muted-foreground' },
-  freelancer: { icon: Zap,   className: 'bg-blue-100 text-blue-700' },
-  pro:        { icon: Crown, className: 'bg-amber-100 text-amber-700' },
-  enterprise: { icon: Crown, className: 'bg-emerald-100 text-emerald-700' },
+  freelancer: { icon: Zap,   className: 'bg-primary/10 text-primary' },
+  pro:        { icon: Crown, className: 'bg-primary/15 text-primary' },
+  enterprise: { icon: Crown, className: 'bg-primary/20 text-primary' },
 };
 
 export default function PlanBadge({ plan, size = 'sm' }: PlanBadgeProps) {
