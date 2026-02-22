@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PLANS } from '@/lib/plans';
+import { PLATFORMS } from '@/lib/platforms';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import {
   Accordion,
@@ -60,6 +61,9 @@ export default function Landing() {
             <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t('nav.features')}
             </a>
+            <Link to="/integrations" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t('nav.integrations')}
+            </Link>
             <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t('nav.pricing')}
             </a>
@@ -200,6 +204,41 @@ export default function Landing() {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Integrations Teaser */}
+      <section className="py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold sm:text-3xl">{t('integrations.title')}</h2>
+            <p className="mt-3 text-muted-foreground">{t('integrations.subtitle')}</p>
+          </div>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            {PLATFORMS.filter((p) => p.status === 'available' && p.slug !== 'generic').map((p) => (
+              <Link
+                key={p.slug}
+                to={`/integrations/${p.slug}`}
+                className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+              >
+                <span
+                  className="inline-block h-3 w-3 rounded-full"
+                  style={{ backgroundColor: p.color }}
+                />
+                {t(`platforms.${p.slug}.name`, { ns: 'integrations' })}
+              </Link>
+            ))}
+            <span className="text-sm text-muted-foreground">{t('integrations.andMore')}</span>
+          </div>
+          <div className="mt-6 text-center">
+            <Link
+              to="/integrations"
+              className="inline-flex items-center text-sm font-medium text-primary hover:underline"
+            >
+              {t('integrations.viewAll')}
+              <ArrowRight className="ml-1 h-3 w-3" />
+            </Link>
           </div>
         </div>
       </section>

@@ -5,6 +5,7 @@
     "pricing": "Pricing",
     "demo": "Demo",
     "faq": "FAQ",
+    "integrations": "Integrations",
     "login": "Log In",
     "signup": "Try Free"
   },
@@ -141,6 +142,12 @@
       "question": "Where is the data stored?",
       "answer": "Audio and transcriptions are stored on secure infrastructure with encryption at rest and in transit. You can configure domain locking so the widget only works on your authorized sites."
     }
+  },
+  "integrations": {
+    "title": "Works with your survey platform",
+    "subtitle": "Alchemer, Qualtrics, SurveyMonkey, QuestionPro, JotForm and more.",
+    "andMore": "and more...",
+    "viewAll": "See all integrations"
   },
   "cta": {
     "title": "Your next study can have a voice",

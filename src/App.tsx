@@ -24,6 +24,8 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminUserDetail from "./pages/AdminUserDetail";
 import AdminOrgs from "./pages/AdminOrgs";
 import AdminOrgDetail from "./pages/AdminOrgDetail";
+import Integrations from "./pages/Integrations";
+import IntegrationDetail from "./pages/IntegrationDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,8 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/integrations/:platform" element={<IntegrationDetail />} />
 
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>

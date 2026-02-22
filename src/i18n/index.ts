@@ -11,6 +11,7 @@ import esLanding from './locales/es/landing.json';
 import esAdmin from './locales/es/admin.json';
 import esOrg from './locales/es/org.json';
 import esChat from './locales/es/chat.json';
+import esIntegrations from './locales/es/integrations.json';
 
 // Import English translations
 import enCommon from './locales/en/common.json';
@@ -21,6 +22,7 @@ import enLanding from './locales/en/landing.json';
 import enAdmin from './locales/en/admin.json';
 import enOrg from './locales/en/org.json';
 import enChat from './locales/en/chat.json';
+import enIntegrations from './locales/en/integrations.json';
 
 // Import Portuguese translations
 import ptCommon from './locales/pt/common.json';
@@ -31,6 +33,7 @@ import ptLanding from './locales/pt/landing.json';
 import ptAdmin from './locales/pt/admin.json';
 import ptOrg from './locales/pt/org.json';
 import ptChat from './locales/pt/chat.json';
+import ptIntegrations from './locales/pt/integrations.json';
 
 export const SUPPORTED_LANGUAGES = ['es', 'en', 'pt'] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
@@ -57,6 +60,7 @@ const resources = {
     admin: esAdmin,
     org: esOrg,
     chat: esChat,
+    integrations: esIntegrations,
   },
   en: {
     common: enCommon,
@@ -67,6 +71,7 @@ const resources = {
     admin: enAdmin,
     org: enOrg,
     chat: enChat,
+    integrations: enIntegrations,
   },
   pt: {
     common: ptCommon,
@@ -77,6 +82,7 @@ const resources = {
     admin: ptAdmin,
     org: ptOrg,
     chat: ptChat,
+    integrations: ptIntegrations,
   },
 };
 
@@ -87,7 +93,7 @@ i18n
     resources,
     fallbackLng: 'es',
     defaultNS: 'common',
-    ns: ['common', 'auth', 'dashboard', 'projects', 'landing', 'admin', 'org', 'chat'],
+    ns: ['common', 'auth', 'dashboard', 'projects', 'landing', 'admin', 'org', 'chat', 'integrations'],
     interpolation: {
       escapeValue: false,
     },

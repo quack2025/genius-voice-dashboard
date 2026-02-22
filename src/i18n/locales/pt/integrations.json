@@ -1,0 +1,232 @@
+{
+  "hub": {
+    "title": "Integra\u00e7\u00f5es",
+    "subtitle": "Adicione captura de voz \u00e0 sua plataforma de pesquisa favorita em minutos. Sem necessidade de desenvolvimento.",
+    "supported": "Plataformas Suportadas",
+    "comingSoon": "Em Breve",
+    "viewGuide": "Ver Guia de Configura\u00e7\u00e3o"
+  },
+  "common": {
+    "backToIntegrations": "Voltar para Integra\u00e7\u00f5es",
+    "getStarted": "Comece Gr\u00e1tis",
+    "comingSoonBadge": "Em Breve",
+    "availableBadge": "Dispon\u00edvel",
+    "copyCode": "Copiar c\u00f3digo",
+    "codeCopied": "Copiado!",
+    "needHelp": "Precisa de ajuda?",
+    "needHelpDesc": "Nosso assistente de IA pode gui\u00e1-lo passo a passo na configura\u00e7\u00e3o.",
+    "openChat": "Abrir Chat IA",
+    "sessionIdNote": "Session ID",
+    "step": "Passo {{number}}"
+  },
+  "platforms": {
+    "alchemer": {
+      "name": "Alchemer",
+      "tagline": "Anteriormente SurveyGizmo. Integra\u00e7\u00e3o completa com JavaScript Actions.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "Alchemer",
+        "subtitle": "Adicione respostas de voz \u00e0s suas pesquisas Alchemer em 3 passos simples. Funciona com todos os planos Alchemer que suportam JavaScript Actions."
+      },
+      "setup": {
+        "title": "Guia de Configura\u00e7\u00e3o",
+        "steps": [
+          {
+            "title": "Adicione o script \u00e0 sua pesquisa",
+            "description": "V\u00e1 para Style > HTML/CSS Editor > Custom HEAD e cole esta tag de script. Isso s\u00f3 precisa ser feito uma vez por pesquisa.",
+            "code": "<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+          },
+          {
+            "title": "Adicione o div cont\u00eainer \u00e0 sua pergunta",
+            "description": "Edite o texto da pergunta na vis\u00e3o Source/HTML e adicione um div cont\u00eainer. Mude 'q1' para corresponder ao ID da pergunta no seu projeto.",
+            "code": "<div id=\"genius-voice-q1\"></div>"
+          },
+          {
+            "title": "Adicione uma A\u00e7\u00e3o JavaScript",
+            "description": "Adicione Action > JavaScript na p\u00e1gina da pergunta. Substitua 'proj_xxx' pela sua chave de projeto do dashboard.",
+            "code": "var QUESTION_ID = 'q1';\nvar c = document.getElementById('genius-voice-' + QUESTION_ID);\nif (c) {\n  c.dataset.project = 'proj_xxx';\n  c.dataset.session = '[survey(\"session id\")]';\n  c.dataset.question = QUESTION_ID;\n  c.dataset.lang = 'es';\n  if (window.GeniusVoice) { GeniusVoice.init(c); }\n}"
+          }
+        ]
+      },
+      "mergeCode": {
+        "sessionId": "[survey(\"session id\")]",
+        "description": "C\u00f3digo de mesclagem integrado do Alchemer que identifica exclusivamente cada sess\u00e3o do respondente."
+      }
+    },
+    "qualtrics": {
+      "name": "Qualtrics",
+      "tagline": "Plataforma de pesquisa empresarial. Integre via Look & Feel e addOnReady.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "Qualtrics",
+        "subtitle": "Incorpore captura de voz nas suas pesquisas Qualtrics usando o editor Look & Feel e JavaScript. Funciona com todas as licen\u00e7as Qualtrics."
+      },
+      "setup": {
+        "title": "Guia de Configura\u00e7\u00e3o",
+        "steps": [
+          {
+            "title": "Adicione o script em Look & Feel",
+            "description": "V\u00e1 para Look & Feel > General > Header (clique em Edit) e cole a tag de script. Uma vez por pesquisa.",
+            "code": "<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+          },
+          {
+            "title": "Adicione o div cont\u00eainer \u00e0 sua pergunta",
+            "description": "Edite o texto da pergunta usando Rich Content Editor > Source/HTML e adicione o div cont\u00eainer.",
+            "code": "<div id=\"genius-voice-q1\"></div>"
+          },
+          {
+            "title": "Adicione JavaScript \u00e0 pergunta",
+            "description": "Clique na pergunta > \u00edcone de engrenagem > Add JavaScript. Use o callback addOnReady do Qualtrics. Substitua 'proj_xxx' pela sua chave de projeto.",
+            "code": "Qualtrics.SurveyEngine.addOnReady(function() {\n  var QUESTION_ID = 'q1';\n  var c = document.getElementById('genius-voice-' + QUESTION_ID);\n  if (c) {\n    c.dataset.project = 'proj_xxx';\n    c.dataset.session = '${e://Field/ResponseID}';\n    c.dataset.question = QUESTION_ID;\n    c.dataset.lang = 'es';\n    if (window.GeniusVoice) { GeniusVoice.init(c); }\n  }\n});"
+          }
+        ]
+      },
+      "mergeCode": {
+        "sessionId": "${e://Field/ResponseID}",
+        "description": "Campo de dados embutido do Qualtrics que fornece o ID de resposta \u00fanico para cada sess\u00e3o."
+      }
+    },
+    "surveymonkey": {
+      "name": "SurveyMonkey",
+      "tagline": "A ferramenta de pesquisa mais popular do mundo. Requer plano Premier ou superior.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "SurveyMonkey",
+        "subtitle": "Adicione respostas de voz a pesquisas SurveyMonkey usando perguntas HTML personalizadas. Nota: requer plano Premier ou superior."
+      },
+      "setup": {
+        "title": "Guia de Configura\u00e7\u00e3o",
+        "steps": [
+          {
+            "title": "Adicione uma pergunta HTML personalizada",
+            "description": "No editor de pesquisa, adicione uma nova pergunta e selecione 'Custom HTML / Texto de Apresenta\u00e7\u00e3o'. Dispon\u00edvel em planos Premier e superiores.",
+            "code": ""
+          },
+          {
+            "title": "Cole o c\u00f3digo completo do widget",
+            "description": "No editor HTML, cole o embed completo do widget. Substitua 'proj_xxx' pela sua chave de projeto.",
+            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"{{ResponseID}}\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+          }
+        ]
+      },
+      "mergeCode": {
+        "sessionId": "{{ResponseID}}",
+        "description": "C\u00f3digo de mesclagem do SurveyMonkey para o identificador \u00fanico de resposta."
+      }
+    },
+    "questionpro": {
+      "name": "QuestionPro",
+      "tagline": "Plataforma de pesquisa rica em recursos com suporte a JavaScript personalizado.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "QuestionPro",
+        "subtitle": "Integre captura de voz em pesquisas QuestionPro usando configura\u00e7\u00e3o de JavaScript personalizado. Funciona com todos os planos que suportam JS personalizado."
+      },
+      "setup": {
+        "title": "Guia de Configura\u00e7\u00e3o",
+        "steps": [
+          {
+            "title": "Adicione o script globalmente",
+            "description": "V\u00e1 para Survey Settings > Custom JavaScript/CSS > Header JavaScript e cole a tag de script.",
+            "code": "<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+          },
+          {
+            "title": "Adicione o div cont\u00eainer \u00e0 sua pergunta",
+            "description": "Edite o texto da pergunta em modo HTML e adicione o div cont\u00eainer. Mude 'q1' pelo ID da sua pergunta.",
+            "code": "<div id=\"genius-voice-q1\"></div>"
+          },
+          {
+            "title": "Adicione JavaScript para a pergunta",
+            "description": "No JavaScript personalizado da p\u00e1gina, adicione o c\u00f3digo de inicializa\u00e7\u00e3o. Substitua 'proj_xxx' pela sua chave de projeto.",
+            "code": "var QUESTION_ID = 'q1';\nvar c = document.getElementById('genius-voice-' + QUESTION_ID);\nif (c) {\n  c.dataset.project = 'proj_xxx';\n  c.dataset.session = '{{ResponseID}}';\n  c.dataset.question = QUESTION_ID;\n  c.dataset.lang = 'es';\n  if (window.GeniusVoice) { GeniusVoice.init(c); }\n}"
+          }
+        ]
+      },
+      "mergeCode": {
+        "sessionId": "{{ResponseID}}",
+        "description": "C\u00f3digo de mesclagem do QuestionPro para o identificador \u00fanico de resposta."
+      }
+    },
+    "jotform": {
+      "name": "JotForm",
+      "tagline": "Construtor de formul\u00e1rios f\u00e1cil de usar com elementos HTML embutidos.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "JotForm",
+        "subtitle": "Adicione captura de voz a formul\u00e1rios JotForm usando o elemento Embed / Full HTML. Configura\u00e7\u00e3o r\u00e1pida e simples."
+      },
+      "setup": {
+        "title": "Guia de Configura\u00e7\u00e3o",
+        "steps": [
+          {
+            "title": "Adicione um elemento Embed",
+            "description": "No construtor JotForm, adicione um elemento 'Embed / Full HTML' ao seu formul\u00e1rio onde deseja o widget de voz.",
+            "code": ""
+          },
+          {
+            "title": "Cole o c\u00f3digo completo do widget",
+            "description": "No editor HTML, cole o embed completo do widget. Substitua 'proj_xxx' pela sua chave de projeto do dashboard.",
+            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"{submission_id}\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+          }
+        ]
+      },
+      "mergeCode": {
+        "sessionId": "{submission_id}",
+        "description": "Vari\u00e1vel de mesclagem do JotForm para o identificador \u00fanico de envio."
+      }
+    },
+    "wordpress": {
+      "name": "WordPress",
+      "tagline": "O CMS mais popular do mundo. Integra\u00e7\u00e3o em breve.",
+      "comingSoonMessage": "Estamos trabalhando em um plugin dedicado de WordPress para Voice Capture. Enquanto isso, voc\u00ea pode usar o embed HTML gen\u00e9rico em qualquer p\u00e1gina WordPress usando o bloco HTML.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "WordPress",
+        "subtitle": "Um plugin dedicado para WordPress est\u00e1 em desenvolvimento. Fique atento!"
+      }
+    },
+    "typeform": {
+      "name": "Typeform",
+      "tagline": "Formul\u00e1rios conversacionais elegantes. Integra\u00e7\u00e3o em breve.",
+      "comingSoonMessage": "O Typeform atualmente n\u00e3o suporta a inser\u00e7\u00e3o de HTML/JavaScript personalizado dentro das perguntas. Estamos explorando m\u00e9todos alternativos de integra\u00e7\u00e3o.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "Typeform",
+        "subtitle": "Estamos trabalhando em uma integra\u00e7\u00e3o com Typeform. Fique atento!"
+      }
+    },
+    "formstack": {
+      "name": "Formstack",
+      "tagline": "Automa\u00e7\u00e3o de fluxos de trabalho com formul\u00e1rios. Integra\u00e7\u00e3o em breve.",
+      "comingSoonMessage": "A integra\u00e7\u00e3o com Formstack est\u00e1 em desenvolvimento. Estamos trabalhando em uma forma de incorporar Voice Capture em formul\u00e1rios Formstack.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "Formstack",
+        "subtitle": "Estamos trabalhando em uma integra\u00e7\u00e3o com Formstack. Fique atento!"
+      }
+    },
+    "generic": {
+      "name": "Qualquer Formul\u00e1rio Web",
+      "tagline": "Funciona com qualquer site ou aplica\u00e7\u00e3o que suporte HTML personalizado.",
+      "hero": {
+        "title": "Voice Capture para ",
+        "titleHighlight": "Qualquer Formul\u00e1rio Web",
+        "subtitle": "Incorpore captura de voz em qualquer p\u00e1gina HTML, app web ou pesquisa personalizada. Basta adicionar um div e uma tag de script."
+      },
+      "setup": {
+        "title": "Guia de Configura\u00e7\u00e3o",
+        "steps": [
+          {
+            "title": "Adicione o HTML do widget",
+            "description": "Adicione este c\u00f3digo onde deseja que o widget de voz apare\u00e7a. Substitua 'proj_xxx' pela sua chave de projeto e 'SESSION_ID' por um identificador \u00fanico por respondente.",
+            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"SESSION_ID\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+          }
+        ]
+      },
+      "mergeCode": {
+        "sessionId": "SESSION_ID",
+        "description": "Substitua por um identificador \u00fanico para cada respondente. Pode ser um par\u00e2metro de URL, valor de cookie ou UUID gerado."
+      }
+    }
+  }
+}

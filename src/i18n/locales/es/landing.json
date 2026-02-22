@@ -5,6 +5,7 @@
     "pricing": "Precios",
     "demo": "Demo",
     "faq": "FAQ",
+    "integrations": "Integraciones",
     "login": "Iniciar Sesión",
     "signup": "Probar Gratis"
   },
@@ -141,6 +142,12 @@
       "question": "¿Dónde se almacenan los datos?",
       "answer": "Los audios y transcripciones se almacenan en infraestructura segura con encriptación en reposo y en tránsito. Puedes configurar bloqueo por dominio para que el widget solo funcione en tus sitios autorizados."
     }
+  },
+  "integrations": {
+    "title": "Funciona con tu plataforma de encuestas",
+    "subtitle": "Alchemer, Qualtrics, SurveyMonkey, QuestionPro, JotForm y más.",
+    "andMore": "y más...",
+    "viewAll": "Ver todas las integraciones"
   },
   "cta": {
     "title": "Tu próximo estudio puede tener voz",
