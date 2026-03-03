@@ -12,10 +12,14 @@ function CodeBlock({ code, label }: { code: string; label: string }) {
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation('integrations');
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API not available or denied — silent fallback
+    }
   };
 
   if (!code) return null;

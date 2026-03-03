@@ -5,6 +5,18 @@ React + TypeScript dashboard for managing voice capture projects, transcriptions
 **Part of:** Genius Labs AI Suite
 **Repos:** [Backend API](https://github.com/quack2025/genius-voice-capture) + Frontend (this)
 
+## Local Paths & Infrastructure
+
+| Resource | Location |
+|----------|----------|
+| This repo (frontend) | `C:\Users\jorge\genius-voice-dashboard` |
+| Backend repo | `C:\Users\jorge\genius-voice-capture` |
+| GitHub (frontend) | `quack2025/genius-voice-dashboard` |
+| GitHub (backend) | `quack2025/genius-voice-capture` |
+| Supabase project | `hggwsdqjkwydiubhvrvq` |
+| Deploy (frontend) | Lovable (auto-deploy from `main`) |
+| Deploy (backend) | Railway → `voice-capture-api-production.up.railway.app` |
+
 ## Quick Reference
 
 | Item | Value |
