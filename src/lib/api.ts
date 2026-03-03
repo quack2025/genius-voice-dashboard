@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { UsageData } from '@/lib/plans';
 
 // API base URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://voiceapi.survey-genius.ai';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.voicecapture.ai';
 
 interface ApiResponse<T> {
   success: boolean;

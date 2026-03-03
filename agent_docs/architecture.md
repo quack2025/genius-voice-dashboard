@@ -118,7 +118,7 @@ All API clients use `fetchWithAuth<T>(endpoint, options)`:
 2. Sets `Authorization: Bearer <token>` + `Content-Type: application/json`
 3. Returns `{ success, data?, error? }`
 
-Base URL: `import.meta.env.VITE_API_URL || 'https://voiceapi.survey-genius.ai'`
+Base URL: `import.meta.env.VITE_API_URL || 'https://api.voicecapture.ai'`
 
 ## Auth Flow (AuthContext.tsx)
 

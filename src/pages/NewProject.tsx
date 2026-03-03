@@ -76,7 +76,7 @@ export default function NewProject() {
     setIsLoading(false);
   };
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'https://voiceapi.survey-genius.ai';
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://api.voicecapture.ai';
 
   // Step 1: HEAD script (one-time, loaded via Alchemer Custom HEAD)
   const headSnippet = `<script src="${apiUrl}/voice.js" defer></script>`;

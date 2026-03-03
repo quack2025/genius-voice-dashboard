@@ -34,7 +34,7 @@
           {
             "title": "Adicione o script \u00e0 sua pesquisa",
             "description": "V\u00e1 para Style > HTML/CSS Editor > Custom HEAD e cole esta tag de script. Isso s\u00f3 precisa ser feito uma vez por pesquisa.",
-            "code": "<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+            "code": "<script src=\"https://api.voicecapture.ai/voice.js\"></script>"
           },
           {
             "title": "Adicione o div cont\u00eainer \u00e0 sua pergunta",
@@ -67,7 +67,7 @@
           {
             "title": "Adicione o script em Look & Feel",
             "description": "V\u00e1 para Look & Feel > General > Header (clique em Edit) e cole a tag de script. Uma vez por pesquisa.",
-            "code": "<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+            "code": "<script src=\"https://api.voicecapture.ai/voice.js\"></script>"
           },
           {
             "title": "Adicione o div cont\u00eainer \u00e0 sua pergunta",
@@ -105,7 +105,7 @@
           {
             "title": "Cole o c\u00f3digo completo do widget",
             "description": "No editor HTML, cole o embed completo do widget. Substitua 'proj_xxx' pela sua chave de projeto.",
-            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"{{ResponseID}}\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"{{ResponseID}}\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://api.voicecapture.ai/voice.js\"></script>"
           }
         ]
       },
@@ -128,7 +128,7 @@
           {
             "title": "Adicione o script globalmente",
             "description": "V\u00e1 para Survey Settings > Custom JavaScript/CSS > Header JavaScript e cole a tag de script.",
-            "code": "<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+            "code": "<script src=\"https://api.voicecapture.ai/voice.js\"></script>"
           },
           {
             "title": "Adicione o div cont\u00eainer \u00e0 sua pergunta",
@@ -166,7 +166,7 @@
           {
             "title": "Cole o c\u00f3digo completo do widget",
             "description": "No editor HTML, cole o embed completo do widget. Substitua 'proj_xxx' pela sua chave de projeto do dashboard.",
-            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"{submission_id}\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"{submission_id}\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://api.voicecapture.ai/voice.js\"></script>"
           }
         ]
       },
@@ -219,7 +219,7 @@
           {
             "title": "Adicione o HTML do widget",
             "description": "Adicione este c\u00f3digo onde deseja que o widget de voz apare\u00e7a. Substitua 'proj_xxx' pela sua chave de projeto e 'SESSION_ID' por um identificador \u00fanico por respondente.",
-            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"SESSION_ID\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://voiceapi.survey-genius.ai/voice.js\"></script>"
+            "code": "<div id=\"genius-voice-q1\"\n     data-project=\"proj_xxx\"\n     data-session=\"SESSION_ID\"\n     data-question=\"q1\"\n     data-lang=\"es\"></div>\n<script src=\"https://api.voicecapture.ai/voice.js\"></script>"
           }
         ]
       },

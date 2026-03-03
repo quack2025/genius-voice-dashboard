@@ -126,7 +126,7 @@ Dashboard frontend para Voice Capture API. Permite gestionar proyectos de captur
 
 El snippet generado en NewProject usa una URL placeholder:
 ```html
-<script src="https://cdn.geniuslabs.ai/voice.js"></script>
+<script src="https://api.voicecapture.ai/voice.js"></script>
 ```
 
 **TODO**: Crear el widget real que:
