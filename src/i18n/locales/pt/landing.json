@@ -10,11 +10,12 @@
     "signup": "Testar Grátis"
   },
   "hero": {
-    "title": "Suas perguntas abertas merecem",
-    "titleHighlight": "respostas de verdade",
-    "subtitle": "40% dos respondentes pulam perguntas abertas. Com Voice Capture, eles só falam. Você recebe transcrições, sentimento e keywords — automaticamente.",
-    "cta": "Adicione voz à sua pesquisa — grátis",
+    "title": "Tire o máximo das suas",
+    "titleHighlight": "pesquisas no Alchemer",
+    "subtitle": "40% dos respondentes pulam perguntas abertas. Com Voice Capture, eles só falam — e você obtém insights mais ricos e profundos do que qualquer campo de texto.",
+    "cta": "Adicione voz à sua pesquisa no Alchemer — grátis",
     "ctaSecondary": "Veja como funciona",
+    "alchemerHighlight": "Feito para Alchemer",
     "stats": {
       "responseRate": "3x mais respostas",
       "responseRateDesc": "vs. texto aberto",
@@ -42,10 +43,10 @@
   },
   "howItWorks": {
     "sectionTitle": "Funciona em 3 passos",
-    "sectionSubtitle": "Sem instalar software. Sem trocar de plataforma. Voice Capture vive dentro da sua pesquisa existente.",
+    "sectionSubtitle": "Sem instalar software. Sem trocar de plataforma. Voice Capture vive dentro da sua pesquisa no Alchemer.",
     "step1": {
       "title": "Incorpore o widget",
-      "description": "Cole um snippet de código na sua pesquisa Alchemer, Qualtrics ou qualquer formulário web. 2 minutos."
+      "description": "Cole um snippet de código na sua pesquisa do Alchemer. 2 minutos, sem necessidade de desenvolvimento."
     },
     "step2": {
       "title": "O respondente fala",
@@ -58,7 +59,7 @@
   },
   "features": {
     "sectionTitle": "Construído para equipes de pesquisa",
-    "sectionSubtitle": "Não é mais um app de gravação. É infraestrutura de captura de voz que se integra ao seu fluxo de trabalho.",
+    "sectionSubtitle": "Não é mais um app de gravação. É infraestrutura de captura de voz que se integra ao seu fluxo de trabalho no Alchemer.",
     "realtime": {
       "title": "Resultados instantâneos",
       "description": "Veja as respostas transcritas conforme chegam. Comece sua análise hoje, não semana que vem."
@@ -68,8 +69,8 @@
       "description": "Rode a mesma pesquisa em espanhol, inglês, português, francês, alemão e mais. Sem ferramentas separadas."
     },
     "integration": {
-      "title": "Vive na sua pesquisa",
-      "description": "Não é um app separado. O widget se incorpora diretamente no Alchemer, Qualtrics ou qualquer formulário web com um snippet HTML."
+      "title": "Vive na sua pesquisa do Alchemer",
+      "description": "Não é um app separado. O widget se incorpora diretamente na sua pesquisa do Alchemer com um snippet HTML. Mais plataformas em breve."
     },
     "export": {
       "title": "Seus dados, seu formato",
@@ -135,8 +136,8 @@
       "answer": "Sim. Voice Capture funciona no Chrome, Safari, Firefox e Edge — tanto em desktop quanto em mobile. A experiência é otimizada para telas touch."
     },
     "q5": {
-      "question": "Posso integrar com minha plataforma de pesquisa?",
-      "answer": "Sim. Voice Capture se integra com Alchemer, Qualtrics e qualquer formulário web que aceite HTML personalizado. Basta colar um snippet de código — sem necessidade de desenvolvimento."
+      "question": "Posso integrar com outras plataformas de pesquisa?",
+      "answer": "Voice Capture é feito para Alchemer hoje. Suporte para Qualtrics, SurveyMonkey, Typeform e outras plataformas está chegando em breve. Também funciona com qualquer formulário web que aceite HTML personalizado."
     },
     "q6": {
       "question": "Onde os dados são armazenados?",
@@ -145,13 +146,15 @@
   },
   "integrations": {
     "title": "Funciona com sua plataforma de pesquisa",
-    "subtitle": "Alchemer, Qualtrics, SurveyMonkey, QuestionPro, JotForm e mais.",
+    "subtitle": "Disponível agora para Alchemer. Em breve para Qualtrics, SurveyMonkey, Typeform e mais.",
+    "alchemerHighlight": "Disponível agora",
+    "comingSoon": "Em breve",
     "andMore": "e mais...",
     "viewAll": "Ver todas as integrações"
   },
   "cta": {
     "title": "Seu próximo estudo pode ter voz",
-    "subtitle": "Configure Voice Capture na sua pesquisa em menos de 5 minutos. Sem cartão de crédito.",
+    "subtitle": "Configure Voice Capture na sua pesquisa do Alchemer em menos de 5 minutos. Sem cartão de crédito.",
     "button": "Criar Conta Grátis"
   }
 }

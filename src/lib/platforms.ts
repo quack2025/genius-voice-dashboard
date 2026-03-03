@@ -9,10 +9,10 @@ export interface PlatformConfig {
 
 export const PLATFORMS: PlatformConfig[] = [
   { slug: 'alchemer', status: 'available', color: '#0066CC', tier: 1 },
-  { slug: 'qualtrics', status: 'available', color: '#B7312C', tier: 1 },
-  { slug: 'surveymonkey', status: 'available', color: '#00BF6F', tier: 1 },
-  { slug: 'questionpro', status: 'available', color: '#0066FF', tier: 1 },
-  { slug: 'jotform', status: 'available', color: '#FF6100', tier: 1 },
+  { slug: 'qualtrics', status: 'coming_soon', color: '#B7312C', tier: 2 },
+  { slug: 'surveymonkey', status: 'coming_soon', color: '#00BF6F', tier: 2 },
+  { slug: 'questionpro', status: 'coming_soon', color: '#0066FF', tier: 2 },
+  { slug: 'jotform', status: 'coming_soon', color: '#FF6100', tier: 2 },
   { slug: 'wordpress', status: 'coming_soon', color: '#21759B', tier: 2 },
   { slug: 'typeform', status: 'coming_soon', color: '#262627', tier: 2 },
   { slug: 'formstack', status: 'coming_soon', color: '#21B573', tier: 2 },

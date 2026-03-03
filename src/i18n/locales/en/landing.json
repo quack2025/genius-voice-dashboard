@@ -10,11 +10,12 @@
     "signup": "Try Free"
   },
   "hero": {
-    "title": "Your open-ended questions deserve",
-    "titleHighlight": "real answers",
-    "subtitle": "40% of respondents skip open-ended questions. With Voice Capture, they just talk. You get transcriptions, sentiment, and keywords — automatically.",
-    "cta": "Add voice to your survey — free",
+    "title": "Make the most out of your",
+    "titleHighlight": "Alchemer surveys",
+    "subtitle": "40% of respondents skip open-ended questions. With Voice Capture, they just talk — and you get richer, deeper insights than any text box could deliver.",
+    "cta": "Add voice to your Alchemer survey — free",
     "ctaSecondary": "See how it works",
+    "alchemerHighlight": "Built for Alchemer",
     "stats": {
       "responseRate": "3x more responses",
       "responseRateDesc": "vs. open text",
@@ -42,10 +43,10 @@
   },
   "howItWorks": {
     "sectionTitle": "It works in 3 steps",
-    "sectionSubtitle": "No software to install. No switching platforms. Voice Capture lives inside your existing survey.",
+    "sectionSubtitle": "No software to install. No switching platforms. Voice Capture lives inside your existing Alchemer survey.",
     "step1": {
       "title": "Embed the widget",
-      "description": "Paste a code snippet into your Alchemer, Qualtrics, or any web form survey. 2 minutes."
+      "description": "Paste a code snippet into your Alchemer survey. 2 minutes, no development required."
     },
     "step2": {
       "title": "Respondent speaks",
@@ -58,7 +59,7 @@
   },
   "features": {
     "sectionTitle": "Built for research teams",
-    "sectionSubtitle": "Not another recording app. It's voice capture infrastructure that plugs into your existing workflow.",
+    "sectionSubtitle": "Not another recording app. It's voice capture infrastructure that plugs into your existing Alchemer workflow.",
     "realtime": {
       "title": "Instant results",
       "description": "See transcribed responses as they come in. Start your analysis today, not next week."
@@ -68,8 +69,8 @@
       "description": "Run the same survey in Spanish, English, Portuguese, French, German, and more. No separate tools."
     },
     "integration": {
-      "title": "Lives in your survey",
-      "description": "Not a separate app. The widget embeds directly into Alchemer, Qualtrics, or any web form with an HTML snippet."
+      "title": "Lives in your Alchemer survey",
+      "description": "Not a separate app. The widget embeds directly into your Alchemer survey with an HTML snippet. More platforms coming soon."
     },
     "export": {
       "title": "Your data, your format",
@@ -135,8 +136,8 @@
       "answer": "Yes. Voice Capture works on Chrome, Safari, Firefox, and Edge — both desktop and mobile. The experience is optimized for touch screens."
     },
     "q5": {
-      "question": "Can I integrate it with my survey platform?",
-      "answer": "Yes. Voice Capture integrates with Alchemer, Qualtrics, and any web form that accepts custom HTML. Just paste a code snippet — no development required."
+      "question": "Can I integrate it with other survey platforms?",
+      "answer": "Voice Capture is built for Alchemer today. Support for Qualtrics, SurveyMonkey, Typeform, and other platforms is coming soon. It also works with any web form that accepts custom HTML."
     },
     "q6": {
       "question": "Where is the data stored?",
@@ -145,13 +146,15 @@
   },
   "integrations": {
     "title": "Works with your survey platform",
-    "subtitle": "Alchemer, Qualtrics, SurveyMonkey, QuestionPro, JotForm and more.",
+    "subtitle": "Available now for Alchemer. Coming soon for Qualtrics, SurveyMonkey, Typeform, and more.",
+    "alchemerHighlight": "Available now",
+    "comingSoon": "Coming soon",
     "andMore": "and more...",
     "viewAll": "See all integrations"
   },
   "cta": {
     "title": "Your next study can have a voice",
-    "subtitle": "Set up Voice Capture in your survey in under 5 minutes. No credit card required.",
+    "subtitle": "Set up Voice Capture in your Alchemer survey in under 5 minutes. No credit card required.",
     "button": "Create Free Account"
   }
 }
