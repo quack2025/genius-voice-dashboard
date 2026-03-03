@@ -92,6 +92,7 @@ export default function Landing() {
       <section className="relative overflow-hidden py-20 sm:py-32">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.08),transparent_60%)]" />
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6">
+          <Badge variant="secondary" className="mb-4">{t('hero.alchemerHighlight')}</Badge>
           <h1 className="mx-auto max-w-4xl text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
             {t('hero.title')}{' '}
             <span className="text-primary">{t('hero.titleHighlight')}</span>
@@ -215,22 +216,39 @@ export default function Landing() {
             <h2 className="text-2xl font-bold sm:text-3xl">{t('integrations.title')}</h2>
             <p className="mt-3 text-muted-foreground">{t('integrations.subtitle')}</p>
           </div>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            {PLATFORMS.filter((p) => p.status === 'available' && p.slug !== 'generic').map((p) => (
-              <Link
-                key={p.slug}
-                to={`/integrations/${p.slug}`}
-                className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
-              >
+
+          {/* Alchemer featured */}
+          <div className="mt-10 flex flex-col items-center gap-6">
+            <Link
+              to="/integrations/alchemer"
+              className="flex items-center gap-3 rounded-full border-2 border-primary bg-primary/5 px-6 py-3 text-base font-semibold transition-colors hover:bg-primary/10"
+            >
+              <span
+                className="inline-block h-4 w-4 rounded-full"
+                style={{ backgroundColor: '#0066CC' }}
+              />
+              Alchemer
+              <Badge variant="default" className="ml-1">{t('integrations.alchemerHighlight')}</Badge>
+            </Link>
+
+            {/* Coming soon platforms */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {PLATFORMS.filter((p) => p.status === 'coming_soon').map((p) => (
                 <span
-                  className="inline-block h-3 w-3 rounded-full"
-                  style={{ backgroundColor: p.color }}
-                />
-                {t(`platforms.${p.slug}.name`, { ns: 'integrations' })}
-              </Link>
-            ))}
-            <span className="text-sm text-muted-foreground">{t('integrations.andMore')}</span>
+                  key={p.slug}
+                  className="flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm text-muted-foreground"
+                >
+                  <span
+                    className="inline-block h-3 w-3 rounded-full opacity-50"
+                    style={{ backgroundColor: p.color }}
+                  />
+                  {t(`platforms.${p.slug}.name`, { ns: 'integrations' })}
+                  <Badge variant="secondary" className="ml-1 text-[10px]">{t('integrations.comingSoon')}</Badge>
+                </span>
+              ))}
+            </div>
           </div>
+
           <div className="mt-6 text-center">
             <Link
               to="/integrations"
